@@ -301,5 +301,47 @@
       "passed": true,
       "jury_model": "gemini-3.1-pro-preview"
     }
+  },
+  "V8_015": {
+    "id": "V8_015",
+    "tag": "V8_015_CAUSTIC_BLUE_Extreme_SideAngle_20Deg_Grazing_Relief",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_015_CAUSTIC_BLUE_Extreme_SideAngle_20Deg_Grazing_Relief_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow 3D camera arc from oblique 3/4 profile toward the front face, showcasing the physical 3D relief height of the letters and burnt-orange pointer hands.",
+    "jury": {
+      "first_five_second_read": "A clean, well-lit 3D product render of a minimalist surf clock with a strong material presence.",
+      "scores": {
+        "design": 7.6,
+        "usability": 7.3,
+        "creativity": 7.6,
+        "content": 7.5,
+        "weighted": 7.5,
+        "band_position": "Lower top quartile; solid execution of a 3D hero object."
+      },
+      "fwa_verdict": {
+        "verdict": "yes",
+        "reason": "High-quality 3D execution and material lighting align with current immersive trends."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "3D WebGL heroes, dark themes, neo-grotesk typography.",
+        "dated_or_derivative": "none",
+        "leads": "Strong, singular material idea carried through the entire object."
+      },
+      "largest_gap": "The burnt-orange hands lack sufficient ambient occlusion, making them appear slightly disconnected from the dial face.",
+      "top_three_fixes": [
+        "Add a tight, soft ambient occlusion shadow beneath the burnt-orange hands.",
+        "Increase tracking on the white beach labels by 0.02em for better physical realism.",
+        "Sharpen the outer bezel corners slightly to strictly adhere to the 3mm chamfer lock."
+      ],
+      "escalation": "none",
+      "confidence": "high, locks are clearly visible and respected in the provided resolution",
+      "passed": true,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
   }
 }
