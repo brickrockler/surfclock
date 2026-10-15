@@ -343,5 +343,181 @@
       "passed": true,
       "jury_model": "gemini-3.1-pro-preview"
     }
+  },
+  "V8_017": {
+    "id": "V8_017",
+    "tag": "V8_017_CAUSTIC_BLUE_TopDown_45Deg_Drafting_Blueprint_Table",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_017_CAUSTIC_BLUE_TopDown_45Deg_Drafting_Blueprint_Table_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Smooth overhead 45-degree camera glide across the Prussian-blue architectural drafting mat, brass calipers, and Slate-Blue Surf Clock.",
+    "jury": {
+      "first_five_second_read": "A tactile, Braun-inspired surf monolith resting on an architect's cutting mat, executed with high-craft material restraint, crisp physical typography, and immediate functional wit.",
+      "scores": {
+        "design": 8.0,
+        "usability": 7.5,
+        "creativity": 8.0,
+        "content": 8.0,
+        "weighted": 7.85,
+        "band_position": "Top 2% of the 7.17-7.87 band, sitting directly alongside Site of the Month contenders ORYZO AI (7.86) and GQ & AP The Extraordinary Lab (7.74)."
+      },
+      "fwa_verdict": {
+        "verdict": "yes",
+        "reason": "Replaces tired screen-space telemetry with a physical, humorously reductionist horological object rendered at photorealistic level."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "Echoes the top-quartile shift toward single-material tabletop worlds (ORYZO AI, L\u00e9o Parpeix, GQ & AP Extraordinary Lab) and strict two-colour plus single-accent restraint.",
+        "dated_or_derivative": "none",
+        "leads": "Subverts the tired 'monospaced aerospace HUD' trope by translating environmental surf data into a calm, physical Dieter Rams-style analog instrument with colloquial Australian copy."
+      },
+      "largest_gap": "The upper dial's 8 radial tick marks (white #F2F0EC, ~8x2px in Image 1) fall one tick short of the brief's locked 9-tick specification, leaving the 12 o'clock zenith under 'LONG REEF' empty and straddled by two ticks rather than anchored by a center tick.",
+      "top_three_fixes": [
+        "Redistribute the upper dial's white (#F2F0EC) radial tick marks from 8 to the locked 9 ticks across the 8-to-4 o'clock arc so each of the 5 beach labels ('FRESHIE', 'QUEENSIE', 'LONG REEF', 'DEE WHY', 'CURL CURL') aligns directly with a primary tick mark and the 4 intervals between them have exactly 1 intermediate tick.",
+        "True up the 4 external corners of the navy-slate (#262E3D) outer bezel to crisper 90-degree vertices with distinct 3mm planar chamfers, reducing the current ~4mm cylindrical corner fillet.",
+        "Clean up the muddied numerals and subdials on the brass vernier caliper at right (x: 1080-1440px, y: 280-780px) so the engraved metric scale reads with crisp dark-etched precision rather than AI-hallucinated glyph artifacts."
+      ],
+      "escalation": "Note on the '2 hands total' lock: there is a 3rd unmounted spare burnt-orange (#D95B38) hand lying on the blue cutting mat at bottom right (x: 960px, y: 615px). While the dial itself strictly holds 2 hands (1 upper, 1 lower), if the lock prohibits spare prop hands on the tabletop, remove the loose hand from the mat.",
+      "confidence": "high \u2014 both the 1x full studio frame and 2x macro crop are provided at full resolution, allowing exact verification of the satin-matte micro-texture, tick count, bevel geometry, and raised typography.",
+      "passed": true,
+      "jury_model": "gemini-4-argon"
+    }
+  },
+  "V8_018": {
+    "id": "V8_018",
+    "tag": "V8_018_CAUSTIC_BLUE_Wide_Anamorphic_Lone_Monolith_In_Blue_Infinity",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_018_CAUSTIC_BLUE_Wide_Anamorphic_Lone_Monolith_In_Blue_Infinity_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow cinematic anamorphic push-in toward the Slate-Blue Surf Clock as the giant diagonal arc of refracted water caustics shimmers across the vast cyclorama.",
+    "jury": {
+      "first_five_second_read": "A striking industrial design frame elevated by immersive water caustics, though the device geometry softens the mandated brutalist brief.",
+      "scores": {
+        "design": 7.4,
+        "usability": 7.3,
+        "creativity": 7.5,
+        "content": 7.3,
+        "weighted": 7.38,
+        "band_position": "Sits near the median (7.34), held back from the top quartile by geometric lock failures and generic typography."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "While the lighting and material execution are strong, the failure to adhere to the strict geometric locks of the brief disqualifies it from top-tier recognition."
+      },
+      "gate_failures": [
+        "The outer corners of the clock casing are rounded (filleted) rather than the mandated sharp 90-degree angles with 3mm chamfers."
+      ],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": false,
+      "trend_check": {
+        "echoes": "One material idea carried all the way through (water/caustics) and quiet chrome.",
+        "dated_or_derivative": "The dial typography and layout lean slightly toward generic telemetry/HUD dressing rather than bespoke horology.",
+        "leads": "The integration of the physical object within a highly atmospheric, single-material lighting environment."
+      },
+      "largest_gap": "The outer casing corners are visibly rounded (approx. 5-8mm radius) instead of the strictly required sharp 90-degree angles with flat 3mm chamfers.",
+      "top_three_fixes": [
+        "Rebuild the outer casing corners to strict 90-degree angles with flat 3mm chamfers to satisfy the geometric lock.",
+        "Increase the tracking on the neo-grotesk beach labels (e.g., 'LONG REEF') by 0.02em to improve legibility at scale.",
+        "Slightly boost the opacity or brightness of the white tick marks and text to ensure they pop against the satin-matte blue dial."
+      ],
+      "escalation": "None.",
+      "confidence": "high, as the geometric violation of the casing corners is clearly visible in both the full frame and the detail crop.",
+      "passed": false,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_019": {
+    "id": "V8_019",
+    "tag": "V8_019_DOMUS_79_Sony_Cobalt_Velvet_Sweep_Warm_Amber_Rim",
+    "world": "WORLD_02_DOMUS_70S",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_019_DOMUS_79_Sony_Cobalt_Velvet_Sweep_Warm_Amber_Rim_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). 1979 Japanese hi-fi catalog 35mm cinema shot: slow, velvety 3D camera dolly arc around the Warm Chalk-Cream Surf Clock on the deep cobalt-blue felt sweep as warm tungsten-amber rim light blooms along the left bezel.",
+    "jury": {
+      "first_five_second_read": "A dramatic 3D render of a surf condition clock with solid material execution, though it misses a critical geometry constraint.",
+      "scores": {
+        "design": 7.4,
+        "usability": 7.3,
+        "creativity": 7.5,
+        "content": 7.4,
+        "weighted": 7.39,
+        "band_position": "Near the median; solid visual craft but held back by a geometry lock failure."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "Lacks the unconventional, experimental interaction required for FWA."
+      },
+      "gate_failures": [
+        "Outer casing and inner bezel feature rounded corners, violating the strict sharp 90-degree lock."
+      ],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": false,
+      "trend_check": {
+        "echoes": "Dark themes, single accent palettes, 3D product focus.",
+        "dated_or_derivative": "Instrument panel and gauge tropes.",
+        "leads": "Material execution and dramatic studio lighting."
+      },
+      "largest_gap": "The bezel corners are visibly rounded instead of the mandated sharp 90-degree angles.",
+      "top_three_fixes": [
+        "Square off the outer casing corners to strict 90-degree angles.",
+        "Square off the inner bezel corners to strict 90-degree angles.",
+        "Soften the harsh blue floor spotlight for a more natural studio falloff."
+      ],
+      "escalation": "none",
+      "confidence": "High; the rounded corners are unmistakable.",
+      "passed": false,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_014": {
+    "id": "V8_014",
+    "tag": "V8_014_CAUSTIC_BLUE_Three_Editions_Architectural_Staggered_Lineup",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_014_CAUSTIC_BLUE_Three_Editions_Architectural_Staggered_Lineup_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Luxurious 3D camera rack-focus and slider move across the three staggered Surf Clock colorways in the slate-blue caustic studio.",
+    "jury": {
+      "first_five_second_read": "A crisp, architectural studio trio of rectangular surf clocks in raking coastal light, let down upon close inspection by typographic typos ('WORTH ITY', 'HAH') and a physically intersecting upper hand that clips directly into the 2 o'clock tick mark.",
+      "scores": {
+        "design": 7.5,
+        "usability": 7.0,
+        "creativity": 7.5,
+        "content": 6.5,
+        "weighted": 7.25,
+        "band_position": "Bottom quartile (<= 7.27); held below the 7.45 pass line by typographic spelling artifacts and physical geometry collision on the dial."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "While the lighting, satin-matte materiality, and monolithic form are top-tier, FWA judges immediately penalize AI-hallucinated text ('WORTH ITY', 'HAH') and interpenetrating 3D geometry."
+      },
+      "gate_failures": [
+        "Usability 7.00 < 7.17 pass threshold (upper hand physically collides with and overlaps the 2 o'clock raised tick mark, breaking functional gauge mechanics)",
+        "Content 6.50 < 7.43 pass threshold (required copy 'WORTH IT?' is rendered as 'WORTH ITY' and 'NAH' is rendered as 'HAH' on the foreground unit, with severe garbled character melt on the mid and background units)",
+        "Weighted overall 7.25 < 7.45 pass threshold"
+      ],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": false,
+      "trend_check": {
+        "echoes": "Echoes the top-quartile shift toward tactile, non-HUD physical instruments and single-material studio restraint (like L\u00e9o Parpeix and ORYZO AI) with a disciplined burnt-orange single accent.",
+        "dated_or_derivative": "None in art direction, though the melted micro-type on the depth-of-field background units betrays raw generative diffusion artifacts rather than clean 3D mesh typography.",
+        "leads": "Replaces tired digital telemetry and sci-fi HUD tropes with an honest, Braun-inspired monolithic physical gauge and dramatic chiaroscuro studio lighting."
+      },
+      "largest_gap": "On the foreground navy monolith's lower sub-dial (bottom center, ~14px raised off-white sans-serif `#E8E8EE`), the locked label 'WORTH IT?' is misspelled as 'WORTH ITY' and 'NAH' is misspelled as 'HAH', while the burnt-orange (`#E86838`) upper hand physically clips into the raised white 2 o'clock tick mark next to 'DEE WHY'.",
+      "top_three_fixes": [
+        "Correct the raised white (`#E8E8EE`) micro-typography at the bottom of all three sub-dials so 'WORTH ITY' reads cleanly as 'WORTH IT?' (with a crisp question mark) and the left sub-dial endpoint 'HAH' reads as 'NAH'.",
+        "Shorten the burnt-orange (`#E86838`) upper dial hand by ~12% or adjust its pivot/angle so its tip terminates cleanly inside the inner radius of the 9 radial tick marks without intersecting or overlapping the 2 o'clock ('DEE WHY') tick mark.",
+        "Clean up the garbled, melted glyph geometry on the middle white-bezel and back cream-bezel clocks ('QUEENSIE', 'FRESHIE', 'LONG REEF', 'WORTH IT?') so out-of-focus background lettering blurs optically rather than deforming into illegible AI artifacts."
+      ],
+      "escalation": "none",
+      "confidence": "high \u2014 the 2x detail crop makes the smooth satin-matte surface, exact 9-tick radial geometry, hand-to-tick collision, and 'WORTH ITY' / 'HAH' spelling errors unmistakable.",
+      "passed": false,
+      "jury_model": "gemini-4-argon"
+    }
   }
 }

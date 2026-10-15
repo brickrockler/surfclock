@@ -1,0 +1,188 @@
+1
+00:00:00,170 --> 00:00:02,790
+Welcome to the Surf Clock assembly guide.
+
+2
+00:00:02,790 --> 00:00:05,740
+The enclosure snaps together front to back
+
+3
+00:00:05,740 --> 00:00:09,160
+with zero screws and zero soldering.
+
+4
+00:00:09,160 --> 00:00:11,780
+Lay the outer frame face-down
+
+5
+00:00:11,780 --> 00:00:13,490
+so the rear cavity faces up.
+
+6
+00:00:13,490 --> 00:00:16,710
+Drop the dial face-down into the bezel.
+
+7
+00:00:16,710 --> 00:00:20,880
+Seat the motor mount plate on the posts,
+
+8
+00:00:20,880 --> 00:00:25,357
+and press 4 long snap-pins into the corners.
+
+9
+00:00:26,670 --> 00:00:30,230
+Drop both 28BYJ-48 stepper motors
+
+10
+00:00:30,230 --> 00:00:31,670
+into their circular seats
+
+11
+00:00:31,670 --> 00:00:34,030
+so the shafts poke through the dial.
+
+12
+00:00:34,030 --> 00:00:38,370
+Because of the 8mm shaft offset,
+
+13
+00:00:38,370 --> 00:00:40,370
+orient the upper motor normally,
+
+14
+00:00:40,370 --> 00:00:43,270
+and flip the lower motor 180 degrees.
+
+15
+00:00:43,270 --> 00:00:46,300
+Push 4 short snap-pins through the ears
+
+16
+00:00:46,300 --> 00:00:48,298
+to lock both motors in place.
+
+17
+00:00:49,670 --> 00:00:53,770
+Press the ESP32-S3 and mini breadboard
+
+18
+00:00:53,770 --> 00:00:54,800
+into the left pocket,
+
+19
+00:00:54,800 --> 00:00:58,060
+and seat both ULN2003 driver boards
+
+20
+00:00:58,060 --> 00:01:00,460
+into the right pocket.
+
+21
+00:01:00,460 --> 00:01:03,600
+Plug both 5-pin motor leads in,
+
+22
+00:01:03,600 --> 00:01:06,720
+tucking slack under the center arch.
+
+23
+00:01:06,720 --> 00:01:11,610
+Wire Upper IN1–IN4 to GPIO 4, 5, 6, 7.
+
+24
+00:01:11,610 --> 00:01:17,270
+Wire Lower IN1–IN4 to GPIO 15, 16, 17, 18.
+
+25
+00:01:17,270 --> 00:01:20,780
+Connect both driver 5V and GND pins
+
+26
+00:01:20,780 --> 00:01:25,130
+to the breadboard 5V VBUS and GND rails,
+
+27
+00:01:25,130 --> 00:01:27,682
+and tuck all wires under the 6 clips.
+
+28
+00:01:28,670 --> 00:01:31,900
+Route the USB-C cable out the bottom slot,
+
+29
+00:01:31,900 --> 00:01:33,870
+place the back cover over the frame,
+
+30
+00:01:33,870 --> 00:01:36,480
+and click in the final 4 long snap-pins.
+
+31
+00:01:36,480 --> 00:01:37,890
+Before plugging in power,
+
+32
+00:01:37,890 --> 00:01:39,710
+flip the clock face-up.
+
+33
+00:01:39,710 --> 00:01:42,730
+Each shaft has flat sides that key into
+
+34
+00:01:42,730 --> 00:01:45,100
+the D-shaped bore inside the hands.
+
+35
+00:01:45,100 --> 00:01:47,970
+Press the long hand on at 12 o'clock
+
+36
+00:01:47,970 --> 00:01:50,070
+pointing straight up at LONG REEF.
+
+37
+00:01:50,070 --> 00:01:53,020
+Press the short hand on at 12 o'clock
+
+38
+00:01:53,020 --> 00:01:55,482
+pointing straight up on WORTH IT?.
+
+39
+00:01:56,670 --> 00:01:59,870
+Plug in USB-C and your Surf Clock is live.
+
+40
+00:01:59,870 --> 00:02:02,940
+Over Wi-Fi, the ESP32 fetches live
+
+41
+00:02:02,940 --> 00:02:04,690
+swell and wind forecasts,
+
+42
+00:02:04,690 --> 00:02:07,410
+rotates both hands along the shortest arc,
+
+43
+00:02:07,410 --> 00:02:10,910
+and powers down the coils to run silent.
+
+44
+00:02:10,910 --> 00:02:14,160
+Built-in RTC and flash memory save
+
+45
+00:02:14,160 --> 00:02:17,840
+hand positions across sleep and power loss.
+
+46
+00:02:17,840 --> 00:02:20,840
+To re-zero anytime, point both hands
+
+47
+00:02:20,840 --> 00:02:24,278
+to 12 o'clock and hold BOOT on reset.
+

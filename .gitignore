@@ -9,8 +9,9 @@ node_modules/
 .firebase/
 .env
 .env.*
+*.blend1
 
-# Ignore local Blender working files, raw 4K video renders, and scratch files in root
+# Ignore local temporary renders, raw 4K video sequences, and scratch files in root
 /*
 !/README.md
 !/.gitignore
@@ -22,6 +23,12 @@ node_modules/
 !/surf_clock_esp32s3_magnet_free.ino
 !/surf_clock_rams.scad
 !/generate_30_printable_design_exploration_images.py
+!/*.stl
+/_tmp_*.stl
+!/*.glb
+!/*.obj
+!/*.usdz
+!/*.blend
 !/.github/
 !/firebase.json
 !/.firebaserc
@@ -33,6 +40,9 @@ node_modules/
 !/cad/
 !/stl/
 !/web_customizer/
+!/C4D_USD_OCTANE_STUDIO_EXPORTS/
+!/FINAL_PRINT_FILES/
+FINAL_PRINT_FILES/*.mp4
 !/V5_PERFECT_CLICKLOCK_PRINT_KIT/
 V5_PERFECT_CLICKLOCK_PRINT_KIT/*.mp4
 !/STUDIO_4K_CINEMA_PIPELINE/
