@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SURF CLOCK — V9 WORKING VIBE PERFECTED + FORGED DESIGN JURY</title>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #0c0d10; color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; margin: 0; padding: 0 28px 60px 28px; }
+  .console-header {
+    position: sticky; top: 0; z-index: 999; background: rgba(12, 13, 16, 0.96); backdrop-filter: blur(14px);
+    border-bottom: 1px solid #262a33; padding: 18px 28px; margin: 0 -28px 28px -28px;
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;
+  }
+  .header-left h1 { font-size: 18px; letter-spacing: 0.05em; text-transform: uppercase; margin: 0 0 4px 0; color: #fff; }
+  .header-left p { font-size: 12px; color: #9da6b5; margin: 0; }
+  .stats-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .stat-chip { background: #181b22; border: 1px solid #2b303c; padding: 6px 11px; border-radius: 6px; font-size: 12px; font-weight: 600; color: #d8dee9; }
+  .btn-copy { background: #ff5500; color: #fff; border: none; padding: 9px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(640px, 1fr)); gap: 24px; }
+  .card { background: #13161c; border: 2px solid #232832; border-radius: 8px; overflow: hidden; }
+  .card[data-status="keep"] { border-color: #10b981; }
+  .card[data-status="fix"]  { border-color: #f59e0b; }
+  .card[data-status="kill"] { border-color: #ef4444; opacity: 0.45; }
+  .card-head { padding: 11px 14px; background: #181c24; border-bottom: 1px solid #242934; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .title-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .shot-id { font-family: monospace; font-size: 13px; font-weight: 700; color: #fff; }
+  .world-pill { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 4px; background: #252b38; color: #dce3f0; }
+  .jury-pill { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; font-family: monospace; }
+  .jury-pill.pass { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
+  .jury-pill.warn { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.35); }
+  .fwa-pill { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 4px; background: #1e2430; color: #a5b4fc; border: 1px solid #313a4d; }
+  .mode-label { font-size: 11px; color: #8c95a6; font-family: monospace; }
+  .jury-strip { padding: 8px 14px; background: #101318; border-bottom: 1px solid #1e222b; font-size: 11px; color: #b0b9c8; display: flex; flex-direction: column; gap: 3px; }
+  .jury-strip b { color: #e2e8f0; }
+  .media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #000; }
+  .media-pair img, .media-pair video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .vid-placeholder { display: flex; align-items: center; justify-content: center; background: #0e1015; color: #6e7787; font-size: 12px; aspect-ratio: 16/9; }
+  .review-bar { padding: 10px 14px; background: #101217; border-top: 1px solid #1e222a; display: flex; flex-direction: column; gap: 8px; }
+  .btn-group { display: flex; gap: 8px; }
+  .v-btn { flex: 1; padding: 7px 10px; border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #2a2f3a; background: #181b22; color: #a8b0be; }
+  .card[data-status="keep"] .btn-keep { background: #059669; border-color: #10b981; color: #fff; }
+  .card[data-status="fix"]  .btn-fix  { background: #d97706; border-color: #f59e0b; color: #fff; }
+  .card[data-status="kill"] .btn-kill { background: #dc2626; border-color: #ef4444; color: #fff; }
+  .note-input { width: 100%; background: #0c0e12; border: 1px solid #252932; color: #eef0f4; padding: 7px 10px; border-radius: 5px; font-size: 12px; }
+  .toast { position: fixed; bottom: 24px; right: 24px; z-index: 2000; background: #10b981; color: #06281e; font-weight: 700; font-size: 13px; padding: 12px 18px; border-radius: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="console-header">
+  <div class="header-left">
+    <h1>SURF CLOCK — V9 WORKING VIBE PERFECTED (FORGED DESIGN JURY)</h1>
+    <p>38 Curated Studio Shots · Silky-Smooth VDI-12 Dial Texture · Native 4K (4:4:4) + Slow Graceful 4K60 Motion</p>
+  </div>
+  <div class="stats-row">
+    <span class="stat-chip">Jury Mean: 7.37 (Top Quartile ≥ 7.45)</span>
+    <span class="stat-chip">Passed Gate: 4/7</span>
+    <span class="stat-chip">FWA Yes: 2</span>
+    <button class="btn-copy" onclick="copyFeedback()">COPY FEEDBACK JSON</button>
+  </div>
+</div>
+<div class="grid">
+  
+  <div class="card" id="card-V8_003" data-id="V8_003" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_003</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill warn">★ JURY D 7.3 · U 7.4 · Cr 7.5 · Co 7.4 → 7.38</span>
+        <span class="fwa-pill">FWA: NO</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A caustic-lit 3D surf clock render that misses strict geometric and textural constraints.</div>
+      <div><b>Largest Gap / Detail Note:</b> Outer bezel corners are visibly rounded instead of the mandated sharp 90-degree angles.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_003_CAUSTIC_BLUE_Asymmetric_RuleOfThirds_ThreeQuarter_RimLight_4K.jpg?v=1792103870" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_003_CAUSTIC_BLUE_Asymmetric_RuleOfThirds_ThreeQuarter_RimLight_4K.jpg?v=1792103870" loading="lazy" alt="V8_003_CAUSTIC_BLUE_Asymmetric_RuleOfThirds_ThreeQuarter_RimLight">
+      </a>
+      <div class="vid-placeholder">4K Still Selected</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_003', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_003', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_003', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_003" placeholder="Feedback for V8_003..." oninput="saveNote('V8_003', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_005" data-id="V8_005" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_005</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill warn">★ JURY D 7.0 · U 7.0 · Cr 7.5 · Co 7.5 → 7.15</span>
+        <span class="fwa-pill">FWA: NO</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A moody, well-lit industrial design render of a surf clock that suffers from severe 3D typography rendering artifacts on close inspection.</div>
+      <div><b>Largest Gap / Detail Note:</b> The 3D text extrusion on 'QUEENSIE' and 'FRESHIE' (left side, white) is glitchy and doubled, destroying legibility.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_005_CAUSTIC_BLUE_Through_Foreground_Crystal_Prism_Bokeh_4K.jpg?v=1792103874" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_005_CAUSTIC_BLUE_Through_Foreground_Crystal_Prism_Bokeh_4K.jpg?v=1792103874" loading="lazy" alt="V8_005_CAUSTIC_BLUE_Through_Foreground_Crystal_Prism_Bokeh">
+      </a>
+      <div class="vid-placeholder">4K Still Selected</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_005', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_005', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_005', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_005" placeholder="Feedback for V8_005..." oninput="saveNote('V8_005', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_006" data-id="V8_006" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_006</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill warn">★ JURY D 7.2 · U 7.0 · Cr 7.1 · Co 6.5 → 7.05</span>
+        <span class="fwa-pill">FWA: NO</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> Moody 3D industrial clock leaning heavily on telemetry tropes.</div>
+      <div><b>Largest Gap / Detail Note:</b> Upper dial features 7 ticks and duplicate labels instead of the requested 9 ticks and 5 unique labels.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_006_CAUSTIC_BLUE_Chiaroscuro_Eclipse_Golden_Rim_Silhouette_4K.jpg?v=1792103928" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_006_CAUSTIC_BLUE_Chiaroscuro_Eclipse_Golden_Rim_Silhouette_4K.jpg?v=1792103928" loading="lazy" alt="V8_006_CAUSTIC_BLUE_Chiaroscuro_Eclipse_Golden_Rim_Silhouette">
+      </a>
+      <div class="vid-placeholder">4K Still Selected</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_006', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_006', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_006', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_006" placeholder="Feedback for V8_006..." oninput="saveNote('V8_006', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_008" data-id="V8_008" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_008</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill pass">★ JURY D 7.6 · U 7.3 · Cr 7.5 · Co 7.4 → 7.47</span>
+        <span class="fwa-pill">FWA: NO</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A clean, well-lit 3D industrial design render with a restrained palette and precise geometry.</div>
+      <div><b>Largest Gap / Detail Note:</b> The raised typography (e.g., 'LONG REEF') appears slightly soft at the edges, lacking the crispness of high-end industrial molding.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_008_CAUSTIC_BLUE_Twin_FrontAndRear_Exhibition_Duo_4K.jpg?v=1792103798" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_008_CAUSTIC_BLUE_Twin_FrontAndRear_Exhibition_Duo_4K.jpg?v=1792103798" loading="lazy" alt="V8_008_CAUSTIC_BLUE_Twin_FrontAndRear_Exhibition_Duo">
+      </a>
+      <div class="vid-placeholder">4K Still Selected</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_008', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_008', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_008', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_008" placeholder="Feedback for V8_008..." oninput="saveNote('V8_008', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_009" data-id="V8_009" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_009</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill pass">★ JURY D 7.5 · U 7.5 · Cr 7.5 · Co 7.5 → 7.50</span>
+        <span class="fwa-pill">FWA: YES</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A photorealistic, minimalist surf condition clock render.</div>
+      <div><b>Largest Gap / Detail Note:</b> White typography lacks subtle ambient occlusion to ground it.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_009_CAUSTIC_BLUE_HighAngle_45Deg_Geometric_Shadow_Study_4K.jpg?v=1792103871" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_009_CAUSTIC_BLUE_HighAngle_45Deg_Geometric_Shadow_Study_4K.jpg?v=1792103871" loading="lazy" alt="V8_009_CAUSTIC_BLUE_HighAngle_45Deg_Geometric_Shadow_Study">
+      </a>
+      <div class="vid-placeholder">Rendering 4K60 Studio Motion...</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_009', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_009', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_009', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_009" placeholder="Feedback for V8_009..." oninput="saveNote('V8_009', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_012" data-id="V8_012" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_012</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill pass">★ JURY D 7.6 · U 7.2 · Cr 7.6 · Co 7.5 → 7.47</span>
+        <span class="fwa-pill">FWA: YES</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A beautifully lit, minimalist 3D render of a bespoke surf condition clock that perfectly nails the requested satin-matte finish and strict horological constraints.</div>
+      <div><b>Largest Gap / Detail Note:</b> The question mark in the 'WORTH IT?' label at the bottom center (approx 12px) suffers from a minor rendering artifact, appearing slightly malformed.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_012_CAUSTIC_BLUE_TwoTone_WhiteBezel_NavyDial_In_BlueCyc_4K.jpg?v=1792103945" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_012_CAUSTIC_BLUE_TwoTone_WhiteBezel_NavyDial_In_BlueCyc_4K.jpg?v=1792103945" loading="lazy" alt="V8_012_CAUSTIC_BLUE_TwoTone_WhiteBezel_NavyDial_In_BlueCyc">
+      </a>
+      <div class="vid-placeholder">Rendering 4K60 Studio Motion...</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_012', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_012', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_012', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_012" placeholder="Feedback for V8_012..." oninput="saveNote('V8_012', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-V8_013" data-id="V8_013" data-status="unreviewed">
+    <div class="card-head">
+      <div class="title-left">
+        <span class="shot-id">V8_013</span>
+        <span class="world-pill">WORLD 01 CAUSTIC BLUE</span>
+        <span class="jury-pill pass">★ JURY D 7.7 · U 7.4 · Cr 7.5 · Co 7.5 → 7.55</span>
+        <span class="fwa-pill">FWA: NO</span>
+      </div>
+      <span class="mode-label">full_front</span>
+    </div>
+    <div class="jury-strip">
+      <div><b>5s Jury Read:</b> A highly realistic, minimalist 3D render of a physical surf condition clock with dramatic lighting.</div>
+      <div><b>Largest Gap / Detail Note:</b> The typography weight on the beach labels (e.g., 'QUEENSIE' at 9 o'clock) is too heavy compared to the delicate tick marks.</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_V9_WORKING_VIBE_4K_STILLS/V8_013_CAUSTIC_BLUE_CreamBlack_M600_Edition_In_SlateBlue_Cyc_4K.jpg?v=1792103869" target="_blank" title="Open full 3840x2160 4:4:4 Smooth-Dial Still">
+        <img src="01_V9_WORKING_VIBE_4K_STILLS/V8_013_CAUSTIC_BLUE_CreamBlack_M600_Edition_In_SlateBlue_Cyc_4K.jpg?v=1792103869" loading="lazy" alt="V8_013_CAUSTIC_BLUE_CreamBlack_M600_Edition_In_SlateBlue_Cyc">
+      </a>
+      <div class="vid-placeholder">Rendering 4K60 Studio Motion...</div>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('V8_013', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('V8_013', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('V8_013', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-V8_013" placeholder="Feedback for V8_013..." oninput="saveNote('V8_013', this.value)">
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">Copied feedback to clipboard!</div>
+<script>
+const STORAGE_KEY = 'surf_clock_v9_jury_feedback';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+function applyState() {
+  document.querySelectorAll('.card').forEach(card => {
+    const id = card.dataset.id;
+    const item = state[id] || { status: 'unreviewed', note: '' };
+    card.dataset.status = item.status || 'unreviewed';
+    const inp = document.getElementById('note-' + id);
+    if (inp && inp.value !== (item.note || '')) inp.value = item.note || '';
+  });
+}
+function setVerdict(id, verdict) {
+  if (!state[id]) state[id] = { status: 'unreviewed', note: '' };
+  state[id].status = (state[id].status === verdict) ? 'unreviewed' : verdict;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  applyState();
+}
+function saveNote(id, val) {
+  if (!state[id]) state[id] = { status: 'unreviewed', note: '' };
+  state[id].note = val;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function copyFeedback() {
+  const out = [];
+  document.querySelectorAll('.card').forEach(c => {
+    const id = c.dataset.id;
+    const s = state[id] || { status: 'unreviewed', note: '' };
+    if (s.status !== 'unreviewed' || (s.note && s.note.trim())) {
+      out.push(id + ' [' + s.status.toUpperCase() + ']: ' + (s.note || ''));
+    }
+  });
+  navigator.clipboard.writeText(out.join('\n') || 'No feedback marked yet.');
+  const t = document.getElementById('toast');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2200);
+}
+applyState();
+</script>
+</body>
+</html>

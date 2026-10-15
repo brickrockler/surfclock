@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SURF CLOCK — BESPOKE GLOBAL STUDIO COLLECTION (4K STILLS + 4K60 CLIPS)</title>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #0d0e11; color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; margin: 0; padding: 0 28px 60px 28px; }
+  .console-header {
+    position: sticky; top: 0; z-index: 999; background: rgba(13, 14, 17, 0.96); backdrop-filter: blur(14px);
+    border-bottom: 1px solid #282c35; padding: 18px 28px; margin: 0 -28px 28px -28px;
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;
+  }
+  .header-left h1 { font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 4px 0; color: #fff; }
+  .header-left p { font-size: 12px; color: #9aa3b2; margin: 0; }
+  .btn-copy {
+    background: #ff5500; color: #fff; border: none; padding: 9px 16px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(600px, 1fr)); gap: 24px; }
+  .card { background: #14171d; border: 2px solid #242933; border-radius: 8px; overflow: hidden; }
+  .card[data-status="keep"] { border-color: #10b981; }
+  .card[data-status="fix"]  { border-color: #f59e0b; }
+  .card[data-status="kill"] { border-color: #ef4444; opacity: 0.45; }
+  .card-head { padding: 11px 14px; background: #181c24; border-bottom: 1px solid #252a34; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card-title-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .shot-id { font-family: monospace; font-size: 13px; font-weight: 700; color: #fff; }
+  .region-pill { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: #262c3a; color: #f0f3f8; letter-spacing: 0.04em; }
+  .badge-5k { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
+  .spec-label { font-size: 11px; color: #9aa3b2; }
+  .meta-strip { padding: 8px 14px; background: #12151b; border-bottom: 1px solid #20242d; font-size: 11px; color: #b5becc; display: flex; flex-direction: column; gap: 3px; }
+  .meta-strip b { color: #e2e6ee; }
+  .media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #000; }
+  .media-pair img, .media-pair video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .review-bar { padding: 10px 14px; background: #111318; border-top: 1px solid #20242c; display: flex; flex-direction: column; gap: 8px; }
+  .btn-group { display: flex; gap: 8px; }
+  .v-btn { flex: 1; padding: 7px 10px; border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #2a2f3a; background: #191c24; color: #a8b0be; }
+  .card[data-status="keep"] .btn-keep { background: #059669; border-color: #10b981; color: #fff; }
+  .card[data-status="fix"]  .btn-fix  { background: #d97706; border-color: #f59e0b; color: #fff; }
+  .card[data-status="kill"] .btn-kill { background: #dc2626; border-color: #ef4444; color: #fff; }
+  .note-input { width: 100%; background: #0d0f13; border: 1px solid #252932; color: #eef0f4; padding: 7px 10px; border-radius: 5px; font-size: 12px; }
+  .toast { position: fixed; bottom: 24px; right: 24px; z-index: 2000; background: #10b981; color: #06281e; font-weight: 700; font-size: 13px; padding: 12px 18px; border-radius: 8px; display: none; }
+</style>
+</head>
+<body>
+<div class="console-header">
+  <div class="header-left">
+    <h1>001 Surf Clock — Bespoke Global Studio Collection (12 Custom Coastlines & Colorways)</h1>
+    <p>Pure Studio & Tactile Material Photography (Sand Plaster, Travertine Stone, Belgian Linen, Gallery White, Dark Tonal) • Native 5.5K→4K Stills + SIFT Relit 4K60 Clips</p>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <a href="00_V8_FRONTIER_100_LOOKBOOK.html" style="color:#9aa3b2;font-size:12px;text-decoration:none;border:1px solid #2b303b;padding:8px 12px;border-radius:6px;">← Full 100-Shot Archive</a>
+    <button class="btn-copy" onclick="copyFeedback()">📋 Copy Feedback for Antigravity</button>
+  </div>
+</div>
+<div class="grid">
+  <div class="card" id="card-CS_01" data-id="CS_01" data-name="V8_050_ZERO_GRAVITY_Three_Colorways_Floating_ZeroG_Constellation" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_01</span>
+        <span class="region-pill">3-UP GLOBAL EDITION • SF / HAWAII / PORTUGAL</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Sea-Kelp Green / Slate-Blue / Warm Limestone Cream</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> SF (Ocean Beach) • Hawaii (Pipeline) • Portugal (Coxos)</div>
+      <div><b>STUDIO SET:</b> Warm Sand Plaster Cyclorama • Zero-Gravity Trio</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_050_ZERO_GRAVITY_Three_Colorways_Floating_ZeroG_Constellation_4K.jpg?v=1792098014" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_050_ZERO_GRAVITY_Three_Colorways_Floating_ZeroG_Constellation_4K.jpg?v=1792098014" loading="lazy" alt="V8_050_ZERO_GRAVITY_Three_Colorways_Floating_ZeroG_Constellation">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/V8_050_ZERO_GRAVITY_Three_Colorways_Floating_ZeroG_Constellation_4K60.mp4?v=1792099156" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_01', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_01', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_01', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_01" placeholder="Feedback for CS_01 (3-UP GLOBAL EDITION • SF / HAWAII / PORTUGAL)..." oninput="saveNote('CS_01', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_02" data-id="CS_02" data-name="CS_02_SAN_FRANCISCO_OCEAN_BEACH_SeaKelp_Dark_Tonal_Slate_Stone" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_02</span>
+        <span class="region-pill">SAN FRANCISCO • NORCAL</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Sea-Kelp Forest Green</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> BOLINAS • SLOAT • OCEAN BEACH • FORT POINT • PACIFICA</div>
+      <div><b>STUDIO SET:</b> Dark Tonal Forest-Charcoal Backdrop & Honed Slate Stone</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_02_SAN_FRANCISCO_OCEAN_BEACH_SeaKelp_Dark_Tonal_Slate_Stone_4K.jpg?v=1792097590" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_02_SAN_FRANCISCO_OCEAN_BEACH_SeaKelp_Dark_Tonal_Slate_Stone_4K.jpg?v=1792097590" loading="lazy" alt="CS_02_SAN_FRANCISCO_OCEAN_BEACH_SeaKelp_Dark_Tonal_Slate_Stone">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_02_SAN_FRANCISCO_OCEAN_BEACH_SeaKelp_Dark_Tonal_Slate_Stone_4K60.mp4?v=1792099110" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_02', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_02', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_02', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_02" placeholder="Feedback for CS_02 (SAN FRANCISCO • NORCAL)..." oninput="saveNote('CS_02', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_03" data-id="CS_03" data-name="CS_03_PORTUGAL_ERICEIRA_Warm_Sand_Travertine_and_Belgian_Linen" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_03</span>
+        <span class="region-pill">ERICEIRA & PENICHE • PORTUGAL</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Warm Sand Limestone Cream</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> BALEAL • RIBEIRA • GUINCHO • COXOS • SUPERTUBOS</div>
+      <div><b>STUDIO SET:</b> Porous Roman Travertine Stone & Raw Unbleached Belgian Linen</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_03_PORTUGAL_ERICEIRA_Warm_Sand_Travertine_and_Belgian_Linen_4K.jpg?v=1792100173" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_03_PORTUGAL_ERICEIRA_Warm_Sand_Travertine_and_Belgian_Linen_4K.jpg?v=1792100173" loading="lazy" alt="CS_03_PORTUGAL_ERICEIRA_Warm_Sand_Travertine_and_Belgian_Linen">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_03_PORTUGAL_ERICEIRA_Warm_Sand_Travertine_and_Belgian_Linen_4K60.mp4?v=1792100690" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_03', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_03', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_03', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_03" placeholder="Feedback for CS_03 (ERICEIRA & PENICHE • PORTUGAL)..." oninput="saveNote('CS_03', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_04" data-id="CS_04" data-name="CS_04_HAWAII_NORTH_SHORE_Pure_Gallery_White_and_Alabaster" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_04</span>
+        <span class="region-pill">NORTH SHORE OAHU • HAWAII</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Two-Tone Pure Chalk-White & Deep Pacific Navy</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> PIPELINE • LANIAKEA • HALEIWA • WAIMEA • SUNSET</div>
+      <div><b>STUDIO SET:</b> Pure Gallery White Cyclorama & Honed White Alabaster</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_04_HAWAII_NORTH_SHORE_Pure_Gallery_White_and_Alabaster_4K.jpg?v=1792098344" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_04_HAWAII_NORTH_SHORE_Pure_Gallery_White_and_Alabaster_4K.jpg?v=1792098344" loading="lazy" alt="CS_04_HAWAII_NORTH_SHORE_Pure_Gallery_White_and_Alabaster">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_04_HAWAII_NORTH_SHORE_Pure_Gallery_White_and_Alabaster_4K60.mp4?v=1792100686" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_04', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_04', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_04', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_04" placeholder="Feedback for CS_04 (NORTH SHORE OAHU • HAWAII)..." oninput="saveNote('CS_04', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_05" data-id="CS_05" data-name="CS_05_SOCAL_MALIBU_TRESTLES_Terracotta_Clay_on_Sand_Plaster" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_05</span>
+        <span class="region-pill">MALIBU & SAN CLEMENTE • SOCAL</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Two-Tone Matte Desert Terracotta & Bone Cream</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> RINCON • MALIBU • TRESTLES • LOWERS • BLACKS</div>
+      <div><b>STUDIO SET:</b> Warm Sand Venetian Plaster & Raw Unglazed Stoneware</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_05_SOCAL_MALIBU_TRESTLES_Terracotta_Clay_on_Sand_Plaster_4K.jpg?v=1792098344" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_05_SOCAL_MALIBU_TRESTLES_Terracotta_Clay_on_Sand_Plaster_4K.jpg?v=1792098344" loading="lazy" alt="CS_05_SOCAL_MALIBU_TRESTLES_Terracotta_Clay_on_Sand_Plaster">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_05_SOCAL_MALIBU_TRESTLES_Terracotta_Clay_on_Sand_Plaster_4K60.mp4?v=1792099163" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_05', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_05', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_05', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_05" placeholder="Feedback for CS_05 (MALIBU & SAN CLEMENTE • SOCAL)..." oninput="saveNote('CS_05', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_06" data-id="CS_06" data-name="CS_06_BYRON_GOLD_COAST_Pebble_Putty_on_Raw_Belgian_Linen" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_06</span>
+        <span class="region-pill">BYRON BAY & GOLD COAST • AUSTRALIA</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">1970s Braun Pebble-Putty & Deep Graphite Charcoal</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> LENNOX • WATEGOS • THE PASS • BURLEIGH • SNAPPER</div>
+      <div><b>STUDIO SET:</b> Natural Oat Belgian Linen & Honed Pale Limestone</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_06_BYRON_GOLD_COAST_Pebble_Putty_on_Raw_Belgian_Linen_4K.jpg?v=1792097628" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_06_BYRON_GOLD_COAST_Pebble_Putty_on_Raw_Belgian_Linen_4K.jpg?v=1792097628" loading="lazy" alt="CS_06_BYRON_GOLD_COAST_Pebble_Putty_on_Raw_Belgian_Linen">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_06_BYRON_GOLD_COAST_Pebble_Putty_on_Raw_Belgian_Linen_4K60.mp4?v=1792100551" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_06', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_06', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_06', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_06" placeholder="Feedback for CS_06 (BYRON BAY & GOLD COAST • AUSTRALIA)..." oninput="saveNote('CS_06', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_07" data-id="CS_07" data-name="CS_07_FRANCE_BIARRITZ_HOSSEGOR_Oxblood_on_Dark_Tonal_Basalt" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_07</span>
+        <span class="region-pill">HOSSEGOR & BIARRITZ • FRANCE</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Deep Bordeaux Oxblood</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> BIARRITZ • GUETHARY • HOSSEGOR • GRAVIERE • CAPBRETON</div>
+      <div><b>STUDIO SET:</b> Matching Dark Tonal Burgundy-Espresso Backdrop & Basalt Stone</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_07_FRANCE_BIARRITZ_HOSSEGOR_Oxblood_on_Dark_Tonal_Basalt_4K.jpg?v=1792097632" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_07_FRANCE_BIARRITZ_HOSSEGOR_Oxblood_on_Dark_Tonal_Basalt_4K.jpg?v=1792097632" loading="lazy" alt="CS_07_FRANCE_BIARRITZ_HOSSEGOR_Oxblood_on_Dark_Tonal_Basalt">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_07_FRANCE_BIARRITZ_HOSSEGOR_Oxblood_on_Dark_Tonal_Basalt_4K60.mp4?v=1792099560" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_07', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_07', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_07', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_07" placeholder="Feedback for CS_07 (HOSSEGOR & BIARRITZ • FRANCE)..." oninput="saveNote('CS_07', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_08" data-id="CS_08" data-name="CS_08_SANTA_CRUZ_Matte_Obsidian_Black_on_Honed_Limestone" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_08</span>
+        <span class="region-pill">SANTA CRUZ • CALIFORNIA</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Braun Obsidian Black</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> WADDELL • FOUR MILE • STEAMERS • PLEASURE • CAPITOLA</div>
+      <div><b>STUDIO SET:</b> Honed Sand-Beige Limestone Slab & Gallery Chalk-White Studio</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_08_SANTA_CRUZ_Matte_Obsidian_Black_on_Honed_Limestone_4K.jpg?v=1792097630" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_08_SANTA_CRUZ_Matte_Obsidian_Black_on_Honed_Limestone_4K.jpg?v=1792097630" loading="lazy" alt="CS_08_SANTA_CRUZ_Matte_Obsidian_Black_on_Honed_Limestone">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_08_SANTA_CRUZ_Matte_Obsidian_Black_on_Honed_Limestone_4K60.mp4?v=1792100534" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_08', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_08', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_08', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_08" placeholder="Feedback for CS_08 (SANTA CRUZ • CALIFORNIA)..." oninput="saveNote('CS_08', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_09" data-id="CS_09" data-name="CS_09_MONTAUK_EAST_END_Dune_Sand_on_Bleached_Linen_and_Stone" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_09</span>
+        <span class="region-pill">MONTAUK • NEW YORK</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Two-Tone Coastal Dune-Sand & Deep Atlantic Slate</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> TERRACE • DITCH • MONTAUK • TURTLE • CAMP HERO</div>
+      <div><b>STUDIO SET:</b> Bleached Belgian Linen & Unpolished Travertine Stone</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_09_MONTAUK_EAST_END_Dune_Sand_on_Bleached_Linen_and_Stone_4K.jpg?v=1792099849" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_09_MONTAUK_EAST_END_Dune_Sand_on_Bleached_Linen_and_Stone_4K.jpg?v=1792099849" loading="lazy" alt="CS_09_MONTAUK_EAST_END_Dune_Sand_on_Bleached_Linen_and_Stone">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_09_MONTAUK_EAST_END_Dune_Sand_on_Bleached_Linen_and_Stone_4K60.mp4?v=1792100699" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_09', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_09', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_09', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_09" placeholder="Feedback for CS_09 (MONTAUK • NEW YORK)..." oninput="saveNote('CS_09', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_10" data-id="CS_10" data-name="CS_10_SYDNEY_BONDI_EAST_Pure_White_Monochrome_on_Carrara_Marble" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_10</span>
+        <span class="region-pill">EASTERN SUBURBS • SYDNEY</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Pure Architectural White</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> COOGEE • MAROUBRA • BONDI • BRONTE • TAMARAMA</div>
+      <div><b>STUDIO SET:</b> Honed White Carrara Marble & White-on-White Gallery Shadow</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_10_SYDNEY_BONDI_EAST_Pure_White_Monochrome_on_Carrara_Marble_4K.jpg?v=1792099939" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/CS_10_SYDNEY_BONDI_EAST_Pure_White_Monochrome_on_Carrara_Marble_4K.jpg?v=1792099939" loading="lazy" alt="CS_10_SYDNEY_BONDI_EAST_Pure_White_Monochrome_on_Carrara_Marble">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/CS_10_SYDNEY_BONDI_EAST_Pure_White_Monochrome_on_Carrara_Marble_4K60.mp4?v=1792100671" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_10', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_10', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_10', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_10" placeholder="Feedback for CS_10 (EASTERN SUBURBS • SYDNEY)..." oninput="saveNote('CS_10', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_11" data-id="CS_11" data-name="V8_001_CAUSTIC_BLUE_Signature_Curved_Cyclorama_Prism_Sweep" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_11</span>
+        <span class="region-pill">NORTHERN BEACHES • SYDNEY</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Monochrome Matte Deep Ocean Navy-Slate</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> FRESHIE • QUEENSIE • LONG REEF • DEE WHY • CURL CURL</div>
+      <div><b>STUDIO SET:</b> Matching Deep Tonal Navy-Teal Curved Cyclorama & Prism Caustics</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_001_CAUSTIC_BLUE_Signature_Curved_Cyclorama_Prism_Sweep_4K.jpg?v=1792094893" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_001_CAUSTIC_BLUE_Signature_Curved_Cyclorama_Prism_Sweep_4K.jpg?v=1792094893" loading="lazy" alt="V8_001_CAUSTIC_BLUE_Signature_Curved_Cyclorama_Prism_Sweep">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/V8_001_CAUSTIC_BLUE_Signature_Curved_Cyclorama_Prism_Sweep_4K60.mp4?v=1792095741" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_11', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_11', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_11', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_11" placeholder="Feedback for CS_11 (NORTHERN BEACHES • SYDNEY)..." oninput="saveNote('CS_11', this.value)">
+    </div>
+  </div>
+  <div class="card" id="card-CS_12" data-id="CS_12" data-name="V8_071_MARBLE_ARCH_HighAngle_Interlocking_Clear_Statuario_Blocks" data-status="unreviewed">
+    <div class="card-head">
+      <div class="card-title-wrap">
+        <span class="shot-id">CS_12</span>
+        <span class="region-pill">NORTHERN BEACHES • SYDNEY</span>
+        <span class="badge-5k">★ NATIVE 5.5K + SIFT 4K60</span>
+      </div>
+      <span class="spec-label">Two-Tone Matte Chalk-White & Deep Ocean Navy</span>
+    </div>
+    <div class="meta-strip">
+      <div><b>CUSTOM DIAL:</b> FRESHIE • QUEENSIE • LONG REEF • DEE WHY • CURL CURL</div>
+      <div><b>STUDIO SET:</b> Interlocking Honed Statuario Marble Blocks & Warm Sand Plaster</div>
+    </div>
+    <div class="media-pair">
+      <a href="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_071_MARBLE_ARCH_HighAngle_Interlocking_Clear_Statuario_Blocks_4K.jpg?v=1792095155" target="_blank" title="Open full 3840x2160 4:4:4 Still">
+        <img src="01_4K_STUDIO_KEYFRAMES_AND_STILLS/V8_071_MARBLE_ARCH_HighAngle_Interlocking_Clear_Statuario_Blocks_4K.jpg?v=1792095155" loading="lazy" alt="V8_071_MARBLE_ARCH_HighAngle_Interlocking_Clear_Statuario_Blocks">
+      </a>
+      <video src="02_INDIVIDUAL_4K_CLIPS_16x9/V8_071_MARBLE_ARCH_HighAngle_Interlocking_Clear_Statuario_Blocks_4K60.mp4?v=1792096213" muted loop playsinline controls preload="metadata"></video>
+    </div>
+    <div class="review-bar">
+      <div class="btn-group">
+        <button class="v-btn btn-keep" onclick="setVerdict('CS_12', 'keep')">✓ KEEP</button>
+        <button class="v-btn btn-fix" onclick="setVerdict('CS_12', 'fix')">↻ REMAKE / FIX</button>
+        <button class="v-btn btn-kill" onclick="setVerdict('CS_12', 'kill')">✕ KILL</button>
+      </div>
+      <input type="text" class="note-input" id="note-CS_12" placeholder="Feedback for CS_12 (NORTHERN BEACHES • SYDNEY)..." oninput="saveNote('CS_12', this.value)">
+    </div>
+  </div></div>
+<div class="toast" id="toast">✓ Copied Bespoke Studio feedback to clipboard!</div>
+<script>
+const KEY = 'surf_clock_bespoke_studio_v1';
+let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+function applyUI() {
+  document.querySelectorAll('.card').forEach(c => {
+    const id = c.dataset.id;
+    const st = (state[id] && state[id].status) || 'unreviewed';
+    c.dataset.status = st;
+    const inp = document.getElementById('note-' + id);
+    if (inp && state[id] && state[id].note) inp.value = state[id].note;
+  });
+}
+function setVerdict(id, v) {
+  if (!state[id]) state[id] = { status: 'unreviewed', note: '' };
+  state[id].status = (state[id].status === v) ? 'unreviewed' : v;
+  localStorage.setItem(KEY, JSON.stringify(state));
+  applyUI();
+}
+function saveNote(id, val) {
+  if (!state[id]) state[id] = { status: 'fix', note: '' };
+  state[id].note = val;
+  if (val.trim() && state[id].status === 'unreviewed') state[id].status = 'fix';
+  localStorage.setItem(KEY, JSON.stringify(state));
+  applyUI();
+}
+function copyFeedback() {
+  let lines = ['### Bespoke Global Studio Collection Feedback'];
+  document.querySelectorAll('.card').forEach(c => {
+    const id = c.dataset.id;
+    const item = state[id];
+    if (item && item.status !== 'unreviewed') {
+      lines.push(`- **${id}** (${item.status.toUpperCase()}): ${item.note || ''}`);
+    }
+  });
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const t = document.getElementById('toast');
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 3000);
+  });
+}
+applyUI();
+</script>
+</body>
+</html>

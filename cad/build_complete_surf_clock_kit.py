@@ -4,7 +4,7 @@
 Includes:
 - Exact 28BYJ-48 stepper motor dimensions (Ø28mm can, 35.0mm M3 hole pitch, 8.0mm shaft offset,
   Ø5.0x3.0mm double-flat keyed shaft with 5.18x3.12mm FDM bore and 0.4mm lead-in chamfer).
-- 3D triangulated Braun/DIN geometric vector typography ("LONG REEF", "QUEENSCLIFF",
+- 3D triangulated Braun/DIN geometric vector typography ("LONG REEF", "QUEENSIE",
   "DEE WHY", "FRESHIE", "CURL CURL", "1", "10", "CONDITIONS") + 180-deg semi-circular arc.
 - 6 ready-to-slice binary STL files + a single .zip archive + an inline HTML 1-click downloader.
 """
@@ -152,7 +152,7 @@ def make_dial_graphics_tris(z0, z1):
     # Upper shaft center at (0, +22.0)
     # 1. Beach Names in bold 1.04mm stroke (~2.5x 0.4mm nozzle width) with clean horological margins:
     tris.extend(render_text_3d("LONG REEF",    0.0,  22.0 + 58.0, char_h=5.5, z0=z0, z1=z1, stroke_w=1.05, tracking=0.36, aspect=0.64))
-    tris.extend(render_text_3d("QUEENSCLIFF", -45.5, 22.0 + 33.5, char_h=4.9, z0=z0, z1=z1, stroke_w=1.00, tracking=0.31, aspect=0.60))
+    tris.extend(render_text_3d("QUEENSIE", -45.5, 22.0 + 33.5, char_h=4.9, z0=z0, z1=z1, stroke_w=1.00, tracking=0.31, aspect=0.60))
     tris.extend(render_text_3d("DEE WHY",      46.5, 22.0 + 33.5, char_h=5.4, z0=z0, z1=z1, stroke_w=1.05, tracking=0.36, aspect=0.64))
     tris.extend(render_text_3d("FRESHIE",     -46.5, 22.0 - 27.5, char_h=5.4, z0=z0, z1=z1, stroke_w=1.05, tracking=0.36, aspect=0.64))
     tris.extend(render_text_3d("CURL CURL",    45.5, 22.0 - 27.5, char_h=5.2, z0=z0, z1=z1, stroke_w=1.02, tracking=0.34, aspect=0.62))

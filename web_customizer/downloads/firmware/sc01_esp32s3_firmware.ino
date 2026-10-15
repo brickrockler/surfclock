@@ -8,7 +8,7 @@
  *     +60°            = DEE WHY
  *     +120°           = CURL CURL
  *     -120° (240°)    = FRESHIE
- *     -60°  (300°)    = QUEENSCLIFF
+ *     -60°  (300°)    = QUEENSIE
  *   - Lower Stepper (28BYJ-48 + ULN2003): Conditions Sub-Dial (180° arc)
  *     -90° (9 o'clock) = Rating 1
  *     +90° (3 o'clock) = Rating 10
@@ -18,11 +18,11 @@
 #include <Preferences.h>
 #include <esp_sleep.h>
 
-static constexpr int32_t STEPS_PER_REV = 4096; // 28BYJ-48 half-step mode
+static constexpr int32_t STEPS_PER_REV = 2048; // 28BYJ-48 full-step mode (matches config.h)
 
 // ULN2003 Driver Pins on ESP32-S3 (IN1, IN2, IN3, IN4)
 static constexpr uint8_t BEACH_PINS[4] = {4, 5, 6, 7};
-static constexpr uint8_t COND_PINS[4]  = {15, 16, 17, 18};
+static constexpr uint8_t COND_PINS[4]  = {11, 12, 13, 14};
 static constexpr uint8_t ZERO_BUTTON_PIN = 0; // Built-in BOOT button for manual 12-o'clock trim
 
 // Persists in 8 KB RTC SRAM across esp_deep_sleep_start() with zero flash wear

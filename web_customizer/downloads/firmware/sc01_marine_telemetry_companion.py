@@ -14,7 +14,7 @@ BEACHES = [
     {"index": 1, "name": "DEE WHY",     "angle_deg": 60,   "lat": -33.754, "lon": 151.296, "ideal_wind_deg": 285},
     {"index": 2, "name": "CURL CURL",   "angle_deg": 120,  "lat": -33.769, "lon": 151.296, "ideal_wind_deg": 265},
     {"index": 3, "name": "FRESHIE",     "angle_deg": -120, "lat": -33.780, "lon": 151.290, "ideal_wind_deg": 310},
-    {"index": 4, "name": "QUEENSCLIFF", "angle_deg": -60,  "lat": -33.786, "lon": 151.288, "ideal_wind_deg": 275},
+    {"index": 4, "name": "QUEENSIE", "angle_deg": -60,  "lat": -33.786, "lon": 151.288, "ideal_wind_deg": 275},
 ]
 
 def fetch_spot_score(spot):

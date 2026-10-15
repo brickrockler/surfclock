@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 94,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "The candidate image nails the industrial design specifications: vertical rectangular monolith housing with recessed face and chamfered bezel, matte molded finish, exact 9 upper radial tick marks with a completely blank lower arc, accurate typography on all 5 beach labels and lower sub-dial, and single burnt-orange hands per dial. The Calacatta Viola marble cantilevered over dark water with caustic reflections and an architectural arch creates a strong, gallery-grade editorial aesthetic.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

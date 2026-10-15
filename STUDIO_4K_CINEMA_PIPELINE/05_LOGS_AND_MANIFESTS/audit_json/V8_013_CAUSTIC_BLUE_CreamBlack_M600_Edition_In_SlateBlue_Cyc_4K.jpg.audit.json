@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional industrial design fidelity and cinema-grade lighting. The vertical rectangular monolith housing, recessed dial face, 9 upper tick marks with a completely clean bottom arc, crisp 3D-embossed typography, and burnt-orange hands are all 100% accurate to the reference. The sweeping warm golden-hour light across the deep slate-blue studio backdrop creates a striking, editorial composition.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

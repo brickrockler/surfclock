@@ -10,10 +10,11 @@
   --bg-hover: #ECEAE4;
   --ink-primary: #111111;
   --ink-secondary: #555450;
-  --ink-muted: #8E8C85;
+  --ink-muted: #5C5952;
   --border-light: #E6E4DD;
   --border-strong: #111111;
   --accent: #FF4F00;
+  --accent-ink: #B53000;
   --font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -2121,12 +2122,22 @@ body.mobile-390-preview {
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
-.hud-swell-summary,
-.hud-swell-size,
-.hud-swell-feet,
-.hud-swell-period,
-.datum-swell-val,
-.datum-swell-sub {
+#hud-swell-summary,
+#hud-swell-size,
+#hud-swell-feet,
+#hud-swell-period,
+#datum-swell-val,
+#datum-swell-sub,
+.status-swell,
+.swell-hero-m,
+.swell-hero-ft,
+.swell-hero-sub,
+.datum-val,
+.datum-label,
+.lt-val,
+.beach-num,
+.sec-idx,
+.live-badge-pill {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
@@ -2414,3 +2425,611 @@ html.mobile-390-preview .customizer-panel {
     gap: 5px !important;
   }
 }
+
+
+/* ============================================================================
+   v43 WCAG AA CONTRAST, ZERO-SCROLL DESKTOP, TABLET LANDSCAPE, MOBILE UX & NIGHT MODE
+   ============================================================================ */
+
+/* WCAG AA Accent Ink & Active Beach Number Contrast (>= 4.5:1) */
+.sec-idx,
+.swell-hero-kicker,
+.live-badge-pill,
+.lt-val.lt-accent,
+.modal-kicker,
+.beach-row.active-beach .beach-point-tag,
+.beach-row:hover .beach-point-tag {
+  color: var(--accent-ink) !important;
+}
+
+.beach-row.active-beach .beach-num {
+  background: #C43600 !important;
+  color: #FFFFFF !important;
+}
+
+.beach-point-tag {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  color: var(--ink-muted);
+}
+
+/* Modal File Link & Tag Non-Collision */
+.file-link,
+.file-link-btn {
+  gap: 10px;
+}
+
+.file-link > span:first-child,
+.file-link-btn > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dl-tag {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Remove 158px truncation cap on .sec-subtitle across all viewports */
+.sec-header {
+  gap: 6px !important;
+}
+
+.sec-subtitle {
+  max-width: none !important;
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.sec-subtitle.live-badge-pill {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.sec-header-right {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+  gap: 6px !important;
+}
+
+/* Desktop & Tablet Landscape Stage Status Pill Safe Bounds */
+@media (min-width: 961px) {
+  .stage-status-pill {
+    max-width: calc(100% - 44px);
+  }
+  .status-text-block {
+    min-width: 0;
+    flex: 1;
+  }
+  .status-location,
+  .status-swell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .status-play-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* 961px - 1200px (1024x768 iPad Landscape) Zero-Collision Stage Status Pill */
+@media (min-width: 961px) and (max-width: 1200px) {
+  .workspace,
+  .studio-main {
+    grid-template-columns: minmax(0, 1fr) 400px;
+  }
+  .stage-status-pill {
+    left: 16px;
+    max-width: calc(100% - 32px);
+    padding: 7px 11px;
+    gap: 8px;
+  }
+  .hud-wave-wrap,
+  .hud-wave-canvas {
+    width: 58px;
+  }
+  .status-location {
+    font-size: 11px;
+  }
+}
+
+/* True Zero-Scroll Desktop/Laptop Fit (1440x900, 1280x800, 1366x768) */
+@media (min-width: 961px) {
+  .cust-section {
+    padding: 8px 16px 9px !important;
+    gap: 6px !important;
+  }
+  .beach-slots-list,
+  .beaches-list {
+    gap: 3px !important;
+  }
+  .beach-row {
+    padding: 3px 8px !important;
+    min-height: 28px !important;
+  }
+  .swatch-grid {
+    gap: 5px !important;
+    padding: 2px !important;
+  }
+  .swatch-btn {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .customizer-footer {
+    padding: 9px 16px 11px !important;
+    gap: 6px !important;
+  }
+  .primary-download-btn {
+    padding: 10px 14px !important;
+  }
+}
+
+@media (min-width: 961px) and (max-height: 820px) {
+  .topbar {
+    height: 50px;
+  }
+  .workspace {
+    height: calc(100vh - 50px);
+  }
+  .cust-section {
+    padding: 6px 15px 7px !important;
+    gap: 5px !important;
+  }
+  .search-wrap {
+    padding: 3px 10px;
+  }
+  .search-input {
+    padding: 5px 8px;
+  }
+  .region-pill,
+  .preset-chip {
+    padding: 3.5px 9px;
+    font-size: 11px;
+  }
+  .beach-row {
+    padding: 2px 8px !important;
+    min-height: 25px !important;
+  }
+  .beach-num {
+    width: 20px;
+    height: 20px;
+  }
+  .swatch-btn {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .part-tab,
+  .seg-btn {
+    padding: 4.5px 4px;
+  }
+  .live-telemetry-card .lt-col {
+    padding: 5px 7px;
+  }
+  .customizer-footer {
+    padding: 7px 15px 9px !important;
+    gap: 5px !important;
+  }
+  .primary-download-btn {
+    padding: 8px 12px !important;
+    font-size: 13.5px;
+  }
+  .sec-action-btn {
+    padding: 6px 10px;
+  }
+}
+
+/* Mobile (<= 960px), iOS Auto-Zoom Prevention, Ergonomic Drawer Height & Explode Slider Parity */
+@media (max-width: 960px) {
+  .search-input,
+  .beach-name-input {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+  }
+  .search-input {
+    padding: 7px 8px !important;
+  }
+  .beach-name-input {
+    padding: 2px 4px !important;
+  }
+  body.mobile-drawer-open .customizer-panel {
+    height: auto !important;
+    max-height: min(58dvh, 480px) !important;
+  }
+  body[data-cam="exploded"] .camera-dock .explode-slider-wrap,
+  .camera-dock:has(.cam-btn[data-cam="exploded"].active) .explode-slider-wrap {
+    display: flex !important;
+    padding-left: 2px;
+    padding-right: 4px;
+  }
+  .explode-slider {
+    width: 56px;
+  }
+}
+
+/* Tablet Portrait (540px - 960px): Test Sweep Parity & 9-Column Swatch Grid */
+@media (min-width: 540px) and (max-width: 960px) {
+  .status-play-btn {
+    display: inline-flex !important;
+    padding: 6px 10px;
+    font-size: 10.5px;
+  }
+  .swatch-grid {
+    grid-template-columns: repeat(9, 1fr) !important;
+    max-width: 460px;
+  }
+}
+
+/* Phones (<= 539px): 6-Column Swatch Grid */
+@media (max-width: 539px) {
+  .swatch-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+}
+
+/* Narrow Mobile (<= 480px): 2x2 Telemetry Matrix */
+@media (max-width: 480px) {
+  .live-telemetry-card {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    padding: 6px !important;
+  }
+  .lt-col {
+    border-right: none !important;
+    padding: 4px 6px !important;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 6px;
+  }
+}
+
+/* Unified Nightlight Theme Across Desktop & Mobile (body.night-mode & .viewport-stage.night-stage) */
+.viewport-stage.night-stage .camera-dock {
+  background: rgba(12, 18, 30, 0.88);
+  border-color: rgba(56, 189, 248, 0.22);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.45);
+}
+
+.viewport-stage.night-stage .cam-btn {
+  color: #94A3B8;
+}
+
+.viewport-stage.night-stage .cam-btn:hover {
+  color: #F8FAFC;
+}
+
+.viewport-stage.night-stage .cam-btn.active {
+  background: #38BDF8;
+  color: #090D16;
+}
+
+.viewport-stage.night-stage .cam-divider {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.viewport-stage.night-stage .swell-hero-kicker {
+  color: #38BDF8 !important;
+}
+
+body.night-mode {
+  background: #0B0F17;
+  color: #F1F5F9;
+}
+
+body.night-mode .topbar {
+  background: rgba(15, 20, 30, 0.94);
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+body.night-mode .brand-title,
+body.night-mode .sec-title,
+body.night-mode .beach-name-input,
+body.night-mode .search-input,
+body.night-mode .lt-val,
+body.night-mode .drawer-cta-title,
+body.night-mode .modal-heading,
+body.night-mode .col-title,
+body.night-mode .sum-val,
+body.night-mode .clean-bom-list strong,
+body.night-mode .custom-gen-btn span,
+body.night-mode .ac-main {
+  color: #F1F5F9;
+}
+
+body.night-mode .brand-tag {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #94A3B8;
+}
+
+body.night-mode .lighting-bar,
+body.night-mode .part-tabs,
+body.night-mode .subdial-segmented {
+  background: #0F141E;
+  border-color: rgba(148, 163, 184, 0.16);
+}
+
+body.night-mode .light-pill,
+body.night-mode .part-tab,
+body.night-mode .seg-btn,
+body.night-mode .ghost-link,
+body.night-mode .sec-subtitle,
+body.night-mode .lt-label,
+body.night-mode .drawer-cta-summary,
+body.night-mode .sum-label,
+body.night-mode .clean-bom-list span,
+body.night-mode .custom-gen-btn small,
+body.night-mode .ac-sub,
+body.night-mode .dl-tag {
+  color: #94A3B8;
+}
+
+body.night-mode .light-pill.active,
+body.night-mode .part-tab.active,
+body.night-mode .seg-btn.active {
+  background: #1E293B;
+  color: #F8FAFC;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+body.night-mode .top-cta-btn {
+  background: #38BDF8;
+  color: #090D16;
+}
+
+body.night-mode .customizer-panel,
+body.night-mode .mobile-drawer-bar,
+body.night-mode .customizer-footer {
+  background: #0F141E;
+  border-color: rgba(148, 163, 184, 0.16);
+}
+
+body.night-mode .cust-section {
+  background: #0F141E;
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+body.night-mode .cust-section:nth-child(even) {
+  background: #131A27;
+}
+
+body.night-mode .search-wrap,
+body.night-mode .search-box-wrap {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+body.night-mode .search-wrap:focus-within {
+  background: #1E293B;
+  border-color: #38BDF8;
+}
+
+body.night-mode .search-input::placeholder {
+  color: #94A3B8;
+}
+
+body.night-mode .autocomplete-dropdown {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
+body.night-mode .ac-item {
+  border-bottom-color: rgba(148, 163, 184, 0.12);
+}
+
+body.night-mode .ac-item:hover,
+body.night-mode .ac-item.ac-active {
+  background: #1E293B;
+}
+
+body.night-mode .region-pill,
+body.night-mode .preset-chip,
+body.night-mode .surprise-btn,
+body.night-mode .sec-action-btn,
+body.night-mode .md-tab {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #CBD5E1;
+}
+
+body.night-mode .region-pill.active,
+body.night-mode .preset-chip.active,
+body.night-mode .md-tab.active {
+  background: #38BDF8;
+  border-color: #38BDF8;
+  color: #090D16;
+}
+
+body.night-mode .beach-row {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: none;
+}
+
+body.night-mode .beach-row:hover {
+  background: #1E293B;
+}
+
+body.night-mode .beach-row.active-beach {
+  background: #1E293B;
+  border-color: #38BDF8;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.night-mode .beach-num {
+  background: #0F141E;
+  color: #94A3B8;
+}
+
+body.night-mode .beach-point-tag {
+  color: #94A3B8;
+}
+
+body.night-mode .sec-idx,
+body.night-mode .live-badge-pill,
+body.night-mode .lt-val.lt-accent,
+body.night-mode .modal-kicker,
+body.night-mode .beach-row.active-beach .beach-point-tag,
+body.night-mode .beach-row:hover .beach-point-tag {
+  color: #FF854D !important;
+}
+
+body.night-mode .lt-val.lt-verdict {
+  color: #4ADE80;
+}
+
+body.night-mode .live-telemetry-card {
+  background: #161D2B;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: none;
+}
+
+body.night-mode .lt-col {
+  border-right-color: rgba(148, 163, 184, 0.16);
+}
+
+@media (max-width: 480px) {
+  body.night-mode .lt-col {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+body.night-mode .swatch-btn.active {
+  box-shadow:
+    0 0 0 2px #0F141E,
+    0 0 0 3.5px #38BDF8,
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+body.night-mode .primary-download-btn {
+  background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+  border-color: #38BDF8;
+  color: #090D16;
+}
+
+body.night-mode .modal-sheet {
+  background: #0F141E;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+body.night-mode .modal-top {
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+body.night-mode .modal-close,
+body.night-mode .modal-summary-box,
+body.night-mode .modal-col {
+  background: #161D2B;
+  color: #F1F5F9;
+}
+
+body.night-mode .custom-gen-btn,
+body.night-mode .file-link,
+body.night-mode .file-link-btn,
+body.night-mode .clean-bom-list li,
+body.night-mode .guide-dl-btn {
+  background: #0F141E;
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #F1F5F9;
+}
+
+/* Keyboard Focus Ring (:focus-visible) & Reduced Motion */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.search-input:focus-visible,
+.beach-name-input:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sonar-ring {
+    animation: none !important;
+    opacity: 0.5 !important;
+    transform: scale(1) !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === v44 Final Supervisor 100% Pass-Condition Polish === */
+.search-clear-btn {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+}
+.lt-label {
+  white-space: nowrap !important;
+}
+@media (min-width: 961px) and (max-width: 1180px) {
+  .live-telemetry-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    padding: 6px !important;
+  }
+  .lt-col {
+    border-right: none !important;
+    padding: 4px 8px !important;
+    background: rgba(0, 0, 0, 0.025);
+    border-radius: 6px;
+  }
+  body.night-mode .lt-col {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+@media (max-width: 960px) {
+  body.mobile-drawer-open .customizer-panel {
+    max-height: min(64dvh, 524px) !important;
+  }
+  .cust-section[data-drawer-section="beaches"] {
+    padding: 8px 14px 10px !important;
+    gap: 6px !important;
+  }
+  .cust-section[data-drawer-section="beaches"] .beach-slots-list {
+    gap: 4px !important;
+  }
+  .cust-section[data-drawer-section="beaches"] .beach-row {
+    padding: 4px 10px !important;
+    min-height: 32px !important;
+  }
+}
+
+/* v59 Global 8-Spot Iconic Surf Pill Grid (4x2 Compact Layout) */
+#region-pills-container.coast-pills {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+}
+#region-pills-container .region-pill {
+  padding: 5px 4px !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "score": 90,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "The candidate image accurately combines the translucent fluted rear cover design from Reference 1 with the warm architectural setting of Reference 2. The internal motor silhouettes, cyan/amber glow, and matte polymer frame are well-rendered.",
+  "prompt_fix": "None required.",
+  "critic_model": "gemini-4-argon",
+  "one_hand_per_dial": true,
+  "rectangular_monolith_housing": true
+}

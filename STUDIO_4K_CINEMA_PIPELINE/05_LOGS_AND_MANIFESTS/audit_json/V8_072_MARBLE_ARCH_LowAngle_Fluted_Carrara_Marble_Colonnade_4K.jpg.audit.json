@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless execution of the industrial design specifications: vertical rectangular monolith housing with recessed dial face, exact 9 upper radial ticks with a completely blank bottom arc, crisp and accurate typography across both dials, single burnt-orange hands casting realistic physical shadows, and a fine matte molded finish without glass or metallic clich\u00e9s. The sunlit neoclassical marble colonnade overlooking the ocean gives it a striking, high-fashion Mediterranean editorial aesthetic.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

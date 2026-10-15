@@ -6,7 +6,7 @@
  * ============================================================================
  */
 
-import { COMPONENT_SWATCHES, CURATED_EDITIONS } from "./materials_and_presets.js?v=42";
+import { COMPONENT_SWATCHES, CURATED_EDITIONS } from "./materials_and_presets.js?v=66";
 import {
   DIAL_SLOTS,
   CURATED_REGIONS,
@@ -15,15 +15,21 @@ import {
   resolve5BestLocalBeaches,
   fetchLiveMarineTelemetry,
   searchLocationsAutocomplete,
-} from "./surf_data.js?v=42";
-import { SurfClockStudio3D } from './studio_3d.js?v=42';
-import { downloadFullStackCustomKit } from "./package_generator.js?v=42";
+} from "./surf_data.js?v=66";
+import { SurfClockStudio3D } from "./studio_3d.js?v=66";
+import {
+  downloadFullStackCustomKit,
+  buildClockwiseSpots,
+  customizeWorkerJs,
+  generateBuildGuideMarkdown,
+} from "./package_generator.js?v=66";
+
 const PART_LABELS = {
-  bezel: "Outer Frame",
-  dial: "Dial Face",
-  inlay: "Typography",
-  hands: "Clock Hands",
-  deck: "Internal Core",
+  bezel: "Frame",
+  dial: "Dial",
+  inlay: "Text",
+  hands: "Hands",
+  deck: "Core",
 };
 
 const EDITION_ACCENT_HEX = {
@@ -52,6 +58,7 @@ class SurfClockConfiguratorApp {
       activeSwellPeriodS: defaultRegion.swellPeriodS ?? 13,
       activeSwellDir: defaultRegion.swellDir || "SSE",
       subdialMode: defaultEdition.subdialMode || "worth_it",
+      liveMarineData: null,
 
       activePart: "bezel",
       activeEditionId: defaultEdition.id,
@@ -67,6 +74,8 @@ class SurfClockConfiguratorApp {
       cameraView: "front",
       explodeFactor: 0,
       liveDemoRunning: false,
+      mobileDrawerOpen: false,
+      mobileDrawerTab: "beaches",
 
       autocompleteItems: [],
       autocompleteIndex: -1,
@@ -78,11 +87,16 @@ class SurfClockConfiguratorApp {
     this.loadingTimeout = null;
     this._acSeq = 0;
     this._regionSeq = 0;
+    this._lastFocusedBeforeModal = null;
 
     if (window.innerWidth === 500 && window.innerHeight === 844) {
       document.documentElement.classList.add("mobile-390-preview");
       document.body.classList.add("mobile-390-preview");
     }
+    this._init();
+  }
+
+  _init() {
     this._initDOMRefs();
     this._recomputeActiveBeachConditions();
     this._init3DEngine();
@@ -94,28 +108,115 @@ class SurfClockConfiguratorApp {
     this._bindEvents();
     this._startHudWaveLoop();
     this._applyDemoQueryHooks();
+    this._fetchLiveWaveTelemetry(
+      this.state.activeRegion.lat,
+      this.state.activeRegion.lng ?? this.state.activeRegion.lon
+    );
+  }
+
+  getActiveSwellMetrics() {
+    const reg = this.state.activeRegion || {};
+    const beaches = this.state.beaches || [];
+    const idx = this.state.selectedBeachIndex ?? 0;
+    const beach = beaches[idx] || {};
+
+    let bestBeach = beaches[0] || {};
+    let maxQ = -1;
+    beaches.forEach((b) => {
+      const q = typeof b.quality === "number" ? b.quality : 7.5;
+      if (q > maxQ) {
+        maxQ = q;
+        bestBeach = b;
+      }
+    });
+
+    const beachQ = typeof beach.quality === "number" ? beach.quality : 7.5;
+    const bestQ = typeof bestBeach.quality === "number" ? bestBeach.quality : 7.5;
+    const qDelta = beachQ - bestQ;
+
+    const exposureFactors = [1.0, 0.90, 0.96, 0.84, 0.92];
+    const exp = exposureFactors[idx % 5] || 1.0;
+
+    // Resolve per-beach directional swell so every beach & region drives true 3D wave direction
+    const COMPASS_16 = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+    const slotDirShift = [0, 3, -3, 5, -5];
+    const resolveBeachDir = (fallbackDir) => {
+      if (beach.swellDir) return beach.swellDir;
+      const cleanBase = String(fallbackDir || reg.swellDir || "WNW").trim().toUpperCase();
+      const bIdx = COMPASS_16.indexOf(cleanBase);
+      if (bIdx >= 0) {
+        return COMPASS_16[(bIdx + (slotDirShift[idx % 5] || 0) + 16) % 16];
+      }
+      return cleanBase;
+    };
+
+    if (this.state.liveMarineData) {
+      const live = this.state.liveMarineData;
+      const baseScore = typeof live.worthItScore === "number" ? live.worthItScore : (reg.worthItScore ?? bestQ);
+      const modulatedScore = Math.max(1.0, Math.min(10.0, Number((baseScore + qDelta * 0.85).toFixed(1))));
+      const baseHeight = live.swellHeightM ?? reg.swellHeightM ?? 1.9;
+      const heightMod = Math.max(0.72, Math.min(1.15, exp * (1.0 + qDelta * 0.045)));
+      const heightM = Number(Math.max(0.4, baseHeight * heightMod).toFixed(1));
+      const periodS = Math.round(live.swellPeriodS ?? reg.swellPeriodS ?? 13);
+      const dir = resolveBeachDir(live.swellDir || reg.swellDir || "WNW");
+      return {
+        worthItScore: modulatedScore,
+        heightM,
+        periodS,
+        dir,
+      };
+    }
+
+    const rating = typeof beach.quality === "number" ? beach.quality : (reg.worthItScore ?? 8.2);
+    const baseHeight = reg.swellHeightM ?? 1.9;
+    const qualityMod = 0.85 + (rating / 10) * 0.22;
+    const heightM = Number(Math.max(0.4, baseHeight * exp * qualityMod).toFixed(1));
+    const periodS = Math.round(reg.swellPeriodS ?? 13);
+    const dir = resolveBeachDir(reg.swellDir || "WNW");
+
+    return {
+      worthItScore: rating,
+      heightM,
+      periodS,
+      dir,
+    };
   }
 
   _recomputeActiveBeachConditions() {
-    const reg = this.state.activeRegion;
-    const beach = this.state.beaches[this.state.selectedBeachIndex];
-    const baseHeight = reg.swellHeightM ?? 1.9;
-    const basePeriod = reg.swellPeriodS ?? 13;
-    const baseDir = reg.swellDir || "SSE";
+    const metrics = this.getActiveSwellMetrics();
+    this.state.conditionsRating = metrics.worthItScore;
+    this.state.activeSwellHeightM = metrics.heightM;
+    this.state.activeSwellPeriodS = metrics.periodS;
+    this.state.activeSwellDir = metrics.dir;
+  }
 
-    let rating = reg.worthItScore ?? 8.2;
-    if (beach && typeof beach.quality === "number") {
-      rating = beach.quality;
-    }
-    this.state.conditionsRating = rating;
-
-    // Subtle exposure factor per beach slot so selecting different beaches reflects break exposure
-    const exposureFactors = [0.95, 0.88, 1.0, 0.82, 0.91];
-    const exp = exposureFactors[this.state.selectedBeachIndex % 5] || 1.0;
-    const qualityMod = 0.85 + (rating / 10) * 0.22;
-    this.state.activeSwellHeightM = Number(Math.max(0.4, baseHeight * exp * qualityMod).toFixed(1));
-    this.state.activeSwellPeriodS = Math.round(basePeriod);
-    this.state.activeSwellDir = baseDir;
+  _fetchLiveWaveTelemetry(lat, lon) {
+    if (lat == null || lon == null) return;
+    const seq = this._regionSeq;
+    fetchLiveMarineTelemetry(lat, lon).then((live) => {
+      if (live && seq === this._regionSeq) {
+        const reg = this.state.activeRegion || {};
+        if (reg.isIconicGlobal) {
+          // Preserve big-wave drama & curated directional variety on the 8 iconic global surf spots
+          live.swellHeightM = Number(Math.max((reg.swellHeightM || 2.8) * 0.88, live.swellHeightM || 0).toFixed(1));
+          live.swellPeriodS = Math.max((reg.swellPeriodS || 15) - 2, live.swellPeriodS || 12);
+          live.swellDir = reg.swellDir || live.swellDir;
+          live.worthItScore = Number(Math.max((reg.worthItScore || 9.5) * 0.94, live.worthItScore || 8.5).toFixed(1));
+        }
+        this.state.liveMarineData = live;
+        this.state.activeRegion.swellHeightM = live.swellHeightM;
+        this.state.activeRegion.swellPeriodS = live.swellPeriodS;
+        this.state.activeRegion.swellDir = live.swellDir;
+        if (typeof live.worthItScore === "number") {
+          this.state.activeRegion.worthItScore = live.worthItScore;
+        }
+        this._recomputeActiveBeachConditions();
+        this._syncSubdialNeedle();
+        this._syncTelemetryToStudio();
+        this._updateAllLabels();
+        if (this._drawStaticHudWave) this._drawStaticHudWave();
+      }
+    });
   }
 
   _applyDemoQueryHooks() {
@@ -126,9 +227,15 @@ class SurfClockConfiguratorApp {
       document.documentElement.classList.add("mobile-390-preview");
       document.body.classList.add("mobile-390-preview");
       if (demo === "mobile_drawer") {
-        this.openMobileDrawer("colors");
+        this.setMobileDrawerOpen(true, "colors");
       }
-      setTimeout(() => { if (this.studio) { this.studio.resize(); this.studio.setCameraPreset("front", true); } }, 50);
+      setTimeout(() => {
+        if (this.studio) {
+          this.studio.resize();
+          this.studio.setCameraPreset("front", true);
+          this.studio?.setMobileDrawerOffset?.(this.state.mobileDrawerOpen, 0.52);
+        }
+      }, 50);
     } else if (demo === "kiama") {
       const kiamaReg = ALL_KNOWN_REGIONS.find((r) => r.id === "kiama-south-coast");
       if (kiamaReg) {
@@ -145,8 +252,7 @@ class SurfClockConfiguratorApp {
         this.dom.sliderExplode.value = "0.95";
       }
       this.state.explodeFactor = 0.95;
-      this.state.cameraView = "exploded";
-      this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === "exploded"));
+      this._setCameraViewState("exploded");
       this.studio.setCameraPreset("exploded", true);
       this.studio.setExplodeFactor(0.95, true);
     } else if (demo === "night" || demo === "slate") {
@@ -159,19 +265,28 @@ class SurfClockConfiguratorApp {
       const ed = CURATED_EDITIONS.find((e) => e.id === "klein-cobalt") || CURATED_EDITIONS[3];
       if (ed) this.applyEdition(ed);
     } else if (demo === "subdial") {
-      this.state.cameraView = "subdial";
-      this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === "subdial"));
+      this._setCameraViewState("subdial");
       if (this.dom.swellScaleDatum) this.dom.swellScaleDatum.classList.add("macro-hidden");
       this.studio.setCameraPreset("subdial", true);
     } else if (demo === "macro") {
-      this.state.cameraView = "macro";
-      this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === "macro"));
+      this._setCameraViewState("macro");
       if (this.dom.swellScaleDatum) this.dom.swellScaleDatum.classList.add("macro-hidden");
       this.studio.setCameraPreset("macro", true);
     }
   }
 
+  _setCameraViewState(view) {
+    this.state.cameraView = view;
+    document.body.dataset.cam = view;
+    this.dom.camBtns.forEach((b) => {
+      const isActive = b.dataset.cam === view;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+
   _initDOMRefs() {
+    const autocompleteEl = document.getElementById("search-autocomplete-dropdown");
     this.dom = {
       viewportStage: document.getElementById("viewport-stage"),
       studioCanvas: document.getElementById("studio-canvas"),
@@ -192,6 +307,7 @@ class SurfClockConfiguratorApp {
       datumSwellVal: document.getElementById("datum-swell-val"),
       datumSwellSub: document.getElementById("datum-swell-sub"),
       customizerPanel: document.getElementById("customizer-panel"),
+      mobileDrawerBar: document.getElementById("mobile-drawer-bar"),
       btnMobileDrawerToggle: document.getElementById("btn-mobile-drawer-toggle"),
       btnMobileDrawerClose: document.getElementById("btn-mobile-drawer-close"),
       mobileDrawerSummary: document.getElementById("mobile-drawer-summary"),
@@ -207,7 +323,8 @@ class SurfClockConfiguratorApp {
       searchContainer: document.getElementById("search-container"),
       searchInput: document.getElementById("location-search-input"),
       btnSearchClear: document.getElementById("btn-search-clear"),
-      autocompleteDropdown: document.getElementById("search-autocomplete-dropdown"),
+      autocompleteDropdown: autocompleteEl,
+      searchDropdown: autocompleteEl,
       beachesStatusBadge: document.getElementById("beaches-status-badge"),
       regionPillsContainer: document.getElementById("region-pills-container"),
       beachesList: document.getElementById("beaches-list"),
@@ -294,12 +411,17 @@ class SurfClockConfiguratorApp {
     const normalized = mode === "nightlight" || mode === "dawn" ? "nightlight" : "daylight";
     this.state.lightingMode = normalized;
     this.dom.lightBtns.forEach((b) => {
-      b.classList.toggle("active", b.dataset.light === normalized);
+      const isActive = b.dataset.light === normalized;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
-    this.dom.viewportStage.classList.toggle("night-stage", normalized === "nightlight");
+    const isNight = normalized === "nightlight";
+    document.body.classList.toggle("night-mode", isNight);
+    this.dom.viewportStage.classList.toggle("night-stage", isNight);
     if (this.studio) {
       this.studio.setLightingMode(normalized);
     }
+    if (this._drawStaticHudWave) this._drawStaticHudWave();
   }
 
   _resolveKeyAccentHex(preferredPart = null) {
@@ -331,34 +453,43 @@ class SurfClockConfiguratorApp {
     if (this.studio && this.studio.setSwellAccentColor) {
       this.studio.setSwellAccentColor(hex, immediate);
     }
+    if (this._drawStaticHudWave) this._drawStaticHudWave();
+  }
+
+  setMobileDrawerOpen(isOpen, section = null) {
+    this.state.mobileDrawerOpen = Boolean(isOpen);
+    if (section) {
+      this.state.mobileDrawerTab = section;
+    }
+    const activeTab = this.state.mobileDrawerTab || "beaches";
+    document.body.classList.toggle("mobile-drawer-open", this.state.mobileDrawerOpen);
+    if (this.dom.btnMobileDrawerToggle) {
+      this.dom.btnMobileDrawerToggle.setAttribute("aria-expanded", this.state.mobileDrawerOpen ? "true" : "false");
+    }
+    if (this.dom.customizerPanel) {
+      this.dom.customizerPanel.style.transform = "";
+      this.dom.customizerPanel.dataset.activeMdtab = activeTab;
+    }
+    if (this.dom.mdTabs) {
+      this.dom.mdTabs.forEach((t) => {
+        const isSelected = t.dataset.mdtab === activeTab;
+        t.classList.toggle("active", isSelected);
+        t.setAttribute("aria-selected", isSelected ? "true" : "false");
+      });
+    }
+    this.studio?.setMobileDrawerOffset?.(this.state.mobileDrawerOpen, 0.52);
   }
 
   openMobileDrawer(tabId = null) {
-    document.body.classList.add("mobile-drawer-open");
-    if (this.dom.btnMobileDrawerToggle) {
-      this.dom.btnMobileDrawerToggle.setAttribute("aria-expanded", "true");
-    }
-    if (tabId && this.dom.customizerPanel) {
-      this.dom.customizerPanel.dataset.activeMdtab = tabId;
-      if (this.dom.mdTabs) {
-        this.dom.mdTabs.forEach((t) => t.classList.toggle("active", t.dataset.mdtab === tabId));
-      }
-    }
+    this.setMobileDrawerOpen(true, tabId || this.state.mobileDrawerTab || "beaches");
   }
 
   closeMobileDrawer() {
-    document.body.classList.remove("mobile-drawer-open");
-    if (this.dom.btnMobileDrawerToggle) {
-      this.dom.btnMobileDrawerToggle.setAttribute("aria-expanded", "false");
-    }
+    this.setMobileDrawerOpen(false);
   }
 
   toggleMobileDrawer() {
-    if (document.body.classList.contains("mobile-drawer-open")) {
-      this.closeMobileDrawer();
-    } else {
-      this.openMobileDrawer();
-    }
+    this.setMobileDrawerOpen(!this.state.mobileDrawerOpen, this.state.mobileDrawerTab || "beaches");
   }
 
   _escapeHtml(str) {
@@ -368,6 +499,19 @@ class SurfClockConfiguratorApp {
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  _scheduleDialRebuild() {
+    if (!this.studio) return;
+    this.studio.updateDialTypography(
+      this.state.beaches.map((b) => b.name),
+      this.state.subdialMode,
+      this.state.activeRegion.shortName
+    );
+  }
+
+  _updateSummaryUI() {
+    this._updateAllLabels();
   }
 
   _syncSubdialNeedle() {
@@ -412,17 +556,19 @@ class SurfClockConfiguratorApp {
 
   _renderRegionPills() {
     this.dom.regionPillsContainer.innerHTML = "";
-    CURATED_REGIONS.slice(0, 6).forEach((region) => {
+    CURATED_REGIONS.slice(0, 9).forEach((region) => {
+      const isActive = region.id === this.state.activeRegion.id;
       const btn = document.createElement("button");
-      btn.className = `region-pill ${region.id === this.state.activeRegion.id ? "active" : ""}`;
+      btn.type = "button";
+      btn.className = `region-pill ${isActive ? "active" : ""}`;
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
       btn.textContent = region.shortName;
       btn.addEventListener("click", () => this.selectRegionPreset(region));
       this.dom.regionPillsContainer.appendChild(btn);
     });
   }
 
-  _renderBeachesList() {
-    this.dom.beachesList.innerHTML = "";
+  _computeBestBeachIndex() {
     let bestIdx = 0;
     let bestQ = -1;
     this.state.beaches.forEach((b, i) => {
@@ -433,6 +579,12 @@ class SurfClockConfiguratorApp {
       }
     });
     this.state.bestBeachIndex = bestIdx;
+    return bestIdx;
+  }
+
+  _renderBeachesList() {
+    this.dom.beachesList.innerHTML = "";
+    const bestIdx = this._computeBestBeachIndex();
 
     this.state.beaches.forEach((beach, idx) => {
       const isSelected = idx === this.state.selectedBeachIndex;
@@ -448,7 +600,7 @@ class SurfClockConfiguratorApp {
       input.type = "text";
       input.className = "beach-name-input";
       input.value = beach.name;
-      input.maxLength = 13;
+      input.maxLength = 12;
       input.setAttribute("aria-label", `Beach ${idx + 1} name`);
 
       input.addEventListener("click", (e) => {
@@ -457,18 +609,33 @@ class SurfClockConfiguratorApp {
       });
 
       input.addEventListener("input", (e) => {
-        const val = formatDialBeachName(e.target.value);
-        this.state.beaches[idx].name = val || `BEACH ${idx + 1}`;
-        this.studio.updateDialTypography(
-          this.state.beaches.map((b) => b.name),
-          this.state.subdialMode,
-          this.state.activeRegion.shortName
-        );
-        this._updateAllLabels();
+        this._stopLiveDemo();
+        const raw = e.target.value.toUpperCase();
+        if (e.target.value !== raw) {
+          const pos = e.target.selectionStart;
+          e.target.value = raw;
+          try {
+            e.target.setSelectionRange(pos, pos);
+          } catch (_) {}
+        }
+        this.state.beaches[idx].name = formatDialBeachName(raw) || `BEACH ${idx + 1}`;
+        this._scheduleDialRebuild();
+        this._updateSummaryUI();
       });
 
-      const tag = document.createElement("span");
-      tag.className = "beach-point-tag";
+      input.addEventListener("blur", () => {
+        const formatted = formatDialBeachName(input.value) || `BEACH ${idx + 1}`;
+        this.state.beaches[idx].name = formatted;
+        input.value = formatted;
+        this._scheduleDialRebuild();
+        this._updateSummaryUI();
+      });
+
+      const tag = document.createElement("button");
+      tag.type = "button";
+      tag.className = `beach-point-tag ${isBest ? "is-best" : ""}`;
+      tag.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      tag.setAttribute("aria-label", `Point clock hand to ${beach.name || `Beach ${idx + 1}`}`);
       if (isSelected && isBest) {
         tag.textContent = "★ Best Now";
       } else if (isSelected) {
@@ -478,6 +645,11 @@ class SurfClockConfiguratorApp {
       } else {
         tag.textContent = "Select";
       }
+
+      tag.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.selectBeachIndex(idx);
+      });
 
       row.addEventListener("click", () => {
         this.selectBeachIndex(idx);
@@ -493,8 +665,11 @@ class SurfClockConfiguratorApp {
   _renderPresetChips() {
     this.dom.presetsRow.innerHTML = "";
     CURATED_EDITIONS.forEach((edition) => {
+      const isActive = edition.id === this.state.activeEditionId;
       const chip = document.createElement("button");
-      chip.className = `preset-chip ${edition.id === this.state.activeEditionId ? "active" : ""}`;
+      chip.type = "button";
+      chip.className = `preset-chip ${isActive ? "active" : ""}`;
+      chip.setAttribute("aria-pressed", isActive ? "true" : "false");
 
       const dots = document.createElement("span");
       dots.className = "preset-dots";
@@ -526,13 +701,16 @@ class SurfClockConfiguratorApp {
     const activeId = this.state.colors[part];
 
     list.forEach((swatch) => {
+      const isActive = swatch.id === activeId;
       const btn = document.createElement("button");
-      btn.className = `swatch-btn ${swatch.id === activeId ? "active" : ""} ${
+      btn.type = "button";
+      btn.className = `swatch-btn ${isActive ? "active" : ""} ${
         swatch.transmission ? "translucent-swatch" : ""
       }`;
       btn.style.backgroundColor = swatch.hex;
       btn.title = swatch.name;
       btn.setAttribute("aria-label", swatch.name);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
 
       btn.addEventListener("click", () => {
         this.setPartSwatch(part, swatch.id);
@@ -543,6 +721,7 @@ class SurfClockConfiguratorApp {
   }
 
   selectRegionPreset(region, silentOverlay = false) {
+    this._stopLiveDemo();
     const seq = ++this._regionSeq;
     if (!silentOverlay) {
       this.showLoadingOverlay(
@@ -556,6 +735,7 @@ class SurfClockConfiguratorApp {
     }
 
     this.state.activeRegion = { ...region };
+    this.state.liveMarineData = null;
     this.state.beaches = region.beaches.map((b) => ({ ...b }));
 
     let bestIdx = region.activeSlot ?? 0;
@@ -585,24 +765,45 @@ class SurfClockConfiguratorApp {
     this._updateAllLabels();
     this.dom.beachesStatusBadge.textContent = `5 breaks loaded for ${region.shortName}`;
 
-    // Fetch live Open-Meteo swell in background
-    fetchLiveMarineTelemetry(region.lat, region.lng).then((live) => {
-      if (live && seq === this._regionSeq) {
-        this.state.activeRegion.swellHeightM = live.swellHeightM;
-        this.state.activeRegion.swellPeriodS = live.swellPeriodS;
-        this.state.activeRegion.swellDir = live.swellDir;
-        this._recomputeActiveBeachConditions();
-        this._syncSubdialNeedle();
-        this._syncTelemetryToStudio();
-        this._updateAllLabels();
-      }
-    });
+    this._fetchLiveWaveTelemetry(region.lat, region.lng ?? region.lon);
   }
 
-  selectBeachIndex(idx) {
+  selectBeachIndex(idx, fromDemo = false) {
+    if (!fromDemo) {
+      this._stopLiveDemo();
+    }
     this.state.selectedBeachIndex = idx;
     this._recomputeActiveBeachConditions();
-    this._renderBeachesList();
+
+    const rows = this.dom.beachesList ? this.dom.beachesList.querySelectorAll(".beach-row") : [];
+    if (rows.length === this.state.beaches.length && rows.length > 0) {
+      const bestIdx = this._computeBestBeachIndex();
+      rows.forEach((row, i) => {
+        const isSelected = i === idx;
+        const isBest = i === bestIdx;
+        row.classList.toggle("active-beach", isSelected);
+
+        const num = row.querySelector(".beach-num");
+        if (num) {
+          num.textContent = String(i + 1).padStart(2, "0");
+        }
+
+        const tag = row.querySelector(".beach-point-tag");
+        if (tag) {
+          tag.textContent = isSelected ? (isBest ? "★ Best Now" : "Pointing") : (isBest ? "Best Now" : "Select");
+          tag.classList.toggle("is-best", isBest);
+          tag.setAttribute("aria-pressed", isSelected ? "true" : "false");
+        }
+
+        const input = row.querySelector(".beach-name-input");
+        if (input && document.activeElement !== input) {
+          input.value = this.state.beaches[i].name;
+        }
+      });
+    } else {
+      this._renderBeachesList();
+    }
+
     this.studio.pointToBeachSlot(idx);
     this._syncSubdialNeedle();
     if (this.studio.triggerWavePulse) {
@@ -615,7 +816,9 @@ class SurfClockConfiguratorApp {
   selectPart(part) {
     this.state.activePart = part;
     this.dom.partTabs.forEach((t) => {
-      t.classList.toggle("active", t.dataset.part === part);
+      const isSelected = t.dataset.part === part;
+      t.classList.toggle("active", isSelected);
+      t.setAttribute("aria-selected", isSelected ? "true" : "false");
     });
     this._renderSwatchGrid();
     this._updateAllLabels();
@@ -642,7 +845,11 @@ class SurfClockConfiguratorApp {
     };
     if (edition.subdialMode && edition.subdialMode !== this.state.subdialMode) {
       this.state.subdialMode = edition.subdialMode;
-      this.dom.subdialBtns.forEach((b) => b.classList.toggle("active", b.dataset.submode === this.state.subdialMode));
+      this.dom.subdialBtns.forEach((b) => {
+        const isActive = b.dataset.submode === this.state.subdialMode;
+        b.classList.toggle("active", isActive);
+        b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
       this.studio.updateDialTypography(
         this.state.beaches.map((b) => b.name),
         this.state.subdialMode,
@@ -659,30 +866,56 @@ class SurfClockConfiguratorApp {
     this._updateAllLabels();
   }
 
+  _hexLuminance(hex) {
+    const clean = String(hex || "#000000").replace("#", "").trim();
+    const expanded = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+    const num = parseInt(expanded, 16) || 0;
+    const srgb = [(num >> 16) & 255, (num >> 8) & 255, num & 255].map((v) => {
+      const c = v / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+  }
+
+  _contrastRatio(hex1, hex2) {
+    const l1 = this._hexLuminance(hex1);
+    const l2 = this._hexLuminance(hex2);
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
   randomizeColors() {
-    // Pick a high-contrast designer combination from the expanded palette
-    const bezelList = COMPONENT_SWATCHES.bezel;
-    const dialList = COMPONENT_SWATCHES.dial;
-    const handsList = COMPONENT_SWATCHES.hands;
-    const deckList = COMPONENT_SWATCHES.deck;
+    const bezelList = COMPONENT_SWATCHES.bezel || [];
+    const dialList = COMPONENT_SWATCHES.dial || [];
+    const inlayList = COMPONENT_SWATCHES.inlay || [];
+    const handsList = COMPONENT_SWATCHES.hands || [];
+    const deckList = COMPONENT_SWATCHES.deck || [];
 
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
     const bSw = pick(bezelList);
     const dSw = pick(dialList);
     const kSw = pick(deckList);
 
-    // Automatically choose crisp high-contrast inlay typography & hands based on actual dial IDs
-    const darkDials = ["obsidian", "navy", "slate", "cobalt", "terracotta"];
-    const isDarkDial = darkDials.includes(dSw.id);
-    const iId = isDarkDial ? "alabaster" : "charcoal";
-    const validHands = handsList.filter((h) => h.id !== dSw.id && (isDarkDial ? h.id !== "charcoal" : h.id !== "alabaster"));
-    const hSw = pick(validHands.length ? validHands : handsList);
+    const inlayPool = inlayList.filter((candidate) => this._contrastRatio(dSw.hex, candidate.hex) >= 2.8);
+    const fallbackInlay = this._hexLuminance(dSw.hex) > 0.35
+      ? (inlayList.find((s) => s.id === "charcoal") || { id: "charcoal", hex: "#141413" })
+      : (inlayList.find((s) => s.id === "alabaster") || { id: "alabaster", hex: "#FAF8F5" });
+    const iSw = inlayPool.length > 0 ? pick(inlayPool) : fallbackInlay;
+
+    const handPool = handsList.filter(
+      (candidate) => candidate.id !== dSw.id && this._contrastRatio(dSw.hex, candidate.hex) >= 2.8
+    );
+    const fallbackHand = this._hexLuminance(dSw.hex) > 0.35
+      ? (handsList.find((s) => s.id === "charcoal") || handsList[0])
+      : (handsList.find((s) => s.id === "alabaster") || handsList[0]);
+    const hSw = handPool.length > 0 ? pick(handPool) : fallbackHand;
 
     this.state.activeEditionId = "";
     this.state.colors = {
       bezel: bSw.id,
       dial: dSw.id,
-      inlay: iId,
+      inlay: iSw.id,
       hands: hSw.id,
       deck: kSw.id,
     };
@@ -702,16 +935,41 @@ class SurfClockConfiguratorApp {
   // ============================================================================
   // GOOGLE MAPS-STYLE LIVE AUTOCOMPLETE DROPDOWN
   // ============================================================================
+  _hideAutocomplete() {
+    clearTimeout(this.searchDebounce);
+    this._acSeq++;
+    if (this.dom.autocompleteDropdown) {
+      this.dom.autocompleteDropdown.classList.add("hidden");
+    }
+    if (this.dom.searchInput) {
+      this.dom.searchInput.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  _highlightAutocompleteItem(items) {
+    const nodes = items || (this.dom.autocompleteDropdown ? this.dom.autocompleteDropdown.querySelectorAll(".ac-item") : []);
+    nodes.forEach((el, idx) => {
+      const isSelected = idx === this.state.autocompleteIndex;
+      el.classList.toggle("ac-active", isSelected);
+      el.setAttribute("aria-selected", isSelected ? "true" : "false");
+      if (isSelected && el.scrollIntoView) {
+        el.scrollIntoView({ block: "nearest" });
+      }
+    });
+  }
+
   async _updateAutocompleteSuggestions(query) {
     const q = (query || "").trim();
     this.dom.btnSearchClear.classList.toggle("hidden", q.length === 0);
     const acSeq = ++this._acSeq;
 
     const results = await searchLocationsAutocomplete(q);
-    if (acSeq !== this._acSeq) return;
+    if (acSeq !== this._acSeq) return results || [];
     this.state.autocompleteItems = results || [];
     this.state.autocompleteIndex = results.length > 0 ? 0 : -1;
+    this._lastResolvedQuery = q;
     this._renderAutocompleteDropdown();
+    return this.state.autocompleteItems;
   }
 
   _renderAutocompleteDropdown() {
@@ -719,14 +977,19 @@ class SurfClockConfiguratorApp {
     if (!items || items.length === 0) {
       this.dom.autocompleteDropdown.classList.add("hidden");
       this.dom.autocompleteDropdown.innerHTML = "";
+      if (this.dom.searchInput) {
+        this.dom.searchInput.setAttribute("aria-expanded", "false");
+      }
       return;
     }
 
     this.dom.autocompleteDropdown.innerHTML = "";
     items.forEach((item, idx) => {
+      const isSelected = idx === this.state.autocompleteIndex;
       const row = document.createElement("div");
-      row.className = `ac-item ${idx === this.state.autocompleteIndex ? "ac-active" : ""}`;
+      row.className = `ac-item ${isSelected ? "ac-active" : ""}`;
       row.setAttribute("role", "option");
+      row.setAttribute("aria-selected", isSelected ? "true" : "false");
 
       row.innerHTML = `
         <svg class="ac-pin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
@@ -743,20 +1006,27 @@ class SurfClockConfiguratorApp {
         e.preventDefault();
         this._selectAutocompleteItem(item);
       });
+      row.addEventListener("click", (e) => {
+        e.preventDefault();
+        this._selectAutocompleteItem(item);
+      });
 
       this.dom.autocompleteDropdown.appendChild(row);
     });
 
     this.dom.autocompleteDropdown.classList.remove("hidden");
+    if (this.dom.searchInput) {
+      this.dom.searchInput.setAttribute("aria-expanded", "true");
+    }
+    this._highlightAutocompleteItem();
   }
 
   async _selectAutocompleteItem(item) {
     if (!item) return;
-    clearTimeout(this.searchDebounce);
-    this._acSeq++;
+    this._stopLiveDemo();
+    this._hideAutocomplete();
     this.dom.searchInput.value = item.label;
     this.dom.btnSearchClear.classList.remove("hidden");
-    this.dom.autocompleteDropdown.classList.add("hidden");
 
     if (item.regionId) {
       const reg = ALL_KNOWN_REGIONS.find((r) => r.id === item.regionId);
@@ -784,6 +1054,7 @@ class SurfClockConfiguratorApp {
       if (seq !== this._regionSeq) return;
       if (resolved && resolved.beaches?.length === 5) {
         this.state.activeRegion = resolved.region;
+        this.state.liveMarineData = null;
         this.state.beaches = resolved.beaches;
         this.state.selectedBeachIndex = 0;
         this._recomputeActiveBeachConditions();
@@ -801,21 +1072,13 @@ class SurfClockConfiguratorApp {
         }
         this._syncTelemetryToStudio();
         this._updateAllLabels();
+        if (resolved.region?.name && (!item.lat && !item.lng)) {
+          this.dom.searchInput.value = resolved.region.name;
+        }
         this.dom.beachesStatusBadge.textContent = `5 nearest breaks to ${resolved.region.shortName}`;
         this.showToast(`📍 Loaded 5 breaks for ${resolved.region.shortName}`);
 
-        fetchLiveMarineTelemetry(item.lat, item.lng).then((live) => {
-          if (live && seq === this._regionSeq) {
-            this.state.activeRegion.swellHeightM = live.swellHeightM;
-            this.state.activeRegion.swellPeriodS = live.swellPeriodS;
-            this.state.activeRegion.swellDir = live.swellDir;
-            this.state.activeRegion.worthItScore = live.worthItScore;
-            this._recomputeActiveBeachConditions();
-            this._syncSubdialNeedle();
-            this._syncTelemetryToStudio();
-            this._updateAllLabels();
-          }
-        });
+        this._fetchLiveWaveTelemetry(resolved.region.lat ?? item.lat, resolved.region.lng ?? item.lng);
       }
     } finally {
       if (seq === this._regionSeq) {
@@ -862,9 +1125,8 @@ class SurfClockConfiguratorApp {
 
     const part = this.state.activePart;
     const sw = this._getSwatchObj(part, this.state.colors[part]);
-    this.dom.activeSwatchLabel.textContent = `${PART_LABELS[part]} — ${sw ? sw.name : ""}`;
+    this.dom.activeSwatchLabel.textContent = `${PART_LABELS[part]} · ${sw ? sw.name : ""}`;
 
-    // Update Section 3 Live Break Telemetry Readout Card (replaces manual slider)
     const v = Number(this.state.conditionsRating);
     if (this.dom.ltBeachName) {
       this.dom.ltBeachName.textContent = activeBeach;
@@ -897,95 +1159,133 @@ class SurfClockConfiguratorApp {
     }
   }
 
-  // Mini 60fps Oscilloscope Wave Visualizer inside the Top-Left Status Pill
+  // Mini 60fps Retina Oscilloscope Wave Visualizer inside the Top-Left Status Pill
   _startHudWaveLoop() {
     const canvas = this.dom.hudWaveCanvas;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const draw = (now) => {
-      requestAnimationFrame(draw);
-      if (document.hidden || window.innerWidth <= 960) return;
-      const t = now * 0.0045;
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
+    const logicalW = 124;
+    const logicalH = 38;
+
+    const syncRetinaSize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.round(logicalW * dpr);
+      const targetH = Math.round(logicalH * dpr);
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    syncRetinaSize();
+
+    const drawFrame = (t) => {
+      syncRetinaSize();
+      ctx.clearRect(0, 0, logicalW, logicalH);
 
       const hM = this.state.activeSwellHeightM ?? 1.9;
-      const amp = Math.min(7.5, Math.max(2.5, hM * 2.6));
+      const amp = Math.min(8.5, Math.max(2.8, hM * 2.9));
       const isNight = this.state.lightingMode === "nightlight";
+
+      const isEastSwell = /^(NNE|NE|ENE|E|ESE|SE|SSE)$/.test(String(this.state.activeSwellDir || "").trim().toUpperCase());
+      const dirSign = isEastSwell ? 1.0 : -1.0;
 
       // Secondary depth wave in HUD oscilloscope
       ctx.beginPath();
-      for (let x = 3; x <= w - 3; x++) {
-        const env = Math.sin(((x - 3) / (w - 6)) * Math.PI);
-        const y = h * 0.5 - Math.sin(x * 0.18 + t * 0.7) * (amp * 0.65) * env;
-        if (x === 3) ctx.moveTo(x, y);
+      for (let x = 4; x <= logicalW - 4; x++) {
+        const env = Math.sin(((x - 4) / (logicalW - 8)) * Math.PI);
+        const y = logicalH * 0.5 - Math.sin(x * 0.11 + dirSign * t * 0.75) * (amp * 0.65) * env;
+        if (x === 4) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = isNight ? "rgba(56, 189, 248, 0.45)" : "rgba(255, 79, 0, 0.32)";
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.5;
       ctx.lineCap = "round";
       ctx.stroke();
 
-      // Primary standing heave wave in HUD oscilloscope
+      // Primary directional groundswell wave in HUD oscilloscope
       ctx.beginPath();
-      for (let x = 3; x <= w - 3; x++) {
-        const env = Math.sin(((x - 3) / (w - 6)) * Math.PI);
-        const y = h * 0.5 - Math.sin(x * 0.22 - t * 0.4) * Math.cos(t * 1.1) * amp * env;
-        if (x === 3) ctx.moveTo(x, y);
+      for (let x = 4; x <= logicalW - 4; x++) {
+        const env = Math.sin(((x - 4) / (logicalW - 8)) * Math.PI);
+        const y = logicalH * 0.5 - Math.sin(x * 0.13 + dirSign * t * 0.95) * (0.75 + 0.25 * Math.cos(t * 0.8)) * amp * env;
+        if (x === 4) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = this.state.activeAccentHex || (isNight ? "#38BDF8" : "#FF4F00");
-      ctx.lineWidth = 2.1;
+      ctx.lineWidth = 2.2;
       ctx.lineCap = "round";
       ctx.stroke();
+    };
+
+    this._drawStaticHudWave = () => drawFrame(0.6);
+
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+      drawFrame(0.6);
+      return;
+    }
+
+    const draw = (now) => {
+      requestAnimationFrame(draw);
+      if (document.hidden || window.innerWidth <= 960) return;
+      if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+        drawFrame(0.6);
+        return;
+      }
+      drawFrame(now * 0.0045);
     };
     requestAnimationFrame(draw);
   }
 
   _bindEvents() {
-    // Google Maps-style live autocomplete input events
     this.dom.searchInput.addEventListener("focus", () => {
       this._updateAutocompleteSuggestions(this.dom.searchInput.value);
     });
 
     this.dom.searchInput.addEventListener("input", (e) => {
       const val = e.target.value;
+      this.dom.btnSearchClear.classList.toggle("hidden", !val.trim());
       clearTimeout(this.searchDebounce);
       this.searchDebounce = setTimeout(() => {
         this._updateAutocompleteSuggestions(val);
       }, 110);
     });
 
-    this.dom.searchInput.addEventListener("keydown", (e) => {
+    this.dom.searchInput.addEventListener("keydown", async (e) => {
       const items = this.state.autocompleteItems || [];
+      const currentVal = (this.dom.searchInput.value || "").trim();
+      const isFresh = this._lastResolvedQuery === currentVal;
+
       if (e.key === "ArrowDown") {
         e.preventDefault();
         if (items.length > 0) {
           this.state.autocompleteIndex = (this.state.autocompleteIndex + 1) % items.length;
-          this._renderAutocompleteDropdown();
+          this._highlightAutocompleteItem();
         }
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         if (items.length > 0) {
           this.state.autocompleteIndex = (this.state.autocompleteIndex - 1 + items.length) % items.length;
-          this._renderAutocompleteDropdown();
+          this._highlightAutocompleteItem();
         }
       } else if (e.key === "Enter") {
         e.preventDefault();
-        if (items.length > 0 && this.state.autocompleteIndex >= 0) {
-          this._selectAutocompleteItem(items[this.state.autocompleteIndex]);
-        } else if (this.dom.searchInput.value.trim()) {
-          this._updateAutocompleteSuggestions(this.dom.searchInput.value).then(() => {
-            if (this.state.autocompleteItems.length > 0) {
-              this._selectAutocompleteItem(this.state.autocompleteItems[0]);
-            }
-          });
-        }
-      } else if (e.key === "Escape") {
         clearTimeout(this.searchDebounce);
-        this._acSeq++;
-        this.dom.autocompleteDropdown.classList.add("hidden");
+        if (isFresh && items.length > 0 && this.state.autocompleteIndex >= 0) {
+          this._selectAutocompleteItem(items[this.state.autocompleteIndex]);
+        } else if (currentVal) {
+          const freshItems = await this._updateAutocompleteSuggestions(currentVal);
+          if (freshItems && freshItems.length > 0) {
+            this._selectAutocompleteItem(freshItems[0]);
+          } else {
+            this._selectAutocompleteItem({
+              label: currentVal,
+              sublabel: `5 Best Local Surf Beaches near ${currentVal}`,
+              lat: 0,
+              lng: 0,
+              regionId: null,
+            });
+          }
+        }
       }
     });
 
@@ -998,9 +1298,7 @@ class SurfClockConfiguratorApp {
 
     document.addEventListener("click", (e) => {
       if (this.dom.searchContainer && !this.dom.searchContainer.contains(e.target)) {
-        clearTimeout(this.searchDebounce);
-        this._acSeq++;
-        this.dom.autocompleteDropdown.classList.add("hidden");
+        this._hideAutocomplete();
       }
     });
 
@@ -1016,12 +1314,20 @@ class SurfClockConfiguratorApp {
       });
     }
 
+    const triggerPartyWave = () => {
+      this._stopLiveDemo();
+      if (this.studio && this.studio.triggerPartyWaveSalute) {
+        this.studio.triggerPartyWaveSalute();
+      }
+      this.showToast("🌊 Shaka! Party Wave Salute Activated");
+    };
     if (this.dom.brandEasterEgg) {
-      this.dom.brandEasterEgg.addEventListener("click", () => {
-        if (this.studio && this.studio.triggerPartyWaveSalute) {
-          this.studio.triggerPartyWaveSalute();
+      this.dom.brandEasterEgg.addEventListener("click", triggerPartyWave);
+      this.dom.brandEasterEgg.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          triggerPartyWave();
         }
-        this.showToast("🌊 Shaka! Party Wave Salute Activated");
       });
     }
 
@@ -1035,6 +1341,12 @@ class SurfClockConfiguratorApp {
       this.dom.hudSwellHeroCard.style.cursor = "pointer";
       this.dom.hudSwellHeroCard.title = "Click to trigger a rogue wave set pulse";
       this.dom.hudSwellHeroCard.addEventListener("click", triggerSetPulse);
+      this.dom.hudSwellHeroCard.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          triggerSetPulse();
+        }
+      });
     }
     if (this.dom.hudWaveCanvas) {
       this.dom.hudWaveCanvas.addEventListener("click", triggerSetPulse);
@@ -1048,8 +1360,7 @@ class SurfClockConfiguratorApp {
           this.dom.sliderExplode.value = String(nextExplode);
         }
         const targetCam = nextExplode > 0.35 ? "exploded" : "front";
-        this.state.cameraView = targetCam;
-        this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === targetCam));
+        this._setCameraViewState(targetCam);
         this.studio.setCameraPreset(targetCam);
         this.studio.setExplodeFactor(nextExplode);
         this.showToast(nextExplode > 0.35 ? "🔧 Exploded Internal Architecture" : "🔩 Assembled Monolith");
@@ -1060,7 +1371,11 @@ class SurfClockConfiguratorApp {
       btn.addEventListener("click", () => {
         const mode = btn.dataset.submode;
         this.state.subdialMode = mode;
-        this.dom.subdialBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        this.dom.subdialBtns.forEach((b) => {
+          const isActive = b === btn;
+          b.classList.toggle("active", isActive);
+          b.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
         this.studio.updateDialTypography(
           this.state.beaches.map((b) => b.name),
           mode,
@@ -1081,8 +1396,7 @@ class SurfClockConfiguratorApp {
     this.dom.camBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         const view = btn.dataset.cam;
-        this.state.cameraView = view;
-        this.dom.camBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        this._setCameraViewState(view);
         if (this.dom.swellScaleDatum) {
           this.dom.swellScaleDatum.classList.toggle("macro-hidden", view === "macro" || view === "subdial" || view === "rear");
         }
@@ -1092,35 +1406,143 @@ class SurfClockConfiguratorApp {
 
     if (this.dom.btnMobileDrawerToggle) {
       this.dom.btnMobileDrawerToggle.addEventListener("click", () => {
+        if (this._suppressNextDrawerClick) {
+          this._suppressNextDrawerClick = false;
+          return;
+        }
         this.toggleMobileDrawer();
       });
     }
     if (this.dom.btnMobileDrawerClose) {
       this.dom.btnMobileDrawerClose.addEventListener("click", (e) => {
         e.stopPropagation();
-        this.closeMobileDrawer();
+        this.setMobileDrawerOpen(false);
       });
     }
     if (this.dom.mdTabs) {
       this.dom.mdTabs.forEach((tab) => {
         tab.addEventListener("click", (e) => {
           e.stopPropagation();
-          this.openMobileDrawer(tab.dataset.mdtab);
+          this.setMobileDrawerOpen(true, tab.dataset.mdtab);
         });
       });
     }
     if (this.dom.btnMobileSearchTrigger) {
       this.dom.btnMobileSearchTrigger.addEventListener("click", (e) => {
         e.stopPropagation();
-        this.openMobileDrawer("beaches");
+        this.setMobileDrawerOpen(true, "beaches");
         setTimeout(() => this.dom.searchInput && this.dom.searchInput.focus(), 180);
       });
     }
     if (this.dom.stageStatusPill) {
       this.dom.stageStatusPill.addEventListener("click", (e) => {
-        if (window.innerWidth <= 960 && !e.target.closest("#btn-live-demo")) {
-          this.openMobileDrawer("beaches");
-          setTimeout(() => this.dom.searchInput && this.dom.searchInput.focus(), 180);
+        if (
+          window.innerWidth <= 960 &&
+          !e.target.closest("#btn-live-demo") &&
+          !e.target.closest("#btn-mobile-search-trigger")
+        ) {
+          this.setMobileDrawerOpen(true, "beaches");
+        }
+      });
+    }
+
+    // Touch / pointer drag gesture on #mobile-drawer-bar
+    if (this.dom.mobileDrawerBar && this.dom.customizerPanel) {
+      let dragStartY = null;
+      let dragDeltaY = 0;
+      let isDraggingDrawer = false;
+
+      const onDragStart = (clientY, target) => {
+        if (window.innerWidth > 960) return;
+        if (target && (target.closest(".md-tab") || target.closest(".md-close-btn"))) return;
+        dragStartY = clientY;
+        dragDeltaY = 0;
+        isDraggingDrawer = false;
+      };
+
+      const onDragMove = (clientY) => {
+        if (dragStartY === null || window.innerWidth > 960) return;
+        const dy = clientY - dragStartY;
+        dragDeltaY = dy;
+        if (Math.abs(dy) > 6) {
+          isDraggingDrawer = true;
+          this.dom.customizerPanel.style.transition = "none";
+          if (this.state.mobileDrawerOpen && dy > 0) {
+            this.dom.customizerPanel.style.transform = `translateY(${Math.min(dy, 380)}px)`;
+          } else if (!this.state.mobileDrawerOpen && dy < 0) {
+            this.dom.customizerPanel.style.transform = `translateY(calc(100% - 56px + ${Math.max(dy, -380)}px))`;
+          }
+        }
+      };
+
+      const onDragEnd = () => {
+        if (dragStartY === null) return;
+        const dy = dragDeltaY;
+        const wasDragging = isDraggingDrawer;
+        dragStartY = null;
+        dragDeltaY = 0;
+        isDraggingDrawer = false;
+        this.dom.customizerPanel.style.transition = "";
+        this.dom.customizerPanel.style.transform = "";
+
+        if (wasDragging) {
+          this._suppressNextDrawerClick = true;
+          setTimeout(() => {
+            this._suppressNextDrawerClick = false;
+          }, 80);
+          if (this.state.mobileDrawerOpen && dy > 38) {
+            this.setMobileDrawerOpen(false);
+          } else if (!this.state.mobileDrawerOpen && dy < -28) {
+            this.setMobileDrawerOpen(true, this.state.mobileDrawerTab || "beaches");
+          }
+        }
+      };
+
+      this.dom.mobileDrawerBar.addEventListener("touchstart", (e) => {
+        if (e.touches && e.touches.length === 1) {
+          onDragStart(e.touches[0].clientY, e.target);
+        }
+      }, { passive: true });
+      this.dom.mobileDrawerBar.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches.length === 1) {
+          onDragMove(e.touches[0].clientY);
+        }
+      }, { passive: true });
+      this.dom.mobileDrawerBar.addEventListener("touchend", onDragEnd);
+      this.dom.mobileDrawerBar.addEventListener("touchcancel", onDragEnd);
+
+      this.dom.mobileDrawerBar.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "touch") return;
+        onDragStart(e.clientY, e.target);
+      });
+      window.addEventListener("pointermove", (e) => {
+        if (e.pointerType === "touch" || dragStartY === null) return;
+        onDragMove(e.clientY);
+      });
+      window.addEventListener("pointerup", (e) => {
+        if (e.pointerType === "touch" || dragStartY === null) return;
+        onDragEnd();
+      });
+    }
+
+    // Outside-tap dismissal on viewportStage when mobile drawer is open
+    if (this.dom.viewportStage) {
+      let stageDownX = 0;
+      let stageDownY = 0;
+      this.dom.viewportStage.addEventListener("pointerdown", (e) => {
+        stageDownX = e.clientX;
+        stageDownY = e.clientY;
+      });
+      this.dom.viewportStage.addEventListener("pointerup", (e) => {
+        if (window.innerWidth <= 960 && this.state.mobileDrawerOpen) {
+          const dist = Math.hypot(e.clientX - stageDownX, e.clientY - stageDownY);
+          if (
+            dist < 6 &&
+            !e.target.closest(".stage-status-pill") &&
+            !e.target.closest(".camera-dock")
+          ) {
+            this.setMobileDrawerOpen(false);
+          }
         }
       });
     }
@@ -1131,13 +1553,11 @@ class SurfClockConfiguratorApp {
         const val = parseFloat(e.target.value);
         this.state.explodeFactor = val;
         if (val > 0.15 && this.state.cameraView !== "exploded") {
-          this.state.cameraView = "exploded";
-          this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === "exploded"));
+          this._setCameraViewState("exploded");
           if (this.dom.swellScaleDatum) this.dom.swellScaleDatum.classList.add("macro-hidden");
           this.studio.setCameraPreset("exploded");
         } else if (val <= 0.04 && this.state.cameraView === "exploded") {
-          this.state.cameraView = "front";
-          this.dom.camBtns.forEach((b) => b.classList.toggle("active", b.dataset.cam === "front"));
+          this._setCameraViewState("front");
           if (this.dom.swellScaleDatum) this.dom.swellScaleDatum.classList.remove("macro-hidden");
           this.studio.setCameraPreset("front");
         }
@@ -1163,16 +1583,46 @@ class SurfClockConfiguratorApp {
     });
 
     this.dom.btnModalClose.addEventListener("click", () => {
-      this.dom.modalBackdrop.classList.add("hidden");
+      this.closeOrderModal();
     });
     this.dom.modalBackdrop.addEventListener("click", (e) => {
       if (e.target === this.dom.modalBackdrop) {
-        this.dom.modalBackdrop.classList.add("hidden");
+        this.closeOrderModal();
       }
     });
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && this.dom.modalBackdrop && !this.dom.modalBackdrop.classList.contains("hidden")) {
-        this.dom.modalBackdrop.classList.add("hidden");
+      if (e.key === "Escape") {
+        if (this.dom.searchDropdown && !this.dom.searchDropdown.classList.contains("hidden")) {
+          this._hideAutocomplete();
+          e.preventDefault();
+          return;
+        } else if (this.dom.modalBackdrop && !this.dom.modalBackdrop.classList.contains("hidden")) {
+          this.closeOrderModal();
+          e.preventDefault();
+          return;
+        } else if (this.state.mobileDrawerOpen) {
+          this.setMobileDrawerOpen(false);
+          e.preventDefault();
+          return;
+        }
+      } else if (e.key === "Tab" && this.dom.modalBackdrop && !this.dom.modalBackdrop.classList.contains("hidden")) {
+        const focusables = Array.from(
+          this.dom.modalBackdrop.querySelectorAll(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        );
+        if (focusables.length > 0) {
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     });
 
@@ -1187,26 +1637,44 @@ class SurfClockConfiguratorApp {
     }
   }
 
-  toggleLiveDemo() {
+  _stopLiveDemo() {
     if (this.demoTimer) {
       clearInterval(this.demoTimer);
       this.demoTimer = null;
     }
-    this.state.liveDemoRunning = !this.state.liveDemoRunning;
-    this.dom.btnLiveDemo.classList.toggle("active", this.state.liveDemoRunning);
-
     if (this.state.liveDemoRunning) {
-      this.showToast("🌊 Live Swell Cycle Started");
-      this.selectBeachIndex((this.state.selectedBeachIndex + 1) % 5);
-      this.demoTimer = setInterval(() => {
-        this.selectBeachIndex((this.state.selectedBeachIndex + 1) % 5);
-      }, 2200);
-    } else {
-      this.showToast("⏸ Swell Cycle Paused");
+      this.state.liveDemoRunning = false;
+      if (this.dom.btnLiveDemo) {
+        this.dom.btnLiveDemo.classList.remove("active");
+        this.dom.btnLiveDemo.setAttribute("aria-pressed", "false");
+        this.dom.btnLiveDemo.innerHTML = `<span class="play-dot"></span> Test Sweep`;
+      }
     }
   }
 
+  toggleLiveDemo() {
+    if (this.state.liveDemoRunning) {
+      this._stopLiveDemo();
+      this.showToast("⏸ Swell Cycle Paused");
+      return;
+    }
+
+    this.state.liveDemoRunning = true;
+    if (this.dom.btnLiveDemo) {
+      this.dom.btnLiveDemo.classList.add("active");
+      this.dom.btnLiveDemo.setAttribute("aria-pressed", "true");
+    }
+    this.showToast("🌊 Live Swell Cycle Started");
+    this.selectBeachIndex((this.state.selectedBeachIndex + 1) % 5, true);
+    this.demoTimer = setInterval(() => {
+      this.selectBeachIndex((this.state.selectedBeachIndex + 1) % 5, true);
+    }, 2200);
+  }
+
   openOrderModal() {
+    if (this.dom.modalBackdrop && this.dom.modalBackdrop.classList.contains("hidden")) {
+      const active = document.activeElement; this._lastFocusedBeforeModal = (active && active !== document.body && active !== document.documentElement) ? active : this.dom.btnOrder;
+    }
     const fSw = this._getSwatchObj("bezel", this.state.colors.bezel);
     const dSw = this._getSwatchObj("dial", this.state.colors.dial);
     const hSw = this._getSwatchObj("hands", this.state.colors.hands);
@@ -1220,7 +1688,20 @@ class SurfClockConfiguratorApp {
       <div class="sum-row"><span class="sum-label">Hands Accent</span><span class="sum-val">${this._escapeHtml(hSw ? hSw.name : "")}</span></div>
     `;
     this.dom.modalBackdrop.classList.remove("hidden");
+    this.dom.btnModalClose?.focus?.();
   }
+
+  closeOrderModal() {
+    if (this.dom.modalBackdrop) {
+      this.dom.modalBackdrop.classList.add("hidden");
+    }
+    const target = this._lastFocusedBeforeModal || this.dom.btnOrder;
+    this._lastFocusedBeforeModal = null;
+    if (target && typeof target.focus === "function") {
+      target.focus();
+    }
+  }
+
   async handleDownloadFullKit() {
     const badge = this.dom.fullKitBadge;
     const origBadge = badge ? badge.textContent : "Full Stack ↓";
@@ -1234,7 +1715,7 @@ class SurfClockConfiguratorApp {
         onProgress: (msg, pct) => {
           if (badge) badge.textContent = `${pct}% ↓`;
           console.log(`[FullStackKit] ${pct}% - ${msg}`);
-        }
+        },
       });
       this.showToast(`✅ Downloaded ${filename}!`);
     } catch (err) {
@@ -1251,78 +1732,46 @@ class SurfClockConfiguratorApp {
     }
   }
 
-
   downloadSpotsJson() {
-    const spotsObj = {};
-    this.state.beaches.forEach((b, i) => {
-      const key = b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `spot-${i + 1}`;
-      spotsObj[key] = {
-        name: b.name,
-        lat: b.lat || -33.74,
-        lon: b.lng || 151.31,
-        idealWindDir: 270,
-        idealSwellDir: 135,
-        clockHour: [12, 10, 2, 8, 4][i] || 12,
-      };
-    });
-    const blob = new Blob([JSON.stringify(spotsObj, null, 2)], { type: "application/json" });
+    const spots = buildClockwiseSpots(this.state.beaches, this.state.activeRegion);
+    const blob = new Blob([JSON.stringify(spots, null, 2)], { type: "application/json" });
     this._triggerDownload(blob, "spots.json");
   }
 
-  downloadCustomWorkerJs() {
-    const spotsObj = {};
-    this.state.beaches.forEach((b, i) => {
-      const key = b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `spot-${i + 1}`;
-      spotsObj[key] = {
-        name: b.name,
-        lat: b.lat || -33.74,
-        lon: b.lng || 151.31,
-        idealWindDir: 270,
-        idealSwellDir: 135,
-      };
-    });
-    const js = `// Custom Cloudflare Worker for ${this.state.activeRegion.name}
-// Full repo: https://github.com/raphdixon/surfclock
-const SPOTS = ${JSON.stringify(spotsObj, null, 2)};
-
-export default {
-  async fetch(request) {
-    return new Response(JSON.stringify({ spots: SPOTS }), {
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
-    });
-  }
-};
-`;
+  async downloadCustomWorkerJs() {
+    const spots = buildClockwiseSpots(this.state.beaches, this.state.activeRegion);
+    let baseWorkerJs = "";
+    try {
+      const res = await fetch("./downloads/cloudflare-worker/src/index.js");
+      if (res.ok) {
+        baseWorkerJs = await res.text();
+      }
+    } catch (err) {
+      console.warn("[WorkerDownload] Could not fetch base worker.js:", err);
+    }
+    const js = customizeWorkerJs(baseWorkerJs, spots);
     const blob = new Blob([js], { type: "application/javascript" });
     this._triggerDownload(blob, "worker.js");
+    this.showToast("⬇ Downloading Custom Surf Telemetry worker.js...");
   }
 
   downloadBuildGuideMarkdown() {
-    const fSw = this._getSwatchObj("bezel", this.state.colors.bezel);
-    const dSw = this._getSwatchObj("dial", this.state.colors.dial);
-    const tSw = this._getSwatchObj("inlay", this.state.colors.inlay);
-    const hSw = this._getSwatchObj("hands", this.state.colors.hands);
-
-    const md = `# SURF CLOCK — Custom Build Guide
-- **Coastline:** ${this.state.activeRegion.name}
-- **5 Beaches:** ${this.state.beaches.map((b, i) => `${i + 1}. ${b.name}`).join(" | ")}
-- **Frame Color:** ${fSw?.name} (${fSw?.hex})
-- **Dial Color:** ${dSw?.name} (${dSw?.hex})
-- **Typography Color:** ${tSw?.name} (${tSw?.hex})
-- **Hands Color:** ${hSw?.name} (${hSw?.hex})
-
-## 1. 3D Printing
-- Print \`01_outer_bezel_chassis.stl\` and \`05_rear_cover_usb.stl\` in **${fSw?.name}**.
-- Print \`02a_dial_faceplate_with_text.stl\` in **${dSw?.name}** with a filament color change at \`Z = 2.60mm\` to **${tSw?.name}**.
-- Print \`03_beach_hand_28byj48_capped.stl\` and \`04_conditions_hand_28byj48_capped.stl\` in **${hSw?.name}**.
-
-## 2. Electronics & Wiring (https://github.com/raphdixon/surfclock)
-- **Upper Stepper (Beach Hand):** ULN2003 IN1–IN4 → ESP32-S3 GPIO 4, 5, 6, 7
-- **Lower Stepper (Sub-Dial):** ULN2003 IN1–IN4 → ESP32-S3 GPIO 11, 12, 13, 14
-- **Power:** 5V & GND from ESP32-S3 USB-C rail
-`;
+    const spots = buildClockwiseSpots(this.state.beaches, this.state.activeRegion);
+    const colorObjs = {
+      bezel: this._getSwatchObj("bezel", this.state.colors.bezel),
+      dial: this._getSwatchObj("dial", this.state.colors.dial),
+      inlay: this._getSwatchObj("inlay", this.state.colors.inlay),
+      hands: this._getSwatchObj("hands", this.state.colors.hands),
+      deck: this._getSwatchObj("deck", this.state.colors.deck),
+    };
+    const md = generateBuildGuideMarkdown({
+      region: this.state.activeRegion,
+      spots,
+      colors: colorObjs,
+    });
     const blob = new Blob([md], { type: "text/markdown" });
-    this._triggerDownload(blob, "SURF_CLOCK_BUILD_GUIDE.md");
+    this._triggerDownload(blob, "BUILD_AND_BOM_GUIDE.md");
+    this.showToast("⬇ Downloading Custom Build & BOM Guide...");
   }
 
   _triggerDownload(blob, filename) {

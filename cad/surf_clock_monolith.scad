@@ -190,7 +190,7 @@ module dial_graphics_2d() {
     translate([UPPER_SHAFT_X, UPPER_SHAFT_Y + 60])
         text("LONG REEF", size = 4.2, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
     translate([UPPER_SHAFT_X - 46, UPPER_SHAFT_Y + 32])
-        text("QUEENSCLIFF", size = 4.0, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+        text("QUEENSIE", size = 4.0, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
     translate([UPPER_SHAFT_X + 48, UPPER_SHAFT_Y + 32])
         text("DEE WHY", size = 4.2, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
     translate([UPPER_SHAFT_X - 48, UPPER_SHAFT_Y - 22])

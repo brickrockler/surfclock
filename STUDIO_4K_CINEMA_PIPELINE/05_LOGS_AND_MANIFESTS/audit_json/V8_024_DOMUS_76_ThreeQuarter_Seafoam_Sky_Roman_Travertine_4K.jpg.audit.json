@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 98,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Impeccable execution. The vertical rectangular monolith housing, recessed dial, and chamfered bezel are spot-on. All 9 upper tick marks and 5 beach labels are accurate with a clean bottom arc. The lower sub-dial and single burnt-orange hands on each dial are perfectly rendered. The travertine plinth, warm directional sunlight, and turquoise-to-sand gradient backdrop create an extraordinary, magazine-worthy editorial aesthetic.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

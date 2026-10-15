@@ -9,20 +9,246 @@
  */
 
 export const DIAL_SLOTS = [
-  { index: 0, clock: "12:00", angleDeg: 0,    labelPos: "TOP CENTER",  cx: 0.0,   cy: 75.1,  maxW: 106.0, defaultCapH: 3.45 },
-  { index: 1, clock: "10:00", angleDeg: -60,  labelPos: "UPPER LEFT",  cx: -58.5, cy: 48.1,  maxW: 39.5,  defaultCapH: 2.95 },
-  { index: 2, clock: "02:00", angleDeg: 60,   labelPos: "UPPER RIGHT", cx: 57.5,  cy: 48.1,  maxW: 39.5,  defaultCapH: 3.20 },
-  { index: 3, clock: "08:00", angleDeg: -120, labelPos: "LOWER LEFT",  cx: -57.5, cy: -1.5,  maxW: 39.5,  defaultCapH: 3.20 },
-  { index: 4, clock: "04:00", angleDeg: 120,  labelPos: "LOWER RIGHT", cx: 57.5,  cy: -1.5,  maxW: 39.5,  defaultCapH: 3.10 },
+  { index: 0, clock: "12:00", angleDeg: 0,    labelPos: "TOP CENTER",  cx: 0.0,   cy: 74.0,  maxW: 96.0,  defaultCapH: 4.25, strokeW: 0.72, tracking: 0.40 },
+  { index: 1, clock: "10:00", angleDeg: -60,  labelPos: "UPPER LEFT",  cx: -58.8, cy: 48.2,  maxW: 39.2,  defaultCapH: 3.90, strokeW: 0.68, tracking: 0.38 },
+  { index: 2, clock: "02:00", angleDeg: 60,   labelPos: "UPPER RIGHT", cx: 58.8,  cy: 48.2,  maxW: 39.2,  defaultCapH: 3.90, strokeW: 0.68, tracking: 0.38 },
+  { index: 3, clock: "08:00", angleDeg: -120, labelPos: "LOWER LEFT",  cx: -58.2, cy: -5.2,  maxW: 39.5,  defaultCapH: 3.90, strokeW: 0.68, tracking: 0.38 },
+  { index: 4, clock: "04:00", angleDeg: 120,  labelPos: "LOWER RIGHT", cx: 58.5,  cy: -5.2,  maxW: 39.5,  defaultCapH: 3.85, strokeW: 0.68, tracking: 0.36 },
 ];
 
 export const CURATED_REGIONS = [
+  {
+    id: "nazare-pt",
+    name: "Nazaré & Silver Coast, Portugal",
+    shortName: "NAZARÉ, PT",
+    code: "NAZ-PRT",
+    country: "Portugal",
+    isIconicGlobal: true,
+    keywords: ["nazare", "nazaré", "praia do norte", "supertubos", "peniche", "ericeira", "coxos", "portugal"],
+    lat: 39.609,
+    lng: -9.086,
+    swellHeightM: 4.2,
+    swellPeriodS: 18,
+    swellDir: "WNW",
+    windKt: 6,
+    windDir: "E",
+    activeSlot: 0,
+    worthItScore: 9.8,
+    beaches: [
+      { name: "PRAIA NORTE", lat: 39.609, lng: -9.086, quality: 9.9, swellDir: "WNW", type: "Submarine Canyon Giant" },
+      { name: "SUPERTUBOS",  lat: 39.344, lng: -9.363, quality: 9.7, swellDir: "SW",  type: "Heavy European Pipeline" },
+      { name: "COXOS REEF",  lat: 39.004, lng: -9.426, quality: 9.8, swellDir: "NW",  type: "World-Class Right Slab" },
+      { name: "BALEAL BAY",  lat: 39.373, lng: -9.339, quality: 9.0, swellDir: "NNE", type: "North Headland Reef" },
+      { name: "PEDRA BRNCA", lat: 38.976, lng: -9.419, quality: 9.3, swellDir: "W",   type: "Hollow Left Reef" },
+    ],
+  },
+  {
+    id: "jaws-maui",
+    name: "Peahi (Jaws) & North Shore, Maui",
+    shortName: "JAWS · MAUI",
+    code: "JAW-MAU",
+    country: "United States",
+    isIconicGlobal: true,
+    keywords: ["jaws", "peahi", "maui", "honolua", "hookipa", "lahaina", "maalaea", "hawaii"],
+    lat: 20.943,
+    lng: -156.298,
+    swellHeightM: 3.9,
+    swellPeriodS: 19,
+    swellDir: "NNE",
+    windKt: 9,
+    windDir: "SSE",
+    activeSlot: 0,
+    worthItScore: 9.9,
+    beaches: [
+      { name: "JAWS PEAHI",  lat: 20.943, lng: -156.298, quality: 10.0, swellDir: "NNE", type: "Outer Deepwater Cathedral" },
+      { name: "HONOLUA BAY", lat: 21.014, lng: -156.639, quality: 9.9,  swellDir: "NW",  type: "Hollow Cave Right Point" },
+      { name: "HOOKIPA PT",  lat: 20.934, lng: -156.357, quality: 9.3,  swellDir: "ENE", type: "Tradewind Reef Peak" },
+      { name: "MAALAEA",     lat: 20.793, lng: -156.510, quality: 9.5,  swellDir: "SSW", type: "Freight Train Fast Right" },
+      { name: "LAHAINA HBR", lat: 20.871, lng: -156.679, quality: 8.9,  swellDir: "SW",  type: "Shallow Reef Wall" },
+    ],
+  },
+  {
+    id: "oahu-north",
+    name: "Pipeline & North Shore, Oahu, Hawaii",
+    shortName: "PIPELINE, HI",
+    code: "HNL-NTH",
+    country: "United States",
+    isIconicGlobal: true,
+    keywords: ["pipeline", "banzai", "oahu", "north shore", "waimea", "sunset beach", "haleiwa", "hawaii"],
+    lat: 21.665,
+    lng: -158.053,
+    swellHeightM: 3.5,
+    swellPeriodS: 18,
+    swellDir: "NW",
+    windKt: 10,
+    windDir: "ENE",
+    activeSlot: 0,
+    worthItScore: 9.8,
+    beaches: [
+      { name: "PIPELINE",    lat: 21.665, lng: -158.053, quality: 10.0, swellDir: "NW",  type: "Shallow Cavern Reef" },
+      { name: "WAIMEA BAY",  lat: 21.641, lng: -158.066, quality: 9.8,  swellDir: "NNW", type: "Iconic Big Wave Point" },
+      { name: "SUNSET BCH",  lat: 21.678, lng: -158.041, quality: 9.6,  swellDir: "N",   type: "Deep Water West Peak" },
+      { name: "HALEIWA",     lat: 21.595, lng: -158.105, quality: 9.3,  swellDir: "WNW", type: "Alii Reef Bowl" },
+      { name: "LANIAKEA",    lat: 21.618, lng: -158.085, quality: 9.1,  swellDir: "NNE", type: "Long Right Reef" },
+    ],
+  },
+  {
+    id: "teahupoo-tahiti",
+    name: "Teahupo'o & Tahiti Iti, Polynesia",
+    shortName: "TEAHUPO'O",
+    code: "THP-PYF",
+    country: "French Polynesia",
+    isIconicGlobal: true,
+    keywords: ["teahupoo", "teahupo'o", "tahiti", "polynesia", "vairao", "taapuna", "papara"],
+    lat: -17.847,
+    lng: -149.267,
+    swellHeightM: 3.3,
+    swellPeriodS: 17,
+    swellDir: "SSW",
+    windKt: 7,
+    windDir: "ENE",
+    activeSlot: 0,
+    worthItScore: 9.9,
+    beaches: [
+      { name: "TEAHUPOO",    lat: -17.847, lng: -149.267, quality: 10.0, swellDir: "SSW", type: "Heaviest Reef Pass on Earth" },
+      { name: "VAIRAO PASS", lat: -17.808, lng: -149.292, quality: 9.4,  swellDir: "S",   type: "Deep Lagoon Barrier Left" },
+      { name: "TAAPUNA",     lat: -17.619, lng: -149.619, quality: 9.5,  swellDir: "SW",  type: "Hollow West Lagoon Pass" },
+      { name: "PAPARA BCH",  lat: -17.772, lng: -149.492, quality: 8.9,  swellDir: "SSE", type: "Black Sand Reef Peak" },
+      { name: "MARAA PASS",  lat: -17.744, lng: -149.572, quality: 9.2,  swellDir: "WSW", type: "Outer Reef Left Barrel" },
+    ],
+  },
+  {
+    id: "mavericks-ca",
+    name: "Mavericks & NorCal Coldwater, CA",
+    shortName: "MAVERICKS",
+    code: "MAV-CAL",
+    country: "United States",
+    isIconicGlobal: true,
+    keywords: ["mavericks", "half moon bay", "pillar point", "ocean beach", "san francisco", "steamer lane", "california"],
+    lat: 37.493,
+    lng: -122.499,
+    swellHeightM: 3.7,
+    swellPeriodS: 18,
+    swellDir: "W",
+    windKt: 6,
+    windDir: "E",
+    activeSlot: 0,
+    worthItScore: 9.6,
+    beaches: [
+      { name: "MAVERICKS",   lat: 37.493, lng: -122.499, quality: 9.9, swellDir: "W",   type: "Outer Coldwater Big Wave Ledge" },
+      { name: "OCEAN BEACH", lat: 37.759, lng: -122.511, quality: 9.5, swellDir: "WNW", type: "Heavy Outer Sandbar Peaks" },
+      { name: "STEAMER LN",  lat: 36.951, lng: -122.025, quality: 9.6, swellDir: "NW",  type: "Santa Cruz Cliff Point" },
+      { name: "PLEASURE PT", lat: 36.963, lng: -121.966, quality: 9.3, swellDir: "SSW", type: "Kelp Bed Reef Wall" },
+      { name: "RINCON PT",   lat: 34.373, lng: -119.477, quality: 9.7, swellDir: "WSW", type: "Queen of the Coast Right" },
+    ],
+  },
+  {
+    id: "bali-uluwatu",
+    name: "Uluwatu & Bukit Peninsula, Bali",
+    shortName: "ULUWATU",
+    code: "DPS-IDN",
+    country: "Indonesia",
+    isIconicGlobal: true,
+    keywords: ["uluwatu", "bali", "padang padang", "impossibles", "bingin", "canggu", "keramas", "indonesia"],
+    lat: -8.814,
+    lng: 115.088,
+    swellHeightM: 2.8,
+    swellPeriodS: 16,
+    swellDir: "SW",
+    windKt: 11,
+    windDir: "ESE",
+    activeSlot: 0,
+    worthItScore: 9.7,
+    beaches: [
+      { name: "ULUWATU",     lat: -8.814, lng: 115.088, quality: 9.9, swellDir: "SW",  type: "Racetrack & Outside Corner" },
+      { name: "PADANG",      lat: -8.811, lng: 115.103, quality: 9.9, swellDir: "SSW", type: "Balinese Pipeline Limestone" },
+      { name: "IMPOSSIBLES", lat: -8.805, lng: 115.111, quality: 9.4, swellDir: "WSW", type: "Fast Long Left Reef" },
+      { name: "BINGIN REEF", lat: -8.805, lng: 115.113, quality: 9.3, swellDir: "S",   type: "Mechanical Left Barrel" },
+      { name: "KERAMAS",     lat: -8.598, lng: 115.337, quality: 9.5, swellDir: "SSE", type: "East Coast High-Perf Right" },
+    ],
+  },
+  {
+    id: "jbay-sa",
+    name: "Jeffreys Bay & Supertubes, South Africa",
+    shortName: "J-BAY, ZA",
+    code: "JBY-ZAF",
+    country: "South Africa",
+    isIconicGlobal: true,
+    keywords: ["j-bay", "jbay", "jeffreys bay", "supertubes", "south africa", "st francis", "boneyards"],
+    lat: -34.049,
+    lng: 24.931,
+    swellHeightM: 2.9,
+    swellPeriodS: 16,
+    swellDir: "SSE",
+    windKt: 9,
+    windDir: "WSW",
+    activeSlot: 0,
+    worthItScore: 9.8,
+    beaches: [
+      { name: "SUPERTUBES",  lat: -34.049, lng: 24.931, quality: 10.0, swellDir: "SSE", type: "Fastest Right Point on Earth" },
+      { name: "BONEYARDS",   lat: -34.043, lng: 24.932, quality: 9.3,  swellDir: "SE",  type: "Top of Point Reef Ledge" },
+      { name: "MAGNA TUBES", lat: -34.038, lng: 24.933, quality: 9.2,  swellDir: "E",   type: "Heavy Wedge Barrel" },
+      { name: "ST FRANCIS",  lat: -34.165, lng: 24.832, quality: 9.6,  swellDir: "ESE", type: "Bruce's Beauties Right" },
+      { name: "MUIZENBERG",  lat: -34.109, lng: 18.471, quality: 8.6,  swellDir: "S",   type: "False Bay South Swell" },
+    ],
+  },
+  {
+    id: "gold-coast",
+    name: "Superbank & Snapper Rocks, Australia",
+    shortName: "SNAPPER, AU",
+    code: "OOL-QLD",
+    country: "Australia",
+    isIconicGlobal: true,
+    keywords: ["snapper", "snapper rocks", "superbank", "kirra", "gold coast", "coolangatta", "burleigh", "rainbow bay"],
+    lat: -28.163,
+    lng: 153.550,
+    swellHeightM: 2.6,
+    swellPeriodS: 14,
+    swellDir: "ENE",
+    windKt: 7,
+    windDir: "SSE",
+    activeSlot: 0,
+    worthItScore: 9.6,
+    beaches: [
+      { name: "SNAPPER",     lat: -28.162, lng: 153.551, quality: 9.9, swellDir: "ENE", type: "2km Superbank Sand-Bottom Right" },
+      { name: "KIRRA POINT", lat: -28.165, lng: 153.535, quality: 9.8, swellDir: "E",   type: "Hollow Freight Train Barrel" },
+      { name: "RAINBOW BAY", lat: -28.164, lng: 153.548, quality: 9.4, swellDir: "NE",  type: "Greenmount Inside Section" },
+      { name: "BURLEIGH HD", lat: -28.088, lng: 153.457, quality: 9.5, swellDir: "SE",  type: "Basalt Boulders Right Point" },
+      { name: "DURANBAH",    lat: -28.168, lng: 153.552, quality: 9.2, swellDir: "ESE", type: "River Mouth Wedge A-Frames" },
+    ],
+  },
+  {
+    id: "sydney-icons",
+    name: "Sydney Icons (Bondi, Bronte & Manly), NSW",
+    shortName: "BONDI / SYD",
+    code: "SYD-ICN",
+    country: "Australia",
+    isIconicGlobal: true,
+    keywords: ["sydney icons", "bondi", "bronte", "tamarama", "maroubra", "manly"],
+    lat: -33.891,
+    lng: 151.276,
+    swellHeightM: 1.9,
+    swellPeriodS: 13,
+    swellDir: "SSE",
+    windKt: 8,
+    windDir: "WNW",
+    activeSlot: 2,
+    worthItScore: 8.8,
+    beaches: [
+      { name: "BONDI",       lat: -33.891, lng: 151.276, quality: 9.2, swellDir: "SE",  type: "Iconic Crescent Bay" },
+      { name: "MANLY",       lat: -33.797, lng: 151.288, quality: 9.1, swellDir: "ENE", type: "Queenscliff & Steyne" },
+      { name: "BRONTE",      lat: -33.904, lng: 151.268, quality: 9.1, swellDir: "SSE", type: "South Reef & Express" },
+      { name: "TAMARAMA",    lat: -33.900, lng: 151.270, quality: 9.3, swellDir: "E",   type: "Deep Water Wedge Reef" },
+      { name: "MAROUBRA",    lat: -33.949, lng: 151.257, quality: 9.2, swellDir: "SSE", type: "Heavy Swell Magnet" },
+    ],
+  },
   {
     id: "sydney-north",
     name: "Sydney Northern Beaches, NSW",
     shortName: "SYDNEY NTH",
     code: "SYD-NTH",
     country: "Australia",
+    keywords: ["northern beaches", "dee why", "long reef", "curl curl", "freshwater", "freshie", "queensie", "queenscliff", "narrabeen", "collaroy"],
     lat: -33.748,
     lng: 151.309,
     swellHeightM: 1.9,
@@ -30,16 +256,17 @@ export const CURATED_REGIONS = [
     swellDir: "SSE",
     windKt: 8,
     windDir: "WNW",
-    activeSlot: 2, // DEE WHY (+60°) matching hero render!
-    worthItScore: 8.2, // +38° on lower sub-dial matching hero render!
+    activeSlot: 2,
+    worthItScore: 8.2,
     beaches: [
-      { name: "LONG REEF",   lat: -33.743, lng: 151.316, quality: 9.2, type: "Reef / Bombora" },
-      { name: "QUEENSCLIFF", lat: -33.785, lng: 151.290, quality: 8.7, type: "North End Bank" },
-      { name: "DEE WHY",     lat: -33.754, lng: 151.299, quality: 9.4, type: "Right Point / Bowl" },
-      { name: "FRESHIE",     lat: -33.779, lng: 151.291, quality: 8.5, type: "Protected Wedge" },
-      { name: "CURL CURL",   lat: -33.769, lng: 151.296, quality: 9.0, type: "Heavy Beachbreak" },
+      { name: "LONG REEF",   lat: -33.743, lng: 151.316, quality: 9.2, swellDir: "NE",  type: "Reef / Bombora" },
+      { name: "QUEENSIE"   , lat: -33.785, lng: 151.290, quality: 8.7, swellDir: "ESE", type: "North End Bank" },
+      { name: "DEE WHY",     lat: -33.754, lng: 151.299, quality: 9.4, swellDir: "SSE", type: "Right Point / Bowl" },
+      { name: "FRESHIE",     lat: -33.779, lng: 151.291, quality: 8.5, swellDir: "E",   type: "Protected Wedge" },
+      { name: "CURL CURL",   lat: -33.769, lng: 151.296, quality: 9.0, swellDir: "SE",  type: "Heavy Beachbreak" },
     ],
   },
+
   {
     id: "kiama-south-coast",
     name: "Kiama & Gerringong, South Coast NSW",
@@ -70,21 +297,22 @@ export const CURATED_REGIONS = [
     shortName: "BONDI / EAST",
     code: "SYD-EST",
     country: "Australia",
-    lat: -33.891,
-    lng: 151.276,
-    swellHeightM: 1.7,
-    swellPeriodS: 12,
+    keywords: ["eastern suburbs", "bondi beach", "north bondi", "bronte beach", "tamarama", "coogee", "maroubra", "clovelly", "randwick", "waverley", "paddington", "surry hills", "newtown", "redfern", "double bay", "rose bay"],
+    lat: -33.904,
+    lng: 151.268,
+    swellHeightM: 1.8,
+    swellPeriodS: 13,
     swellDir: "SE",
-    windKt: 9,
-    windDir: "W",
+    windKt: 8,
+    windDir: "WNW",
     activeSlot: 1,
-    worthItScore: 7.6,
+    worthItScore: 8.6,
     beaches: [
-      { name: "BONDI",     lat: -33.891, lng: 151.276, quality: 8.6, type: "Crescent Bay" },
-      { name: "TAMARAMA",  lat: -33.900, lng: 151.270, quality: 9.1, type: "Deep Water Reef/Bank" },
-      { name: "BRONTE",    lat: -33.904, lng: 151.268, quality: 8.9, type: "South Reef" },
-      { name: "MAROUBRA",  lat: -33.949, lng: 151.257, quality: 9.0, type: "Open Swell Magnet" },
-      { name: "CRONULLA",  lat: -34.055, lng: 151.157, quality: 9.3, type: "Shark Island / Point" },
+      { name: "BONDI",     lat: -33.891, lng: 151.276, quality: 9.1, type: "Iconic Crescent Bay" },
+      { name: "TAMARAMA",  lat: -33.900, lng: 151.270, quality: 9.3, type: "Deep Water Reef/Bank" },
+      { name: "BRONTE",    lat: -33.904, lng: 151.268, quality: 9.1, type: "South Reef & Express" },
+      { name: "COOGEE",    lat: -33.921, lng: 151.258, quality: 8.7, type: "Protected Eastern Bay" },
+      { name: "MAROUBRA",  lat: -33.949, lng: 151.257, quality: 9.2, type: "Open Swell Magnet" },
     ],
   },
   {
@@ -108,29 +336,6 @@ export const CURATED_REGIONS = [
       { name: "LENNOX HEAD", lat: -28.797, lng: 153.600, quality: 9.7, type: "World-Class Right" },
       { name: "TALLOWS",     lat: -28.653, lng: 153.628, quality: 8.6, type: "Punchy Beachbreak" },
       { name: "BROKEN HEAD", lat: -28.706, lng: 153.616, quality: 9.0, type: "Sand Bottom Point" },
-    ],
-  },
-  {
-    id: "gold-coast",
-    name: "Coolangatta / Gold Coast, QLD",
-    shortName: "GOLD COAST",
-    code: "OOL-QLD",
-    country: "Australia",
-    lat: -28.163,
-    lng: 153.550,
-    swellHeightM: 2.2,
-    swellPeriodS: 14,
-    swellDir: "ENE",
-    windKt: 7,
-    windDir: "SSE",
-    activeSlot: 0,
-    worthItScore: 9.5,
-    beaches: [
-      { name: "SNAPPER",     lat: -28.162, lng: 153.551, quality: 9.9, type: "Superbank Right" },
-      { name: "RAINBOW BAY", lat: -28.164, lng: 153.548, quality: 9.4, type: "Barrel Section" },
-      { name: "KIRRA POINT", lat: -28.165, lng: 153.535, quality: 9.8, type: "Hollow Freight Train" },
-      { name: "BURLEIGH HD", lat: -28.088, lng: 153.457, quality: 9.5, type: "Boulders Right Point" },
-      { name: "DURANBAH",    lat: -28.168, lng: 153.552, quality: 9.2, type: "Wedge A-Frames" },
     ],
   },
   {
@@ -177,29 +382,6 @@ export const CURATED_REGIONS = [
       { name: "NORTH POINT", lat: -33.861, lng: 114.982, quality: 9.8, type: "Deep Barrel Reef" },
       { name: "YALLINGUP",   lat: -33.640, lng: 115.012, quality: 8.9, type: "Outer Bombora Reef" },
       { name: "INJIDUP",     lat: -33.699, lng: 114.985, quality: 9.1, type: "Carparks Point" },
-    ],
-  },
-  {
-    id: "oahu-north",
-    name: "North Shore, Oahu, Hawaii",
-    shortName: "OAHU NORTH",
-    code: "HNL-NTH",
-    country: "United States",
-    lat: 21.665,
-    lng: -158.053,
-    swellHeightM: 3.4,
-    swellPeriodS: 18,
-    swellDir: "NW",
-    windKt: 11,
-    windDir: "ENE",
-    activeSlot: 0,
-    worthItScore: 9.8,
-    beaches: [
-      { name: "PIPELINE",    lat: 21.665, lng: -158.053, quality: 10.0, type: "Shallow Cavern Reef" },
-      { name: "SUNSET BCH",  lat: 21.678, lng: -158.041, quality: 9.6, type: "Deep Water Peak" },
-      { name: "WAIMEA BAY",  lat: 21.641, lng: -158.066, quality: 9.7, type: "Big Wave Point" },
-      { name: "HALEIWA",     lat: 21.595, lng: -158.105, quality: 9.2, type: "Toilet Bowl Reef" },
-      { name: "LANIAKEA",   lat: 21.618, lng: -158.085, quality: 9.1, type: "Long Right Reef" },
     ],
   },
   {
@@ -387,29 +569,6 @@ export const CURATED_REGIONS = [
     ],
   },
   {
-    id: "bali-uluwatu",
-    name: "Bukit Peninsula & Canggu, Bali",
-    shortName: "ULUWATU BALI",
-    code: "DPS-IDN",
-    country: "Indonesia",
-    lat: -8.814,
-    lng: 115.088,
-    swellHeightM: 2.5,
-    swellPeriodS: 16,
-    swellDir: "SSW",
-    windKt: 12,
-    windDir: "ESE",
-    activeSlot: 0,
-    worthItScore: 9.7,
-    beaches: [
-      { name: "ULUWATU",     lat: -8.814, lng: 115.088, quality: 9.9, type: "Racetrack & Outside Corner" },
-      { name: "PADANG",      lat: -8.811, lng: 115.103, quality: 9.9, type: "Balinese Pipeline" },
-      { name: "IMPOSSIBLES", lat: -8.805, lng: 115.111, quality: 9.4, type: "Fast Long Left Reef" },
-      { name: "BINGIN",      lat: -8.805, lng: 115.113, quality: 9.3, type: "Mechanical Left Barrel" },
-      { name: "CANGGU ECHO", lat: -8.654, lng: 115.125, quality: 8.9, type: "Sandbar & Rivermouth" },
-    ],
-  },
-  {
     id: "raglan-nz",
     name: "Raglan & West Coast, New Zealand",
     shortName: "RAGLAN NZ",
@@ -430,29 +589,6 @@ export const CURATED_REGIONS = [
       { name: "INDICATORS",  lat: -37.829, lng: 174.790, quality: 9.8, type: "Outer Point Wall" },
       { name: "PIHA BAR",    lat: -36.953, lng: 174.468, quality: 9.1, type: "Lion Rock Black Sand" },
       { name: "MURIWAI",     lat: -36.830, lng: 174.426, quality: 8.7, type: "Tasman Heavy Beach" },
-    ],
-  },
-  {
-    id: "jbay-sa",
-    name: "Jeffreys Bay & Cape, South Africa",
-    shortName: "J-BAY SA",
-    code: "JBY-ZAF",
-    country: "South Africa",
-    lat: -34.049,
-    lng: 24.931,
-    swellHeightM: 2.7,
-    swellPeriodS: 16,
-    swellDir: "SSW",
-    windKt: 9,
-    windDir: "WSW",
-    activeSlot: 0,
-    worthItScore: 9.8,
-    beaches: [
-      { name: "SUPERTUBES",  lat: -34.049, lng: 24.931, quality: 10.0, type: "Fastest Right Point" },
-      { name: "BONEYARDS",   lat: -34.043, lng: 24.932, quality: 9.3, type: "Top of Point Reef" },
-      { name: "MAGNA TUBES", lat: -34.038, lng: 24.933, quality: 9.2, type: "Heavy Wedge Barrel" },
-      { name: "ST FRANCIS",  lat: -34.165, lng: 24.832, quality: 9.6, type: "Bruce's Beauties" },
-      { name: "MUIZENBERG",  lat: -34.109, lng: 18.471, quality: 8.5, type: "False Bay Corner" },
     ],
   },
   {
@@ -886,6 +1022,43 @@ const EXTRA_GLOBAL_BREAKS = [
   { name: "SAYULITA",    lat: 20.869,  lng: -105.441, quality: 8.5, type: "Town Right Reef" },
   { name: "BARRA CRUZ",  lat: 15.826,  lng: -95.962,  quality: 9.6, type: "Sand-Bottom Right Point" },
   { name: "SALINA CRUZ", lat: 16.162,  lng: -95.199,  quality: 9.5, type: "Jetty Right Tube" },
+  // Granular Sydney Upper & Lower Northern Beaches
+  { name: "PALM BEACH",  lat: -33.599, lng: 151.325, quality: 9.1, type: "North Corner & Kiddies" },
+  { name: "WHALE BCH",   lat: -33.612, lng: 151.329, quality: 9.2, type: "The Wedge Reef" },
+  { name: "AVALON",      lat: -33.636, lng: 151.332, quality: 9.4, type: "North & South Avalon" },
+  { name: "BILGOLA",     lat: -33.647, lng: 151.327, quality: 8.8, type: "Headland Pocket Bank" },
+  { name: "NEWPORT",     lat: -33.656, lng: 151.324, quality: 9.1, type: "Newport Peak & Reef" },
+  { name: "MONA VALE",   lat: -33.678, lng: 151.319, quality: 9.0, type: "Basin & Bongin Reef" },
+  { name: "WARRIEWOOD",  lat: -33.694, lng: 151.311, quality: 8.9, type: "Cliff Corner Wedge" },
+  { name: "NARRABEEN",   lat: -33.714, lng: 151.304, quality: 9.6, type: "Iconic North Narrabeen Alley" },
+  { name: "LONG REEF",   lat: -33.743, lng: 151.316, quality: 9.2, type: "Outer Reef & Bombora" },
+  { name: "DEE WHY",     lat: -33.754, lng: 151.299, quality: 9.4, type: "Right Point & Bowl" },
+  { name: "CURL CURL",   lat: -33.769, lng: 151.296, quality: 9.1, type: "Heavy Beachbreak" },
+  { name: "FRESHIE",     lat: -33.779, lng: 151.291, quality: 8.8, type: "Protected Wedge" },
+  { name: "QUEENSIE",    lat: -33.785, lng: 151.290, quality: 8.9, type: "North End Bombora & Bank" },
+  { name: "MANLY",       lat: -33.797, lng: 151.288, quality: 9.2, type: "South Steyne & Bower Reef" },
+  // Granular Sydney Eastern Suburbs & Sutherland
+  { name: "BONDI",       lat: -33.891, lng: 151.276, quality: 9.2, type: "Iconic Crescent Bay" },
+  { name: "TAMARAMA",    lat: -33.900, lng: 151.270, quality: 9.3, type: "Deepwater Wedge & Reef" },
+  { name: "BRONTE",      lat: -33.904, lng: 151.268, quality: 9.1, type: "South Reef & Express" },
+  { name: "COOGEE",      lat: -33.921, lng: 151.258, quality: 8.9, type: "Wedding Cake Island Peaks" },
+  { name: "MAROUBRA",    lat: -33.949, lng: 151.257, quality: 9.2, type: "Skatepark & South Reef" },
+  { name: "GREENHILLS",  lat: -34.031, lng: 151.178, quality: 8.9, type: "Open Ocean Sandbar" },
+  { name: "WANDA BCH",   lat: -34.039, lng: 151.168, quality: 8.9, type: "Punchy Beachbreak" },
+  { name: "ELOUERA",     lat: -34.045, lng: 151.162, quality: 9.1, type: "Fast Hollow Banks" },
+  { name: "THE ALLEY",   lat: -34.052, lng: 151.157, quality: 9.0, type: "North Cronulla Rip Bowl" },
+  { name: "SHARK ISL",   lat: -34.059, lng: 151.159, quality: 9.7, type: "World-Famous Right Slab" },
+  { name: "GARIE BEACH", lat: -34.171, lng: 151.066, quality: 9.1, type: "Royal National Park Bank" },
+  { name: "STANWELL PK", lat: -34.231, lng: 150.992, quality: 8.9, type: "Heavy Beachbreak" },
+  // Granular Los Angeles / Venice / Santa Monica / Orange County
+  { name: "VENICE BRKW", lat: 33.985,  lng: -118.475, quality: 9.0, type: "Venice Breakwater Peak" },
+  { name: "SANTA MONCA", lat: 34.009,  lng: -118.497, quality: 8.6, type: "Bay Street Sandbar" },
+  { name: "SUNSET PT",   lat: 34.039,  lng: -118.554, quality: 8.9, type: "Point & Beachbreak" },
+  { name: "MANHATTAN",   lat: 33.884,  lng: -118.414, quality: 8.9, type: "Pier Bowl Sandbar" },
+  { name: "HERMOSA",     lat: 33.862,  lng: -118.404, quality: 8.7, type: "South Bay Beachbreak" },
+  { name: "HUNTINGTON",  lat: 33.655,  lng: -118.005, quality: 9.2, type: "Surf City Pier Northside" },
+  { name: "NEWPORT JTY", lat: 33.596,  lng: -117.905, quality: 9.3, type: "56th St & The Wedge" },
+  { name: "THE WEDGE",   lat: 33.593,  lng: -117.882, quality: 9.5, type: "Mutant Jetty Sidewash" },
 ];
 EXTRA_GLOBAL_BREAKS.forEach((b) => GLOBAL_BREAK_POOL.push(b));
 
@@ -913,9 +1086,12 @@ export function haversineKm(lat1, lon1, lat2, lon2) {
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export function formatDialBeachName(rawName) {
-  if (!rawName) return "MAIN BREAK";
-  let s = rawName
+export function formatDialBeachName(raw) {
+  const norm = String(raw || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  if (!norm.trim()) return "";
+  let str = norm
     .toUpperCase()
     .replace(/['’`]/g, "'")
     .replace(/\bBEACH\b/g, "BCH")
@@ -927,16 +1103,63 @@ export function formatDialBeachName(rawName) {
     .replace(/\bHARBOR\b/g, "HBR")
     .replace(/\bSAINT\b/g, "ST")
     .replace(/\bMOUNT\b/g, "MT")
-    .replace(/[^A-Z0-9 ?\-'./&]/g, " ")
+    .replace(/[^A-Z0-9 ?\-'./&+]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  if (s.length > 11) {
-    s = s.replace(/\s+(BCH|PT|HD|RF)$/, "").trim();
+  if (!str) return "";
+  if (str.length > 12) {
+    str = str.replace(/\s+(BCH|PT|HD|RF)$/, "").trim();
   }
-  if (s.length > 11) {
-    s = s.slice(0, 11).trim();
+  if (str.length > 12) {
+    str = str.slice(0, 12).trim();
   }
-  return s || "LOCAL REEF";
+  return str;
+}
+
+/**
+ * Generates 5 normalized dial beaches for a coastline region.
+ * Preserves 0° equator/prime-meridian coordinates and 0° North swell/wind bearings via nullish coalescing (??),
+ * while defaulting missing/invalid region coordinates to Sydney Northern Beaches (-33.75, 151.30).
+ */
+export function generate5BeachesForCoastline(region, customBeaches = null) {
+  const hasValidLat = region && typeof region.lat === "number" && !Number.isNaN(region.lat);
+  const rawRegLon = region ? (typeof region.lon === "number" ? region.lon : region.lng) : undefined;
+  const hasValidLon = typeof rawRegLon === "number" && !Number.isNaN(rawRegLon);
+
+  const baseLat = hasValidLat && hasValidLon ? region.lat : -33.75;
+  const baseLon = hasValidLat && hasValidLon ? rawRegLon : 151.30;
+
+  const sourceBeaches =
+    Array.isArray(customBeaches) && customBeaches.length > 0
+      ? customBeaches
+      : Array.isArray(region?.beaches) && region.beaches.length > 0
+      ? region.beaches
+      : CURATED_REGIONS[0].beaches;
+
+  return Array.from({ length: 5 }, (_, i) => {
+    const b = sourceBeaches[i] || {};
+    const lat = Number(b.lat ?? baseLat);
+    const lon = Number(b.lon ?? b.lng ?? baseLon);
+    const openSwellDir = Number(b.openSwellDir ?? region?.openSwellDir ?? 135);
+    const dirTolerance = Number(b.dirTolerance ?? 45);
+    const windOffshore = Number(b.windOffshore ?? region?.windOffshore ?? 270);
+    const windTolerance = Number(b.windTolerance ?? 45);
+    const quality = Number(b.quality ?? 8.6);
+    const formattedName = formatDialBeachName(b.name);
+    return {
+      ...b,
+      name: formattedName || `BEACH ${i + 1}`,
+      lat,
+      lon,
+      lng: lon,
+      openSwellDir,
+      dirTolerance,
+      windOffshore,
+      windTolerance,
+      quality,
+      type: b.type || "Coastal Surf Break",
+    };
+  });
 }
 
 /**
@@ -988,15 +1211,15 @@ Rules:
     const parsed = JSON.parse(text);
     if (!Array.isArray(parsed.beaches) || parsed.beaches.length < 5) return null;
     const beaches = parsed.beaches.slice(0, 5).map((b, i) => ({
-      name: formatDialBeachName(b.name || `BREAK ${i + 1}`),
+      name: formatDialBeachName(b.name || `BREAK ${i + 1}`) || `BREAK ${i + 1}`,
       lat: Number(b.lat ?? lat ?? -33.8),
       lng: Number(b.lng ?? lng ?? 151.2),
       quality: Number(Math.min(9.9, Math.max(6.8, Number(b.quality ?? 8.6))).toFixed(1)),
       type: b.type || "Surf Break",
-      distKm: (lat && lng && b.lat && b.lng) ? haversineKm(lat, lng, Number(b.lat), Number(b.lng)) : i * 2.5,
+      distKm: (lat != null && lng != null && b.lat != null && b.lng != null) ? haversineKm(lat, lng, Number(b.lat), Number(b.lng)) : i * 2.5,
     }));
-    const rLat = Number(lat || parsed.lat || beaches[0].lat);
-    const rLng = Number(lng || parsed.lng || beaches[0].lng);
+    const rLat = Number(lat ?? parsed.lat ?? beaches[0].lat);
+    const rLng = Number(lng ?? parsed.lng ?? beaches[0].lng);
     const shortName = (parsed.shortName || placeLabel.split(",")[0] || "CUSTOM").toUpperCase().slice(0, 12);
     const codePrefix = shortName.replace(/[^A-Z]/g, "").slice(0, 3).padEnd(3, "X");
     return {
@@ -1023,106 +1246,507 @@ Rules:
   }
 }
 
-export async function resolve5BestLocalBeaches(lat, lng, placeLabel = "") {
-  const qLower = (placeLabel || "").toLowerCase();
+/**
+ * Detects whether a search string looks like a street address, unit number, or postcode query
+ */
+export function isLikelyStreetAddress(query) {
+  const q = String(query || "").trim();
+  if (!q) return false;
+  if (/^\d+[a-zA-Z]?\s+\S+/.test(q)) return true;
+  if (/^\d+\/\d+\s+\S+/.test(q)) return true;
+  if (/\b(st|street|rd|road|ave|avenue|parade|pde|dr|drive|ln|lane|way|blvd|boulevard|ct|court|pl|place|cres|crescent|hwy|highway|terrace|tce|close|cl|circuit|cct|esplanade|esp)\b/i.test(q)) {
+    return true;
+  }
+  return false;
+}
 
-  // 1a. Direct keyword or proximity match against ALL_KNOWN_REGIONS
-  for (const reg of ALL_KNOWN_REGIONS) {
-    const kwMatch = Array.isArray(reg.keywords) && reg.keywords.some((kw) => qLower.includes(kw));
-    const nameMatch = reg.name.toLowerCase().includes(qLower) || qLower.includes(reg.shortName.toLowerCase());
-    const dist = (lat != null && lng != null && (lat !== 0 || lng !== 0)) ? haversineKm(lat, lng, reg.lat, reg.lng) : 999;
-    if ((kwMatch && (dist < 55 || dist === 999)) || dist <= 16.0 || (nameMatch && qLower.length >= 4 && (dist < 55 || dist === 999))) {
-      return {
-        region: { ...reg },
-        beaches: reg.beaches.map((b) => ({
-          ...b,
-          distKm: (lat != null && lng != null && (lat !== 0 || lng !== 0)) ? haversineKm(lat, lng, b.lat, b.lng) : 2.0,
-        })),
-        source: "CURATED_SURF_ATLAS",
-      };
+/**
+ * Extracts a clean locality / suburb / town short title (<= 12 chars) from any street address or place label
+ */
+export function extractLocalityShortName(placeLabel) {
+  const raw = String(placeLabel || "").trim();
+  if (!raw) return "LOCAL COAST";
+  const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  // If first part is a street address (e.g. "42 Fletcher Street" or "15"), prefer the suburb/neighborhood in part[1]
+  for (const part of parts) {
+    if (/^\d+$/.test(part)) continue;
+    if (/^\d+[a-zA-Z\-\/]*\s+/.test(part)) continue;
+    if (isLikelyStreetAddress(part)) continue;
+    if (/^(new south wales|nsw|victoria|vic|queensland|qld|western australia|wa|south australia|sa|tasmania|tas|australia|united states|usa|united kingdom|uk|california|ca)$/i.test(part)) {
+      continue;
+    }
+    const cleaned = part.replace(/\b\d{4,5}\b/g, "").trim();
+    if (cleaned.length >= 2) {
+      return formatDialBeachName(cleaned).slice(0, 12) || cleaned.toUpperCase().slice(0, 12);
+    }
+  }
+  // Fallback: strip leading house numbers and street suffix from parts[0]
+  const stripped = parts[0]
+    .replace(/^\d+[a-zA-Z\-\/]*\s+/, "")
+    .replace(/\b(street|st|road|rd|avenue|ave|parade|pde|drive|dr|lane|ln|boulevard|blvd|place|pl|court|ct|crescent|cres)\b/gi, "")
+    .trim();
+  return (stripped || parts[0] || "LOCAL").toUpperCase().slice(0, 12);
+}
+
+/**
+ * Multi-provider CORS street address & place geocoder (ArcGIS World Geocoder + Komoot Photon + OSM Nominatim).
+ * Works in the browser with zero API keys for any residential home address, street, suburb, postcode, or beach on Earth.
+ */
+function getBrowserLocationBias() {
+  try {
+    const tz = (typeof Intl !== "undefined" && Intl.DateTimeFormat().resolvedOptions().timeZone) || "Australia/Sydney";
+    const tzMap = {
+      "Australia/Sydney": { lat: -33.8688, lng: 151.2093 },
+      "Australia/Melbourne": { lat: -37.8136, lng: 144.9631 },
+      "Australia/Brisbane": { lat: -27.4698, lng: 153.0251 },
+      "Australia/Perth": { lat: -31.9505, lng: 115.8605 },
+      "Australia/Adelaide": { lat: -34.9285, lng: 138.6007 },
+      "Australia/Hobart": { lat: -42.8821, lng: 147.3272 },
+      "Pacific/Auckland": { lat: -36.8485, lng: 174.7633 },
+      "Pacific/Honolulu": { lat: 21.3069, lng: -157.8583 },
+      "America/Los_Angeles": { lat: 34.0522, lng: -118.2437 },
+      "America/New_York": { lat: 40.7128, lng: -74.0060 },
+      "Europe/London": { lat: 51.5072, lng: -0.1276 },
+      "Europe/Lisbon": { lat: 38.7223, lng: -9.1393 },
+      "Europe/Paris": { lat: 43.4832, lng: -1.5586 },
+      "Europe/Madrid": { lat: 43.3183, lng: -1.9812 },
+      "Asia/Makassar": { lat: -8.6500, lng: 115.2167 },
+      "Asia/Tokyo": { lat: 35.6762, lng: 139.6503 },
+    };
+    return tzMap[tz] || { lat: -33.8688, lng: 151.2093 };
+  } catch (_) {
+    return { lat: -33.8688, lng: 151.2093 };
+  }
+}
+
+export async function geocodeAddressCandidates(query, limit = 6) {
+  const q = String(query || "").trim();
+  if (q.length < 2) return [];
+
+  const bias = getBrowserLocationBias();
+  const houseMatch = q.match(/^(\d+[a-zA-Z]?)\s+/);
+  const requestedHouseNum = houseMatch ? houseMatch[1].toLowerCase() : null;
+
+  const qTokens = q
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((t) => t.length >= 2 && !/^(st|street|rd|road|ave|avenue|dr|drive|ln|lane|pl|place|ct|court|pde|parade|blvd|boulevard|the)$/.test(t));
+
+  const computeTokenMatch = (label, extraText = "") => {
+    if (qTokens.length === 0) return 1.0;
+    const hay = `${label} ${extraText}`.toLowerCase();
+    let hits = 0;
+    for (const tok of qTokens) {
+      if (hay.includes(tok)) hits += 1;
+    }
+    return hits / qTokens.length;
+  };
+
+  const scoreCandidate = (label, extraText = "", baseScore = 85) => {
+    const tokenRatio = computeTokenMatch(label, extraText);
+    const hasLocality = label.includes(",");
+    return baseScore * 0.35 + tokenRatio * 65 + (hasLocality ? 8 : -15);
+  };
+
+  const fetchArcGIS = async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3200);
+    try {
+      const url = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=${limit}&location=${bias.lng},${bias.lat}&outFields=Match_addr,Addr_type,StAddr,Nbrhd,City,Subregion,Region,Country&SingleLine=${encodeURIComponent(q)}`;
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const out = [];
+      for (const c of data.candidates || []) {
+        const lat = Number(c?.location?.y);
+        const lng = Number(c?.location?.x);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
+        const attr = c.attributes || {};
+        const rawAddr = String(c.address || attr.Match_addr || "").trim();
+        if (!rawAddr) continue;
+        if (!rawAddr.includes(",") && !attr.City && !attr.Nbrhd && !attr.Region && qTokens.length >= 2) {
+          continue;
+        }
+        const extra = `${attr.Nbrhd || ""} ${attr.City || ""} ${attr.Subregion || ""} ${attr.Region || ""} ${attr.Country || ""}`;
+        const tokenRatio = computeTokenMatch(rawAddr, extra);
+        const locality = attr.Nbrhd || attr.City || attr.Subregion || attr.Region || rawAddr.split(",")[0];
+        const isAddr = /PointAddress|StreetAddress|StreetInt|Subaddress|StreetName/i.test(attr.Addr_type || "") || isLikelyStreetAddress(rawAddr);
+        out.push({
+          label: rawAddr,
+          sublabel: `5 Best Local Surf Beaches near ${locality}`,
+          lat,
+          lng,
+          regionId: null,
+          badge: isAddr ? "📍 HOME ADDRESS" : "📍 LOCATION",
+          _tokenRatio: tokenRatio,
+          _rank: scoreCandidate(rawAddr, extra, Number(c.score || 90)) + 4,
+        });
+      }
+      return out;
+    } catch (_) {
+      clearTimeout(timer);
+      return [];
+    }
+  };
+
+  const fetchPhoton = async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3200);
+    try {
+      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=${bias.lat}&lon=${bias.lng}&limit=${limit}&lang=en`;
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const out = [];
+      for (const feat of data.features || []) {
+        const coords = feat?.geometry?.coordinates;
+        if (!Array.isArray(coords) || coords.length < 2) continue;
+        const [lng, lat] = coords.map(Number);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
+        const p = feat.properties || {};
+        // If user typed a specific house number (e.g. 75), skip Photon results with a different house number (e.g. 88)
+        if (requestedHouseNum && p.housenumber && String(p.housenumber).toLowerCase() !== requestedHouseNum) {
+          continue;
+        }
+        const streetPart = p.housenumber && p.street
+          ? `${p.housenumber} ${p.street}`
+          : (p.street || p.name || "");
+        const suburbPart = p.suburb || p.district || p.locality || "";
+        const cityPart = p.city || p.town || p.county || "";
+        const statePart = p.state || "";
+        const countryPart = p.country || "";
+        const parts = [streetPart, suburbPart, cityPart, statePart, countryPart].filter(Boolean);
+        const dedupParts = [];
+        for (const pt of parts) {
+          if (!dedupParts.some((existing) => existing.toLowerCase() === pt.toLowerCase())) {
+            dedupParts.push(pt);
+          }
+        }
+        const label = dedupParts.join(", ");
+        if (!label) continue;
+        const extra = `${p.postcode || ""} ${p.name || ""}`;
+        const tokenRatio = computeTokenMatch(label, extra);
+        const locality = suburbPart || cityPart || p.name || dedupParts[0];
+        const isAddr = Boolean(p.housenumber || p.street || p.type === "house" || p.type === "street");
+        out.push({
+          label,
+          sublabel: `5 Best Local Surf Beaches near ${locality}`,
+          lat,
+          lng,
+          regionId: null,
+          badge: isAddr ? "📍 HOME ADDRESS" : "📍 LOCATION",
+          _tokenRatio: tokenRatio,
+          _rank: scoreCandidate(label, extra, isAddr ? 88 : 82),
+        });
+      }
+      return out;
+    } catch (_) {
+      clearTimeout(timer);
+      return [];
+    }
+  };
+
+  const fetchNominatim = async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3200);
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=4&q=${encodeURIComponent(q)}`;
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const out = [];
+      for (const item of data || []) {
+        const lat = Number(item.lat);
+        const lng = Number(item.lon);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
+        const a = item.address || {};
+        if (requestedHouseNum && a.house_number && String(a.house_number).toLowerCase() !== requestedHouseNum) {
+          continue;
+        }
+        const street = a.house_number && a.road ? `${a.house_number} ${a.road}` : (a.road || item.name || "");
+        const suburb = a.suburb || a.neighbourhood || a.village || a.town || "";
+        const city = a.city || a.municipality || a.county || "";
+        const state = a.state || "";
+        const country = a.country || "";
+        const parts = [street, suburb, city, state, country].filter(Boolean);
+        const dedup = [];
+        for (const pt of parts) {
+          if (!dedup.some((e) => e.toLowerCase() === pt.toLowerCase())) dedup.push(pt);
+        }
+        const label = dedup.join(", ") || String(item.display_name || "").split(",").slice(0, 4).join(", ");
+        if (!label) continue;
+        const extra = item.display_name || "";
+        const tokenRatio = computeTokenMatch(label, extra);
+        const locality = suburb || city || dedup[0];
+        out.push({
+          label,
+          sublabel: `5 Best Local Surf Beaches near ${locality}`,
+          lat,
+          lng,
+          regionId: null,
+          badge: a.house_number || a.road ? "📍 HOME ADDRESS" : "📍 LOCATION",
+          _tokenRatio: tokenRatio,
+          _rank: scoreCandidate(label, extra, 88),
+        });
+      }
+      return out;
+    } catch (_) {
+      clearTimeout(timer);
+      return [];
+    }
+  };
+
+  const [arcResults, photonResults, nomResults] = await Promise.all([
+    fetchArcGIS(),
+    fetchPhoton(),
+    fetchNominatim(),
+  ]);
+
+  let merged = [...arcResults, ...photonResults, ...nomResults].sort((a, b) => (b._rank || 0) - (a._rank || 0));
+  const bestTokenRatio = merged.reduce((m, c) => Math.max(m, c._tokenRatio || 0), 0);
+  if (bestTokenRatio >= 0.75) {
+    merged = merged.filter((c) => (c._tokenRatio || 0) >= Math.max(0.6, bestTokenRatio - 0.15));
+  }
+
+  const unique = [];
+  for (const cand of merged) {
+    const normLbl = cand.label.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const isDup = unique.some(
+      (u) =>
+        u.label.toLowerCase().replace(/[^a-z0-9]/g, "") === normLbl ||
+        (haversineKm(u.lat, u.lng, cand.lat, cand.lng) < 0.18 && normLbl.slice(0, 12) === u.label.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12))
+    );
+    if (!isDup) {
+      unique.push(cand);
+    }
+    if (unique.length >= limit) break;
+  }
+  return unique;
+}
+
+/**
+ * Fetches live named beaches & surf spots from OpenStreetMap Overpass API + Wikipedia GeoSearch
+ * when an address is on a coastline outside our static break catalog.
+ */
+async function fetchLiveOsmAndWikiBeaches(lat, lng) {
+  if (lat == null || lng == null || (lat === 0 && lng === 0)) return [];
+  const results = [];
+
+  const wikiPromise = (async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3200);
+    try {
+      const wUrl = `https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}|${lng}&gsradius=10000&gslimit=50&format=json&origin=*`;
+      const wRes = await fetch(wUrl, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!wRes.ok) return [];
+      const wData = await wRes.json();
+      const out = [];
+      for (const item of wData?.query?.geosearch || []) {
+        const title = item.title || "";
+        if (!/beach|point|bay|reef|head|cove|island|surf/i.test(title)) continue;
+        if (/station|school|church|railway|council|electoral|highway|hotel|park|hospital|cemetery|club/i.test(title)) continue;
+        const clean = formatDialBeachName(title.replace(/\(.*?\)/g, "").split(",")[0]);
+        if (clean.length < 3) continue;
+        const dKm = haversineKm(lat, lng, item.lat, item.lon);
+        out.push({
+          name: clean,
+          lat: Number(item.lat),
+          lng: Number(item.lon),
+          distKm: dKm,
+          quality: Number(Math.min(9.3, Math.max(7.5, 8.9 - dKm * 0.03)).toFixed(1)),
+          type: "Local Coastal Break",
+        });
+      }
+      return out;
+    } catch (_) {
+      clearTimeout(timer);
+      return [];
+    }
+  })();
+
+  const overpassPromise = (async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3600);
+    try {
+      const query = `[out:json][timeout:3];(node["natural"="beach"]["name"](around:30000,${lat},${lng});way["natural"="beach"]["name"](around:30000,${lat},${lng});node["sport"="surfing"]["name"](around:35000,${lat},${lng}););out center 40;`;
+      const oUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+      const oRes = await fetch(oUrl, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!oRes.ok) return [];
+      const oData = await oRes.json();
+      const out = [];
+      for (const el of oData?.elements || []) {
+        const rawName = el?.tags?.["name:en"] || el?.tags?.name || "";
+        if (!rawName) continue;
+        if (/dog|nudist|private|hotel|resort|boat|ramp|ferry/i.test(rawName)) continue;
+        const bLat = Number(el.lat ?? el?.center?.lat);
+        const bLng = Number(el.lon ?? el?.center?.lon);
+        if (Number.isNaN(bLat) || Number.isNaN(bLng)) continue;
+        const clean = formatDialBeachName(rawName);
+        if (clean.length < 3) continue;
+        const dKm = haversineKm(lat, lng, bLat, bLng);
+        const isSurfTag = el?.tags?.sport === "surfing";
+        out.push({
+          name: clean,
+          lat: bLat,
+          lng: bLng,
+          distKm: dKm,
+          quality: Number(Math.min(9.5, Math.max(7.6, (isSurfTag ? 9.2 : 8.7) - dKm * 0.025)).toFixed(1)),
+          type: isSurfTag ? "Mapped Surf Break" : "Local Coastal Beach",
+        });
+      }
+      return out;
+    } catch (_) {
+      clearTimeout(timer);
+      return [];
+    }
+  })();
+
+  const [wList, oList] = await Promise.all([wikiPromise, overpassPromise]);
+  results.push(...oList, ...wList);
+  return results;
+}
+
+export async function resolve5BestLocalBeaches(lat, lng, placeLabel = "") {
+  let targetLat = (lat != null && !Number.isNaN(Number(lat))) ? Number(lat) : 0;
+  let targetLng = (lng != null && !Number.isNaN(Number(lng))) ? Number(lng) : 0;
+  let resolvedLabel = String(placeLabel || "").trim();
+
+  // 1. If coordinates are missing or (0, 0), geocode the typed address/query first!
+  if ((targetLat === 0 && targetLng === 0) && resolvedLabel.length >= 2) {
+    const geocoded = await geocodeAddressCandidates(resolvedLabel, 1);
+    if (geocoded.length > 0) {
+      targetLat = geocoded[0].lat;
+      targetLng = geocoded[0].lng;
+      resolvedLabel = geocoded[0].label || resolvedLabel;
     }
   }
 
-  // 2. Intelligent Gemini AI Search for "5 best surf beaches near [placeLabel]"
+  const qLower = resolvedLabel.toLowerCase();
+  const isStreetAddr = isLikelyStreetAddress(resolvedLabel);
+
+  // 2. Only match a static regional preset directly if the user searched a regional name (NOT a street address)
+  //    and the region center is within 8km of the target coordinates.
+  if (!isStreetAddr) {
+    for (const reg of ALL_KNOWN_REGIONS) {
+      const dist = (targetLat !== 0 || targetLng !== 0) ? haversineKm(targetLat, targetLng, reg.lat, reg.lng) : 999;
+      const exactNameMatch = reg.name.toLowerCase() === qLower || reg.shortName.toLowerCase() === qLower;
+      if (exactNameMatch || dist <= 4.5) {
+        return {
+          region: { ...reg },
+          beaches: reg.beaches.map((b) => ({
+            ...b,
+            distKm: (targetLat !== 0 || targetLng !== 0) ? haversineKm(targetLat, targetLng, b.lat, b.lng) : 2.0,
+          })),
+          source: "CURATED_SURF_ATLAS",
+        };
+      }
+    }
+  }
+
+  // 3. Optional Gemini AI Search if key is configured
   const geminiResult = await queryGemini5BestSurfBeaches(
-    placeLabel || `${Number(lat).toFixed(3)}, ${Number(lng).toFixed(3)}`,
-    lat,
-    lng
+    resolvedLabel || `${targetLat.toFixed(3)}, ${targetLng.toFixed(3)}`,
+    targetLat,
+    targetLng
   );
   if (geminiResult && geminiResult.beaches?.length === 5) {
     return geminiResult;
   }
 
-  // 3. Fast CORS-enabled Wikipedia GeoSearch (10km radius) + strict local break pool (<= 30km, NEVER 85km away!)
-  const wikiBeaches = [];
-  if (lat != null && lng != null) {
-    try {
-      const wUrl = `https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}|${lng}&gsradius=10000&gslimit=50&format=json&origin=*`;
-      const wRes = await fetch(wUrl);
-      if (wRes.ok) {
-        const wData = await wRes.json();
-        const seen = new Set();
-        for (const item of wData?.query?.geosearch || []) {
-          const title = item.title || "";
-          if (!/beach|point|bay|reef|head|cove|island|surf/i.test(title)) continue;
-          if (/station|school|church|railway|council|electoral|highway|hotel|park/i.test(title)) continue;
-          const clean = formatDialBeachName(title.replace(/\(.*?\)/g, "").split(",")[0]);
-          if (clean.length < 3 || seen.has(clean)) continue;
-          seen.add(clean);
-          const dKm = haversineKm(lat, lng, item.lat, item.lon);
-          wikiBeaches.push({
-            name: clean,
-            lat: item.lat,
-            lng: item.lon,
-            distKm: dKm,
-            quality: Number(Math.min(9.4, 8.9 - dKm * 0.04).toFixed(1)),
-            type: "Local Coastal Break",
-          });
-        }
-      }
-    } catch (_) {}
-  }
-
-  const poolSorted = GLOBAL_BREAK_POOL.map((b) => ({
-    ...b,
-    name: formatDialBeachName(b.name),
-    distKm: (lat != null && lng != null) ? haversineKm(lat, lng, b.lat, b.lng) : 999,
-  })).sort((a, b) => a.distKm - b.distKm);
-
-  const combined = [];
-  const usedNames = new Set();
-  for (const cand of [...poolSorted.filter((x) => x.distKm <= 30), ...wikiBeaches, ...poolSorted]) {
-    if (!usedNames.has(cand.name)) {
-      usedNames.add(cand.name);
-      combined.push(cand);
+  // 4. Build deduplicated candidate pool from GLOBAL_BREAK_POOL around (targetLat, targetLng)
+  const poolMap = new Map();
+  for (const rawBreak of GLOBAL_BREAK_POOL) {
+    const formattedName = formatDialBeachName(rawBreak.name);
+    if (!formattedName) continue;
+    const dKm = (targetLat !== 0 || targetLng !== 0)
+      ? haversineKm(targetLat, targetLng, rawBreak.lat, rawBreak.lng)
+      : 999;
+    const existing = poolMap.get(formattedName);
+    if (!existing || dKm < existing.distKm || (Math.abs(dKm - existing.distKm) < 1.0 && (rawBreak.quality ?? 8.5) > (existing.quality ?? 8.5))) {
+      poolMap.set(formattedName, {
+        ...rawBreak,
+        name: formattedName,
+        distKm: dKm,
+        quality: Number(rawBreak.quality ?? 8.6),
+      });
     }
-    if (combined.length >= 5) break;
   }
 
-  const top5 = combined.slice(0, 5);
+  let allCandidates = Array.from(poolMap.values()).sort((a, b) => a.distKm - b.distKm);
+  const closePoolCount = allCandidates.filter((c) => c.distKm <= 25.0).length;
+
+  // 5. If fewer than 5 curated breaks exist within 25km of this address, query live OSM Overpass + Wikipedia beaches
+  if (closePoolCount < 5 && (targetLat !== 0 || targetLng !== 0)) {
+    const liveBeaches = await fetchLiveOsmAndWikiBeaches(targetLat, targetLng);
+    for (const lb of liveBeaches) {
+      if (!poolMap.has(lb.name)) {
+        poolMap.set(lb.name, lb);
+      }
+    }
+    allCandidates = Array.from(poolMap.values()).sort((a, b) => a.distKm - b.distKm);
+  }
+
+  // 6. Select the 5 Best Local Surf Beaches using adaptive coastal radius + surf quality weighting
+  const minDistKm = allCandidates.length > 0 ? allCandidates[0].distKm : 0;
+  // Tight local coastal cluster (within 9.5km of the nearest beach to the home address)
+  let localCluster = allCandidates.filter((c) => c.distKm <= Math.max(9.5, minDistKm + 9.0));
+  if (localCluster.length < 5) {
+    localCluster = allCandidates.filter((c) => c.distKm <= Math.max(22.0, minDistKm + 18.0));
+  }
+  if (localCluster.length < 5) {
+    localCluster = allCandidates.slice(0, 10);
+  }
+
+  // Score each candidate in the local cluster by Surf Quality minus a gentle distance penalty from the nearest beach
+  const rankedCluster = localCluster
+    .map((c) => ({
+      ...c,
+      _localScore: (c.quality ?? 8.5) - Math.max(0, c.distKm - minDistKm) * 0.16,
+    }))
+    .sort((a, b) => b._localScore - a._localScore);
+
+  const top5 = rankedCluster.slice(0, 5);
+  // Sort the 5 local beaches geographically North-to-South along the coast so the radial dial reads naturally
   top5.sort((a, b) => b.lat - a.lat);
 
-  const codePrefix = (placeLabel || "CST")
-    .replace(/[^A-Za-z]/g, "")
-    .toUpperCase()
+  // Determine which of the 5 slots is the best/closest break to point to initially
+  let bestSlot = 0;
+  let bestSlotScore = -999;
+  top5.forEach((b, idx) => {
+    const s = (b.quality ?? 8.5) - Math.max(0, b.distKm - minDistKm) * 0.12;
+    if (s > bestSlotScore) {
+      bestSlotScore = s;
+      bestSlot = idx;
+    }
+  });
+
+  const localityShort = extractLocalityShortName(resolvedLabel);
+  const codePrefix = localityShort
+    .replace(/[^A-Z]/g, "")
     .slice(0, 3)
     .padEnd(3, "X");
 
   return {
     region: {
-      id: "custom-loc",
-      name: placeLabel || `${Number(lat).toFixed(3)}°, ${Number(lng).toFixed(3)}°`,
-      shortName: (placeLabel.split(",")[0] || "CUSTOM").toUpperCase().slice(0, 12),
+      id: "custom-loc-" + codePrefix.toLowerCase(),
+      name: resolvedLabel || `${targetLat.toFixed(3)}°, ${targetLng.toFixed(3)}°`,
+      shortName: localityShort,
       code: `${codePrefix}-LOC`,
-      lat,
-      lng,
+      lat: targetLat,
+      lng: targetLng,
       swellHeightM: 1.9,
       swellPeriodS: 13,
       swellDir: "SSE",
       windKt: 8,
       windDir: "OFFSHORE",
-      activeSlot: 0,
-      worthItScore: 8.6,
+      activeSlot: bestSlot,
+      worthItScore: Number(Math.max(...top5.map((b) => b.quality ?? 8.6)).toFixed(1)),
     },
     beaches: top5,
     source: "LOCAL_COASTAL_SOLVER",
@@ -1157,99 +1781,84 @@ export async function fetchLiveMarineTelemetry(lat, lng) {
 
 export async function searchLocationsAutocomplete(query) {
   const q = (query || "").trim();
-  if (!q) return ALL_KNOWN_REGIONS.slice(0, 8).map((r) => ({
-    label: r.name,
-    sublabel: `${r.beaches.map((b) => b.name).join(" · ")}`,
-    lat: r.lat,
-    lng: r.lng,
-    regionId: r.id,
-    badge: "CURATED",
-  }));
+  if (!q) {
+    return ALL_KNOWN_REGIONS.slice(0, 9).map((r) => ({
+      label: r.name,
+      sublabel: `${r.beaches.map((b) => b.name).join(" · ")}`,
+      lat: r.lat,
+      lng: r.lng,
+      regionId: r.id,
+      badge: "CURATED",
+    }));
+  }
 
   const qLower = q.toLowerCase();
+  const isStreet = isLikelyStreetAddress(q);
   const localMatches = [];
   const seenLabels = new Set();
 
-  for (const r of ALL_KNOWN_REGIONS) {
-    const beachStr = r.beaches.map((b) => b.name).join(" ");
-    const kwStr = Array.isArray(r.keywords) ? r.keywords.join(" ") : "";
-    if (
-      r.name.toLowerCase().includes(qLower) ||
-      r.shortName.toLowerCase().includes(qLower) ||
-      (r.country && r.country.toLowerCase().includes(qLower)) ||
-      beachStr.toLowerCase().includes(qLower) ||
-      kwStr.toLowerCase().includes(qLower)
-    ) {
-      seenLabels.add(r.name.toLowerCase());
-      localMatches.push({
-        label: r.name,
-        sublabel: r.beaches.map((b) => b.name).join(" · "),
-        lat: r.lat,
-        lng: r.lng,
-        regionId: r.id,
-        badge: "5 BEST BREAKS",
-      });
-    }
-  }
-
-  for (const b of GLOBAL_BREAK_POOL) {
-    if (b.name.toLowerCase().includes(qLower) || (b.type && b.type.toLowerCase().includes(qLower))) {
-      const lbl = `${b.name}${b.regionName ? " — " + b.regionName : " Coastal Break"}`;
-      if (!seenLabels.has(lbl.toLowerCase())) {
-        seenLabels.add(lbl.toLowerCase());
+  // Only match curated regions / breaks by substring if the user is NOT typing a residential street address
+  if (!isStreet) {
+    for (const r of ALL_KNOWN_REGIONS) {
+      const beachStr = r.beaches.map((b) => b.name).join(" ");
+      const kwStr = Array.isArray(r.keywords) ? r.keywords.join(" ") : "";
+      if (
+        r.name.toLowerCase().includes(qLower) ||
+        r.shortName.toLowerCase().includes(qLower) ||
+        (r.country && r.country.toLowerCase().includes(qLower)) ||
+        beachStr.toLowerCase().includes(qLower) ||
+        kwStr.toLowerCase().includes(qLower)
+      ) {
+        seenLabels.add(r.name.toLowerCase());
         localMatches.push({
-          label: lbl,
-          sublabel: `${b.type || "Surf Break"} · ${b.lat.toFixed(3)}°, ${b.lng.toFixed(3)}° · Nearest 5 Breaks`,
-          lat: b.lat,
-          lng: b.lng,
-          regionId: null,
-          badge: "SURF BREAK",
+          label: r.name,
+          sublabel: r.beaches.map((b) => b.name).join(" · "),
+          lat: r.lat,
+          lng: r.lng,
+          regionId: r.id,
+          badge: "5 BEST BREAKS",
         });
+      }
+    }
+
+    for (const b of GLOBAL_BREAK_POOL) {
+      if (b.name.toLowerCase().includes(qLower) || (b.type && b.type.toLowerCase().includes(qLower))) {
+        const lbl = `${b.name}${b.regionName ? " — " + b.regionName : " Coastal Break"}`;
+        if (!seenLabels.has(lbl.toLowerCase())) {
+          seenLabels.add(lbl.toLowerCase());
+          localMatches.push({
+            label: lbl,
+            sublabel: `${b.type || "Surf Break"} · Nearest 5 Local Breaks`,
+            lat: b.lat,
+            lng: b.lng,
+            regionId: null,
+            badge: "SURF BREAK",
+          });
+        }
       }
     }
   }
 
   let remoteMatches = [];
   if (q.length >= 2) {
-    try {
-      const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=en`;
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        for (const feat of data.features || []) {
-          const [lng, lat] = feat.geometry.coordinates;
-          const p = feat.properties || {};
-          const parts = [p.name, p.city || p.town || p.county, p.state, p.country].filter(Boolean);
-          const dedupParts = [...new Set(parts)];
-          const label = dedupParts.join(", ");
-          if (!label) continue;
-          remoteMatches.push({
-            label,
-            sublabel: `Gemini AI Surf Search · 5 Best Breaks near ${p.name || label.split(",")[0]}`,
-            lat,
-            lng,
-            regionId: null,
-            badge: "✨ GEMINI SURF",
-          });
-        }
-      }
-    } catch (_) {}
+    remoteMatches = await geocodeAddressCandidates(q, 6);
   }
 
   if (q.length >= 3 && localMatches.length === 0 && remoteMatches.length === 0) {
     remoteMatches.push({
       label: q,
-      sublabel: `Gemini AI Search: "5 best surf beaches near ${q}"`,
+      sublabel: `Find 5 best local surf beaches near "${q}"`,
       lat: 0,
       lng: 0,
       regionId: null,
-      badge: "✨ GEMINI AI",
+      badge: "📍 SEARCH ADDRESS",
     });
   }
 
+  const ordered = isStreet ? [...remoteMatches, ...localMatches] : [...localMatches, ...remoteMatches];
   const combined = [];
   const dedup = new Set();
-  for (const item of [...localMatches, ...remoteMatches]) {
+  for (const item of ordered) {
     const key = (item.label || "").toLowerCase();
     if (!key || dedup.has(key)) continue;
     dedup.add(key);

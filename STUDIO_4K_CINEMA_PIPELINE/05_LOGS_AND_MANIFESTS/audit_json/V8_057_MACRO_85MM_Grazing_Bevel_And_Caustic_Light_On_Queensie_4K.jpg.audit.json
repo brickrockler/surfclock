@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "score": 90,
+  "upper_ticks_only_9_no_bottom_ticks": false,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "The macro shot features great lighting, tactile polymer texture, accurate raised labels, and a single orange pointer. However, the upper dial forms a complete 12-tick circle instead of omitting the bottom ticks at 5, 6, and 7 o'clock as seen in the reference.",
+  "prompt_fix": "Specify an incomplete radial dial with only 9 tick marks spanning from 8 o'clock to 4 o'clock, leaving the bottom section at 5, 6, and 7 o'clock completely blank.",
+  "critic_model": "gemini-4-argon",
+  "one_hand_per_dial": true,
+  "rectangular_monolith_housing": true
+}

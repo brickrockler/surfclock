@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "The candidate image nails the geometry, typography, dial configuration, and coastal editorial lighting. The 9-tick upper arch and blank bottom arc are 100% accurate, and the open window overlooking rolling ocean waves creates an aspirational Architectural Digest beach house aesthetic.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional 100mm macro shot of the upper beach dial. All five beach labels ('LONG REEF', 'QUEENSIE', 'DEE WHY', 'FRESHIE', 'CURL CURL') are crisp, accurately spelled, and rendered in raised 3D relief. The dial features the exact 9 upper radial tick marks with no bottom ticks at 5, 6, or 7 o'clock. A single burnt-orange pointer needle sits over a tactile matte navy polymer surface with exquisite depth of field and directional lighting.",
+  "prompt_fix": "None required.",
+  "critic_model": "gemini-4-argon"
+}

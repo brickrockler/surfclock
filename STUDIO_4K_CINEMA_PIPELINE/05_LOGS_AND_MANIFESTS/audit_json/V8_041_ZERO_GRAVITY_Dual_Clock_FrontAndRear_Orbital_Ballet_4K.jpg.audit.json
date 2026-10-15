@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional execution. The shot perfectly showcases both the front dial face and the ribbed translucent rear housing in a dynamic floating composition. All 9 upper tick marks, 5 beach labels, lower sub-dial elements, and single burnt-orange hands are 100% accurate. The lighting, matte navy finish, and subtle cyan glow from the rear unit onto the front bezel give it an authentic, high-end editorial quality.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

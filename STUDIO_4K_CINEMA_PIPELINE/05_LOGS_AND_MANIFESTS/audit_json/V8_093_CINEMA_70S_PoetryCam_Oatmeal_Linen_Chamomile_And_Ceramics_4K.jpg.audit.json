@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 98,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless execution of the vertical rectangular monolith housing in warm chalk-white bezel with deep slate-navy dial face. All 9 upper tick marks, 5 beach labels, and the lower sub-dial are 100% accurate. The overhead flat-lay composition with natural linen, chamomile flowers, and a ceramic matcha cup in crisp morning sunlight looks like an authentic Kinfolk/Domus editorial photograph.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

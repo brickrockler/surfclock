@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 94,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Excellent flat-lay editorial photograph on Carrara marble with a vintage Leica rangefinder, espresso cup, and Dieter Rams monograph. The vertical rectangular monolith housing is accurately proportioned with a matte slate-blue finish. All 9 upper radial ticks are present with a completely blank bottom arc, labels are spelled accurately, and each dial has a single burnt-orange pointer hand. Minor note: the lower semicircular arch is slightly thicker and lacks the inner tick marks, and the dial markings appear slightly raised rather than pad-printed, but overall it passes all criteria with high marks.",
+  "prompt_fix": "Ensure the lower semicircular arch gauge is a thin pad-printed white line with 5 subtle inward tick marks along its inner curve.",
+  "critic_model": "gemini-4-argon"
+}

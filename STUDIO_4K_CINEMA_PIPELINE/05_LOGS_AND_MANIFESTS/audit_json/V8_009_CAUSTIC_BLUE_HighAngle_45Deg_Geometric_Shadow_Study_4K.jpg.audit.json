@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional high-angle editorial composition. The rectangular monolith proportions, 4mm recessed dial, and matte navy finish are spot-on. The upper dial features exactly 9 ticks with a completely blank bottom arc, accurate beach labels, and crisp burnt-orange hands. The dramatic diagonal architectural light beam elevates the shot to top-tier magazine quality.",
+  "prompt_fix": "None required.",
+  "critic_model": "gemini-4-argon"
+}

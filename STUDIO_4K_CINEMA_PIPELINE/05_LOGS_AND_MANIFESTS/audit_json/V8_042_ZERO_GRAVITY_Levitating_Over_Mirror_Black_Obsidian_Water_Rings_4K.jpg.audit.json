@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional high-cinema execution. The vertical rectangular monolith housing, recessed matte navy face, 9 upper radial ticks (with a completely clean bottom arc), single burnt-orange hand per dial, and exact typography are all spot-on. The suspended composition over a golden-lit concentric water ripple on black mirror glass feels like a luxury watch/instrument campaign frame.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

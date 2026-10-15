@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "score": 90,
+  "upper_ticks_only_9_no_bottom_ticks": false,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Strong macro composition with accurate text and dramatic lighting. Polymer texture is effective, though the needle is slightly glossy and the gauge tick count is 5 instead of 9.",
+  "prompt_fix": "Force a strictly matte finish on the orange needle. Increase gauge ticks to exactly 9.",
+  "critic_model": "gemini-3.1-pro-preview",
+  "one_hand_per_dial": true,
+  "rectangular_monolith_housing": true
+}

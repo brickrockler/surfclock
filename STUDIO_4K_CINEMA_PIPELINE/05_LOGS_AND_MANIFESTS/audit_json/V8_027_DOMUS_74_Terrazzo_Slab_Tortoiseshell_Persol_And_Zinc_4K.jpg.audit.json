@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 98,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless execution across all criteria. The upper dial features exactly 9 radial tick marks with a completely clean bottom arc. All 5 beach labels ('FRESHIE', 'QUEENSIE', 'LONG REEF', 'DEE WHY', 'CURL CURL') and the lower sub-dial ('NAH', 'YEAH', 'WORTH IT?') are spelled and positioned accurately. Each dial has a single burnt-orange pointer hand. The warm morning light on the terrazzo table with tortoiseshell sunglasses and a vintage zinc tube delivers top-tier editorial art direction.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

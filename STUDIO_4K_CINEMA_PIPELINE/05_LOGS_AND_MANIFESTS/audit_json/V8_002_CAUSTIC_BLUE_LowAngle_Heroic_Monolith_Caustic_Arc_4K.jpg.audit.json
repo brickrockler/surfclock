@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Impeccable product fidelity and poetic lighting. The vertical rectangular monolith housing, 9 upper radial ticks (with a clean, blank bottom arc), accurate beach typography, lower 'WORTH IT?' sub-dial, and burnt-orange hands are all rendered with razor-sharp precision. The warm rim light on the right side of the housing paired with the sweeping caustic wave arc in the background creates a memorable, cinema-grade composition.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

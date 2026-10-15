@@ -8,7 +8,7 @@
  *   5. Pure blank recessed dial faceplate & perimeter AO shadow frame builder
  */
 
-import { DIAL_SLOTS } from "./surf_data.js?v=42";
+import { DIAL_SLOTS } from "./surf_data.js?v=66";
 
 // Helper to sample circular/elliptical arc segments [[u1,v1],[u2,v2]]
 function arcSegs(cx, cy, rx, ry, degStart, degEnd, steps = 8) {
@@ -27,93 +27,118 @@ function arcSegs(cx, cy, rx, ry, degStart, degEnd, steps = 8) {
 }
 
 export const CHAR_WIDTH_FACTORS = {
-  I: 0.16,
+  I: 0.245,
+  "0": 0.68,
   "1": 0.44,
-  "'": 0.16,
+  "2": 0.68,
+  "3": 0.68,
+  "4": 0.68,
+  "5": 0.68,
+  "6": 0.68,
+  "7": 0.68,
+  "8": 0.68,
+  "9": 0.68,
+  "?": 0.68,
+  "&": 0.76,
+  "+": 0.68,
+  "'": 0.18,
   ".": 0.18,
-  "-": 0.46,
-  "/": 0.48,
-  " ": 0.40,
-  L: 0.54,
-  F: 0.56,
-  E: 0.58,
-  T: 0.60,
-  J: 0.52,
-  P: 0.60,
-  B: 0.62,
-  R: 0.62,
-  S: 0.60,
-  C: 0.62,
-  D: 0.64,
-  G: 0.64,
-  O: 0.66,
-  Q: 0.66,
-  U: 0.62,
-  H: 0.62,
-  N: 0.62,
-  A: 0.66,
-  V: 0.64,
-  X: 0.64,
-  Y: 0.64,
-  Z: 0.60,
-  K: 0.62,
+  "-": 0.48,
+  "/": 0.68,
+  " ": 0.476,
+  L: 0.68,
+  F: 0.68,
+  E: 0.68,
+  T: 0.68,
+  J: 0.64,
+  P: 0.68,
+  B: 0.68,
+  R: 0.68,
+  S: 0.68,
+  C: 0.68,
+  D: 0.68,
+  G: 0.68,
+  O: 0.68,
+  Q: 0.68,
+  U: 0.68,
+  H: 0.68,
+  N: 0.68,
+  A: 0.68,
+  V: 0.68,
+  X: 0.68,
+  Y: 0.68,
+  Z: 0.68,
+  K: 0.68,
   M: 0.78,
-  W: 0.80,
+  W: 0.802,
 };
 
 export function getCharWidthFactor(ch) {
-  return CHAR_WIDTH_FACTORS[ch] ?? 0.62;
+  return CHAR_WIDTH_FACTORS[ch] ?? 0.68;
 }
 
 export const FONT_STROKES = {
-  A: [[[0.0, 0.0], [0.5, 1.0]], [[0.5, 1.0], [1.0, 0.0]], [[0.18, 0.34], [0.82, 0.34]]],
+  A: [[[0.0, 0.0], [0.5, 1.0]], [[0.5, 1.0], [1.0, 0.0]], [[0.20, 0.30], [0.80, 0.30]]],
   B: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.56, 1.0]],
-    ...arcSegs(0.56, 0.76, 0.38, 0.24, 90, -90, 8),
-    [[0.56, 0.52], [0.0, 0.52]],
-    [[0.56, 0.52], [0.60, 0.52]],
-    ...arcSegs(0.60, 0.26, 0.40, 0.26, 90, -90, 8),
-    [[0.60, 0.0], [0.0, 0.0]],
+    [[0.0, 1.0], [0.68, 1.0]],
+    [[0.68, 1.0], [0.96, 0.84]],
+    [[0.96, 0.84], [0.96, 0.66]],
+    [[0.96, 0.66], [0.68, 0.52]],
+    [[0.68, 0.52], [0.0, 0.52]],
+    [[0.68, 0.52], [1.0, 0.36]],
+    [[1.0, 0.36], [1.0, 0.16]],
+    [[1.0, 0.16], [0.70, 0.0]],
+    [[0.70, 0.0], [0.0, 0.0]],
   ],
   C: [
-    ...arcSegs(0.52, 0.70, 0.46, 0.30, 32, 180, 7),
-    [[0.06, 0.70], [0.06, 0.30]],
-    ...arcSegs(0.52, 0.30, 0.46, 0.30, 180, 328, 7),
+    [[0.95, 0.82], [0.72, 1.0]],
+    [[0.72, 1.0], [0.25, 1.0]],
+    [[0.25, 1.0], [0.0, 0.75]],
+    [[0.0, 0.75], [0.0, 0.25]],
+    [[0.0, 0.25], [0.25, 0.0]],
+    [[0.25, 0.0], [0.72, 0.0]],
+    [[0.72, 0.0], [0.95, 0.18]],
   ],
   D: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.50, 1.0]],
-    ...arcSegs(0.50, 0.68, 0.46, 0.32, 90, 0, 5),
-    [[0.96, 0.68], [0.96, 0.32]],
-    ...arcSegs(0.50, 0.32, 0.46, 0.32, 0, -90, 5),
-    [[0.50, 0.0], [0.0, 0.0]],
+    [[0.0, 1.0], [0.65, 1.0]],
+    [[0.65, 1.0], [1.0, 0.74]],
+    [[1.0, 0.74], [1.0, 0.26]],
+    [[1.0, 0.26], [0.65, 0.0]],
+    [[0.65, 0.0], [0.0, 0.0]],
   ],
   E: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.92, 1.0]],
-    [[0.0, 0.52], [0.76, 0.52]],
-    [[0.0, 0.0], [0.94, 0.0]],
+    [[0.0, 1.0], [0.95, 1.0]],
+    [[0.0, 0.50], [0.78, 0.50]],
+    [[0.0, 0.0], [0.95, 0.0]],
   ],
   F: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.92, 1.0]],
-    [[0.0, 0.52], [0.76, 0.52]],
+    [[0.0, 1.0], [0.95, 1.0]],
+    [[0.0, 0.48], [0.78, 0.48]],
   ],
   G: [
-    ...arcSegs(0.52, 0.70, 0.46, 0.30, 34, 180, 7),
-    [[0.06, 0.70], [0.06, 0.30]],
-    ...arcSegs(0.52, 0.30, 0.46, 0.30, 180, 360, 7),
-    [[0.98, 0.30], [0.98, 0.48]],
-    [[0.98, 0.48], [0.52, 0.48]],
+    [[0.95, 0.82], [0.72, 1.0]],
+    [[0.72, 1.0], [0.25, 1.0]],
+    [[0.25, 1.0], [0.0, 0.75]],
+    [[0.0, 0.75], [0.0, 0.25]],
+    [[0.0, 0.25], [0.25, 0.0]],
+    [[0.25, 0.0], [0.82, 0.0]],
+    [[0.82, 0.0], [1.0, 0.25]],
+    [[1.0, 0.25], [1.0, 0.48]],
+    [[1.0, 0.48], [0.52, 0.48]],
   ],
-  H: [[[0.0, 0.0], [0.0, 1.0]], [[0.96, 0.0], [0.96, 1.0]], [[0.0, 0.52], [0.96, 0.52]]],
+  H: [[[0.0, 0.0], [0.0, 1.0]], [[1.0, 0.0], [1.0, 1.0]], [[0.0, 0.50], [1.0, 0.50]]],
   I: [[[0.5, 0.0], [0.5, 1.0]]],
   J: [
-    [[0.92, 1.0], [0.92, 0.30]],
-    ...arcSegs(0.48, 0.30, 0.44, 0.30, 0, -165, 8),
+    [[0.92, 1.0], [0.92, 0.26]],
+    [[0.92, 0.26], [0.68, 0.0]],
+    [[0.68, 0.0], [0.24, 0.0]],
+    [[0.24, 0.0], [0.0, 0.22]],
   ],
-  K: [[[0.0, 0.0], [0.0, 1.0]], [[0.96, 1.0], [0.06, 0.46]], [[0.32, 0.60], [0.98, 0.0]]],
+  K: [[[0.0, 0.0], [0.0, 1.0]], [[0.98, 1.0], [0.06, 0.46]], [[0.34, 0.62], [1.0, 0.0]]],
   L: [[[0.0, 1.0], [0.0, 0.0]], [[0.0, 0.0], [0.92, 0.0]]],
   M: [
     [[0.0, 0.0], [0.0, 1.0]],
@@ -121,82 +146,124 @@ export const FONT_STROKES = {
     [[0.5, 0.22], [1.0, 1.0]],
     [[1.0, 1.0], [1.0, 0.0]],
   ],
-  N: [[[0.0, 0.0], [0.0, 1.0]], [[0.0, 1.0], [0.96, 0.0]], [[0.96, 0.0], [0.96, 1.0]]],
+  N: [[[0.0, 0.0], [0.0, 1.0]], [[0.0, 1.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 1.0]]],
   O: [
-    ...arcSegs(0.50, 0.70, 0.46, 0.30, 0, 180, 8),
-    [[0.04, 0.70], [0.04, 0.30]],
-    ...arcSegs(0.50, 0.30, 0.46, 0.30, 180, 360, 8),
-    [[0.96, 0.30], [0.96, 0.70]],
+    [[0.25, 1.0], [0.75, 1.0]],
+    [[0.75, 1.0], [1.0, 0.75]],
+    [[1.0, 0.75], [1.0, 0.25]],
+    [[1.0, 0.25], [0.75, 0.0]],
+    [[0.75, 0.0], [0.25, 0.0]],
+    [[0.25, 0.0], [0.0, 0.25]],
+    [[0.0, 0.25], [0.0, 0.75]],
+    [[0.0, 0.75], [0.25, 1.0]],
   ],
   P: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.56, 1.0]],
-    ...arcSegs(0.56, 0.74, 0.40, 0.26, 90, -90, 9),
-    [[0.56, 0.48], [0.0, 0.48]],
+    [[0.0, 1.0], [0.72, 1.0]],
+    [[0.72, 1.0], [1.0, 0.80]],
+    [[1.0, 0.80], [1.0, 0.62]],
+    [[1.0, 0.62], [0.72, 0.46]],
+    [[0.72, 0.46], [0.0, 0.46]],
   ],
   Q: [
-    ...arcSegs(0.50, 0.70, 0.46, 0.30, 0, 180, 8),
-    [[0.04, 0.70], [0.04, 0.30]],
-    ...arcSegs(0.50, 0.30, 0.46, 0.30, 180, 360, 8),
-    [[0.96, 0.30], [0.96, 0.70]],
-    [[0.58, 0.26], [1.02, -0.08]],
+    [[0.25, 1.0], [0.75, 1.0]],
+    [[0.75, 1.0], [1.0, 0.75]],
+    [[1.0, 0.75], [1.0, 0.25]],
+    [[1.0, 0.25], [0.75, 0.0]],
+    [[0.75, 0.0], [0.25, 0.0]],
+    [[0.25, 0.0], [0.0, 0.25]],
+    [[0.0, 0.25], [0.0, 0.75]],
+    [[0.0, 0.75], [0.25, 1.0]],
+    [[0.60, 0.30], [1.08, -0.12]],
   ],
   R: [
     [[0.0, 0.0], [0.0, 1.0]],
-    [[0.0, 1.0], [0.56, 1.0]],
-    ...arcSegs(0.56, 0.75, 0.40, 0.25, 90, -90, 9),
-    [[0.56, 0.50], [0.0, 0.50]],
-    [[0.52, 0.50], [0.96, 0.0]],
+    [[0.0, 1.0], [0.72, 1.0]],
+    [[0.72, 1.0], [1.0, 0.80]],
+    [[1.0, 0.80], [1.0, 0.62]],
+    [[1.0, 0.62], [0.72, 0.46]],
+    [[0.72, 0.46], [0.0, 0.46]],
+    [[0.58, 0.46], [1.0, 0.0]],
   ],
   S: [
-    ...arcSegs(0.50, 0.74, 0.44, 0.26, 28, 255, 9),
-    [[0.39, 0.49], [0.61, 0.45]],
-    ...arcSegs(0.50, 0.25, 0.46, 0.25, 75, -152, 9),
+    [[0.95, 0.85], [0.72, 1.0]],
+    [[0.72, 1.0], [0.22, 1.0]],
+    [[0.22, 1.0], [0.0, 0.76]],
+    [[0.0, 0.76], [0.18, 0.54]],
+    [[0.18, 0.54], [0.82, 0.44]],
+    [[0.82, 0.44], [1.0, 0.22]],
+    [[1.0, 0.22], [0.75, 0.0]],
+    [[0.75, 0.0], [0.20, 0.0]],
+    [[0.20, 0.0], [0.0, 0.16]],
   ],
-  T: [[[0.0, 1.0], [1.0, 1.0]], [[0.5, 0.0], [0.5, 1.0]]],
+  T: [[[0.5, 0.0], [0.5, 1.0]], [[0.0, 1.0], [1.0, 1.0]]],
   U: [
-    [[0.04, 1.0], [0.04, 0.32]],
-    ...arcSegs(0.50, 0.32, 0.46, 0.32, 180, 360, 9),
-    [[0.96, 0.32], [0.96, 1.0]],
+    [[0.0, 1.0], [0.0, 0.26]],
+    [[0.0, 0.26], [0.25, 0.0]],
+    [[0.25, 0.0], [0.75, 0.0]],
+    [[0.75, 0.0], [1.0, 0.26]],
+    [[1.0, 0.26], [1.0, 1.0]],
   ],
   V: [[[0.0, 1.0], [0.5, 0.0]], [[0.5, 0.0], [1.0, 1.0]]],
   W: [
     [[0.0, 1.0], [0.22, 0.0]],
-    [[0.22, 0.0], [0.50, 0.74]],
-    [[0.50, 0.74], [0.78, 0.0]],
+    [[0.22, 0.0], [0.50, 0.68]],
+    [[0.50, 0.68], [0.78, 0.0]],
     [[0.78, 0.0], [1.0, 1.0]],
   ],
   X: [[[0.0, 1.0], [1.0, 0.0]], [[0.0, 0.0], [1.0, 1.0]]],
   Y: [[[0.0, 1.0], [0.5, 0.48]], [[1.0, 1.0], [0.5, 0.48]], [[0.5, 0.48], [0.5, 0.0]]],
-  Z: [[[0.0, 1.0], [0.96, 1.0]], [[0.96, 1.0], [0.0, 0.0]], [[0.0, 0.0], [0.96, 0.0]]],
+  Z: [[[0.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [0.0, 0.0]], [[0.0, 0.0], [1.0, 0.0]]],
   "0": [
-    ...arcSegs(0.50, 0.70, 0.45, 0.30, 0, 180, 8),
-    [[0.05, 0.70], [0.05, 0.30]],
-    ...arcSegs(0.50, 0.30, 0.45, 0.30, 180, 360, 8),
-    [[0.95, 0.30], [0.95, 0.70]],
+    [[0.25, 1.0], [0.75, 1.0]],
+    [[0.75, 1.0], [1.0, 0.75]],
+    [[1.0, 0.75], [1.0, 0.25]],
+    [[1.0, 0.25], [0.75, 0.0]],
+    [[0.75, 0.0], [0.25, 0.0]],
+    [[0.25, 0.0], [0.0, 0.25]],
+    [[0.0, 0.25], [0.0, 0.75]],
+    [[0.0, 0.75], [0.25, 1.0]],
   ],
   "1": [[[0.18, 0.76], [0.56, 1.0]], [[0.56, 1.0], [0.56, 0.0]], [[0.16, 0.0], [0.92, 0.0]]],
   "2": [
-    ...arcSegs(0.50, 0.72, 0.44, 0.28, 155, -25, 9),
-    [[0.90, 0.60], [0.04, 0.0]],
-    [[0.04, 0.0], [0.96, 0.0]],
+    [[0.06, 0.78], [0.28, 1.0]],
+    [[0.28, 1.0], [0.76, 1.0]],
+    [[0.76, 1.0], [0.96, 0.78]],
+    [[0.96, 0.78], [0.96, 0.58]],
+    [[0.96, 0.58], [0.04, 0.0]],
+    [[0.04, 0.0], [0.98, 0.0]],
   ],
   "3": [
-    ...arcSegs(0.50, 0.75, 0.42, 0.25, 150, -90, 8),
-    [[0.50, 0.50], [0.36, 0.50]],
-    ...arcSegs(0.50, 0.25, 0.45, 0.25, 90, -155, 8),
+    [[0.08, 0.82], [0.28, 1.0]],
+    [[0.28, 1.0], [0.76, 1.0]],
+    [[0.76, 1.0], [0.96, 0.78]],
+    [[0.96, 0.78], [0.72, 0.52]],
+    [[0.72, 0.52], [0.40, 0.52]],
+    [[0.72, 0.52], [0.98, 0.26]],
+    [[0.98, 0.26], [0.76, 0.0]],
+    [[0.76, 0.0], [0.24, 0.0]],
+    [[0.24, 0.0], [0.04, 0.18]],
   ],
   "4": [[[0.72, 0.0], [0.72, 1.0]], [[0.72, 1.0], [0.04, 0.32]], [[0.04, 0.32], [0.96, 0.32]]],
   "5": [
     [[0.92, 1.0], [0.08, 1.0]],
     [[0.08, 1.0], [0.06, 0.54]],
-    [[0.06, 0.54], [0.52, 0.54]],
-    ...arcSegs(0.52, 0.27, 0.44, 0.27, 90, -155, 9),
+    [[0.06, 0.54], [0.74, 0.54]],
+    [[0.74, 0.54], [0.98, 0.32]],
+    [[0.98, 0.32], [0.76, 0.0]],
+    [[0.76, 0.0], [0.22, 0.0]],
+    [[0.22, 0.0], [0.04, 0.18]],
   ],
   "6": [
-    ...arcSegs(0.52, 0.70, 0.44, 0.30, 35, 180, 7),
-    [[0.08, 0.70], [0.08, 0.28]],
-    ...arcSegs(0.52, 0.28, 0.44, 0.28, 180, 540, 12),
+    [[0.92, 0.82], [0.72, 1.0]],
+    [[0.72, 1.0], [0.26, 1.0]],
+    [[0.26, 1.0], [0.04, 0.74]],
+    [[0.04, 0.74], [0.04, 0.24]],
+    [[0.04, 0.24], [0.28, 0.0]],
+    [[0.28, 0.0], [0.76, 0.0]],
+    [[0.76, 0.0], [0.98, 0.24]],
+    [[0.98, 0.24], [0.76, 0.50]],
+    [[0.76, 0.50], [0.04, 0.50]],
   ],
   "7": [[[0.04, 1.0], [0.96, 1.0]], [[0.96, 1.0], [0.32, 0.0]]],
   "8": [
@@ -209,12 +276,16 @@ export const FONT_STROKES = {
     ...arcSegs(0.48, 0.30, 0.44, 0.30, 0, -145, 7),
   ],
   "?": [
-    ...arcSegs(0.50, 0.74, 0.42, 0.26, 155, -45, 8),
-    [[0.80, 0.56], [0.50, 0.40]],
-    [[0.50, 0.40], [0.50, 0.25]],
-    [[0.50, 0.08], [0.50, 0.0]],
+    [[0.08, 0.78], [0.28, 1.0]],
+    [[0.28, 1.0], [0.76, 1.0]],
+    [[0.76, 1.0], [0.98, 0.80]],
+    [[0.98, 0.80], [0.98, 0.62]],
+    [[0.98, 0.62], [0.50, 0.42]],
+    [[0.50, 0.42], [0.50, 0.24]],
+    [[0.50, 0.06], [0.50, 0.0]],
   ],
   "-": [[[0.12, 0.50], [0.88, 0.50]]],
+  "+": [[[0.12, 0.50], [0.88, 0.50]], [[0.50, 0.16], [0.50, 0.84]]],
   "'": [[[0.50, 1.02], [0.42, 0.72]]],
   ".": [[[0.50, 0.10], [0.50, 0.0]]],
   "/": [[[0.10, 0.0], [0.90, 1.0]]],
@@ -252,6 +323,8 @@ function pushBeveledJointCap(positions, indices, cx, cy, r, zBack = -4.675, zFro
   }
   const centerTopIdx = positions.length / 3;
   positions.push(cx, cy, zFront);
+  const centerBackIdx = positions.length / 3;
+  positions.push(cx, cy, zBack);
 
   for (let i = 0; i < N; i++) {
     const i1 = (i + 1) % N;
@@ -260,20 +333,26 @@ function pushBeveledJointCap(positions, indices, cx, cy, r, zBack = -4.675, zFro
       indices.push(baseIdx + i, baseIdx + N + i1, baseIdx + N + i);
       indices.push(baseIdx + N + i, baseIdx + N + i1, baseIdx + 2 * N + i1);
       indices.push(baseIdx + N + i, baseIdx + 2 * N + i1, baseIdx + 2 * N + i);
+      // Top cap (+Z normal)
       indices.push(centerTopIdx, baseIdx + 2 * N + i, baseIdx + 2 * N + i1);
+      // Bottom cap at zBack (-Z normal: 0, 0, -1) for watertight 2-manifold STL
+      indices.push(centerBackIdx, baseIdx + i1, baseIdx + i);
     } else {
       indices.push(baseIdx + i, baseIdx + N + i1, baseIdx + i1);
       indices.push(baseIdx + i, baseIdx + N + i, baseIdx + N + i1);
       indices.push(baseIdx + N + i, baseIdx + 2 * N + i1, baseIdx + N + i1);
       indices.push(baseIdx + N + i, baseIdx + 2 * N + i, baseIdx + 2 * N + i1);
+      // Front cap (-Z normal when flipped)
       indices.push(centerTopIdx, baseIdx + 2 * N + i1, baseIdx + 2 * N + i);
+      // Back cap (+Z normal when flipped)
+      indices.push(centerBackIdx, baseIdx + i, baseIdx + i1);
     }
   }
 }
 
 /**
  * Appends a single beveled 3D stroke prism segment strictly from (x1, y1) to (x2, y2)
- * with rounded 10-sided beveled end caps at both endpoints.
+ * with rounded 10-sided beveled end caps at both endpoints and watertight bottom caps at zBack.
  */
 export function pushBeveledStrokeSegment(
   positions,
@@ -338,11 +417,19 @@ export function pushBeveledStrokeSegment(
     }
   }
   if (!flipZ) {
+    // Top cap at zFront (+Z normal)
     indices.push(baseIdx + 8, baseIdx + 9, baseIdx + 10);
     indices.push(baseIdx + 8, baseIdx + 10, baseIdx + 11);
+    // Bottom cap at zBack (-Z normal: 0, 0, -1) for watertight 2-manifold STL
+    indices.push(baseIdx + 0, baseIdx + 2, baseIdx + 1);
+    indices.push(baseIdx + 0, baseIdx + 3, baseIdx + 2);
   } else {
+    // Front cap when flipped (-Z normal)
     indices.push(baseIdx + 8, baseIdx + 10, baseIdx + 9);
     indices.push(baseIdx + 8, baseIdx + 11, baseIdx + 10);
+    // Back cap when flipped (+Z normal)
+    indices.push(baseIdx + 0, baseIdx + 1, baseIdx + 2);
+    indices.push(baseIdx + 0, baseIdx + 2, baseIdx + 3);
   }
 
   if (withCaps) {
@@ -370,6 +457,28 @@ export function measureProportionalString(clean, capH, tracking) {
  * Appends a centered proportional DIN 1451 3D string at (cx, cy).
  * Supports both front-facing (+Z) and rear-plaque-facing (-Z, xDir = -1, flipZ = true) text!
  */
+export function add3DTextToArrays(
+  text,
+  cx,
+  cy,
+  capH,
+  sw,
+  positions,
+  indices,
+  maxW = 999.0,
+  tracking = 0.30,
+  zBack = -4.675,
+  zFront = -3.965,
+  xDir = 1.0
+) {
+  // Support both (text, cx, cy, ...) and (positions, indices, text, cx, cy, ...) argument orders
+  if (Array.isArray(text) && Array.isArray(cx)) {
+    return appendString3D(text, cx, cy, capH, sw, positions, indices, maxW, tracking, zBack, zFront, xDir);
+  }
+  const cleanText = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+  return appendString3D(positions, indices, cleanText, cx, cy, capH, sw, maxW, tracking, zBack, zFront, xDir);
+}
+
 export function appendString3D(
   positions,
   indices,
@@ -384,7 +493,8 @@ export function appendString3D(
   zFront = -3.965,
   xDir = 1.0
 ) {
-  const clean = (text || "").toUpperCase().trim();
+  const cleanText = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+  const clean = cleanText.trim();
   if (!clean) return;
 
   let effCapH = capH;
@@ -449,7 +559,7 @@ export function appendString3D(
  *   3. The lower 180° semi-circular sub-dial arch, L-corner leader tabs, and 9 radial ticks around (0, -78.2)
  *   4. The lower sub-dial labels (`NAH / YEAH / WORTH IT?` or `1 / 10 / CONDITIONS` or `FLAT / EPIC / SWELL`)
  */
-export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "worth_it", includeTicksAndArch = false) {
+export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "worth_it", includeTicksAndArch = true) {
   const positions = [];
   const indices = [];
 
@@ -457,14 +567,14 @@ export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "w
   const LOWER_Y = -78.2;
 
   if (includeTicksAndArch) {
-    // 1. Authentic 9 Upper Sector Ticks around (0, +25.3) matching 19_Gauntlet_Verified_Masterpiece_v5_ULTRA.jpg
+    // 1. Exact Physical Clock 9 Upper Rounded-Pill Sector Ticks around (0, +25.3)
     const majorAngles = [-120, -60, 0, 60, 120];
     const minorAngles = [-90, -30, 30, 90];
     for (const deg of majorAngles) {
       const rad = (deg * Math.PI) / 180.0;
-      const r0 = 37.5;
-      const r1 = deg === 0 ? 46.8 : 44.5;
-      const sw = deg === 0 ? 2.05 : 1.75;
+      const r0 = 35.5;
+      const r1 = deg === 0 ? 42.6 : 42.0;
+      const sw = deg === 0 ? 1.65 : 1.52;
       pushBeveledStrokeSegment(
         positions,
         indices,
@@ -484,11 +594,11 @@ export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "w
       pushBeveledStrokeSegment(
         positions,
         indices,
-        Math.sin(rad) * 39.2,
-        UPPER_Y + Math.cos(rad) * 39.2,
-        Math.sin(rad) * 44.2,
-        UPPER_Y + Math.cos(rad) * 44.2,
-        1.30,
+        Math.sin(rad) * 37.5,
+        UPPER_Y + Math.cos(rad) * 37.5,
+        Math.sin(rad) * 41.5,
+        UPPER_Y + Math.cos(rad) * 41.5,
+        1.22,
         -4.675,
         -3.965,
         true,
@@ -496,9 +606,9 @@ export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "w
       );
     }
 
-    // 3. Lower 180° Semi-Circular Sub-Dial Arch + Connected L-Corner Feet around (0, -78.2)
+    // 3. Exact Physical Clock Lower 180° Semi-Circular Sub-Dial Arch + 5 Inward Graduation Ticks around (0, -78.2)
     const ARCH_R = 31.375;
-    const ARCH_STEPS = 64;
+    const ARCH_STEPS = 72;
     for (let i = 0; i < ARCH_STEPS; i++) {
       const a0 = (-90.0 + (180.0 * i) / ARCH_STEPS) * (Math.PI / 180.0);
       const a1 = (-90.0 + (180.0 * (i + 1)) / ARCH_STEPS) * (Math.PI / 180.0);
@@ -509,41 +619,62 @@ export function buildDialTypographyGeometry(THREE, beachNames5, subdialMode = "w
         LOWER_Y + Math.cos(a0) * ARCH_R,
         Math.sin(a1) * ARCH_R,
         LOWER_Y + Math.cos(a1) * ARCH_R,
-        1.55,
+        1.65,
         -4.675,
         -3.965,
         i === 0 || i === ARCH_STEPS - 1,
         false
       );
     }
-    // Connected inward L-corner feet at -90° and +90°
-    pushBeveledStrokeSegment(positions, indices, -32.15, LOWER_Y, -26.20, LOWER_Y, 1.55);
-    pushBeveledStrokeSegment(positions, indices, 26.20, LOWER_Y, 32.15, LOWER_Y, 1.55);
-    // Top 12-o'clock center tick hanging down from inside of the arch
-    pushBeveledStrokeSegment(positions, indices, 0.0, LOWER_Y + 31.20, 0.0, LOWER_Y + 27.60, 1.55);
+    // 5 Inward Graduation Ticks at -90° (left foot), -45°, 0° (12 o'clock), +45°, +90° (right foot)
+    const lowerTicks = [
+      { deg: -90.0, len: 4.5, sw: 1.60 },
+      { deg: -45.0, len: 3.6, sw: 1.35 },
+      { deg: 0.0,   len: 4.4, sw: 1.55 },
+      { deg: 45.0,  len: 3.6, sw: 1.35 },
+      { deg: 90.0,  len: 4.5, sw: 1.60 },
+    ];
+    for (const lt of lowerTicks) {
+      const rad = (lt.deg * Math.PI) / 180.0;
+      const rOuter = 31.45;
+      const rInner = 30.55 - lt.len;
+      pushBeveledStrokeSegment(
+        positions,
+        indices,
+        Math.sin(rad) * rOuter,
+        LOWER_Y + Math.cos(rad) * rOuter,
+        Math.sin(rad) * rInner,
+        LOWER_Y + Math.cos(rad) * rInner,
+        lt.sw,
+        -4.675,
+        -3.965,
+        true,
+        false
+      );
+    }
   }
 
-  // 2. 5 Upper Beach Labels around Upper Shaft (0, +25.3) — Crisp Bold DIN 1451 Relief
+  // 2. 5 Upper Beach Labels around Upper Shaft (0, +25.3) — Physical Clock Rounded-Pill Open DIN Typeface
   DIAL_SLOTS.forEach((slot, idx) => {
     const rawName = beachNames5 && beachNames5[idx] ? beachNames5[idx] : "LOCAL REEF";
-    const sw = idx === 0 ? 0.76 : 0.68;
-    const tr = idx === 0 ? 0.34 : 0.31;
+    const sw = slot.strokeW || (idx === 0 ? 0.72 : 0.70);
+    const tr = slot.tracking || (idx === 1 ? 0.31 : 0.42);
     appendString3D(positions, indices, rawName, slot.cx, slot.cy, slot.defaultCapH, sw, slot.maxW, tr);
   });
 
   // 4. Lower Sub-Dial Mode Labels around Lower Shaft (0, -78.2)
   if (subdialMode === "conditions") {
-    appendString3D(positions, indices, "1", -43.5, LOWER_Y - 1.2, 3.10, 0.68, 20.0, 0.32);
-    appendString3D(positions, indices, "10", 44.5, LOWER_Y - 1.2, 3.10, 0.68, 20.0, 0.32);
-    appendString3D(positions, indices, "CONDITIONS", 0.0, LOWER_Y - 14.2, 2.75, 0.62, 68.0, 0.32);
+    appendString3D(positions, indices, "1", -44.5, -78.8, 3.85, 0.68, 24.0, 0.44);
+    appendString3D(positions, indices, "10", 45.5, -78.8, 3.85, 0.68, 24.0, 0.44);
+    appendString3D(positions, indices, "CONDITIONS", 0.0, -93.0, 3.65, 0.66, 72.0, 0.38);
   } else if (subdialMode === "swell") {
-    appendString3D(positions, indices, "FLAT", -45.5, LOWER_Y - 1.2, 2.85, 0.64, 26.0, 0.32);
-    appendString3D(positions, indices, "EPIC", 46.5, LOWER_Y - 1.2, 2.85, 0.64, 26.0, 0.32);
-    appendString3D(positions, indices, "SWELL", 0.0, LOWER_Y - 14.2, 2.85, 0.64, 60.0, 0.34);
+    appendString3D(positions, indices, "FLAT", -45.2, -78.8, 3.75, 0.68, 28.0, 0.42);
+    appendString3D(positions, indices, "EPIC", 46.2, -78.8, 3.75, 0.68, 28.0, 0.42);
+    appendString3D(positions, indices, "SWELL", 0.0, -93.0, 3.80, 0.68, 64.0, 0.44);
   } else {
-    appendString3D(positions, indices, "NAH", -45.5, LOWER_Y - 1.2, 2.85, 0.64, 26.0, 0.32);
-    appendString3D(positions, indices, "YEAH", 46.5, LOWER_Y - 1.2, 2.85, 0.64, 26.0, 0.32);
-    appendString3D(positions, indices, "WORTH IT?", 0.0, LOWER_Y - 14.2, 2.75, 0.62, 68.0, 0.32);
+    appendString3D(positions, indices, "NAH", -45.2, -78.8, 3.85, 0.68, 28.0, 0.46);
+    appendString3D(positions, indices, "YEAH", 46.2, -78.8, 3.85, 0.68, 28.0, 0.46);
+    appendString3D(positions, indices, "WORTH IT?", 0.0, -93.0, 3.80, 0.68, 72.0, 0.42);
   }
 
   const geom = new THREE.BufferGeometry();
@@ -609,19 +740,168 @@ export function buildRearPlaqueTypographyGeometry(THREE, regionTitle = "SYDNEY")
  * Builds a 100% pure, blank, surgical recessed dial faceplate (`X ∈ [-78.5, +78.5]`, `Y ∈ [-108.0, +108.0]`, `Z ∈ [-7.00, -4.60]`)
  * with zero pre-baked Sydney beach text, so Macro & Exploded views never show duplicate ghost letters!
  */
+/**
+ * Appends a rectangular plate section [xMin..xMax, yMin..yMax, zBack..zFront]
+ * with a circular cylindrical through-hole at (cx, cy) of radius r.
+ * Emits top (+Z), bottom (-Z), inner bore wall, and requested outer perimeter walls.
+ */
+function appendRectPlateWithHole(
+  positions,
+  indices,
+  xMin,
+  xMax,
+  yMin,
+  yMax,
+  zBack,
+  zFront,
+  cx,
+  cy,
+  r,
+  holeSegs = 32,
+  emitTopWall = true,
+  emitBottomWall = true
+) {
+  const angleSet = new Set();
+  for (let i = 0; i < holeSegs; i++) {
+    angleSet.add((i / holeSegs) * Math.PI * 2.0);
+  }
+  // Include exact angles to the 4 corners of the rectangle so outer segments lie strictly on straight edges
+  const corners = [
+    [xMax - cx, yMax - cy],
+    [xMin - cx, yMax - cy],
+    [xMin - cx, yMin - cy],
+    [xMax - cx, yMin - cy],
+  ];
+  for (const [dx, dy] of corners) {
+    let a = Math.atan2(dy, dx);
+    if (a < 0) a += Math.PI * 2.0;
+    angleSet.add(a);
+  }
+  const angles = Array.from(angleSet).sort((a, b) => a - b);
+  const M = angles.length;
+
+  const rayToRect = (a) => {
+    const ca = Math.cos(a);
+    const sa = Math.sin(a);
+    const tx = ca > 1e-8 ? (xMax - cx) / ca : ca < -1e-8 ? (xMin - cx) / ca : Infinity;
+    const ty = sa > 1e-8 ? (yMax - cy) / sa : sa < -1e-8 ? (yMin - cy) / sa : Infinity;
+    const t = Math.min(tx, ty);
+    return [cx + ca * t, cy + sa * t];
+  };
+
+  for (let i = 0; i < M; i++) {
+    const a0 = angles[i];
+    const a1 = angles[(i + 1) % M];
+    const c0x = cx + Math.cos(a0) * r;
+    const c0y = cy + Math.sin(a0) * r;
+    const c1x = cx + Math.cos(a1) * r;
+    const c1y = cy + Math.sin(a1) * r;
+    const [p0x, p0y] = rayToRect(a0);
+    const [p1x, p1y] = rayToRect(a1);
+
+    const base = positions.length / 3;
+    // 0..3: front face (zFront)
+    positions.push(c0x, c0y, zFront);
+    positions.push(p0x, p0y, zFront);
+    positions.push(p1x, p1y, zFront);
+    positions.push(c1x, c1y, zFront);
+    // 4..7: back face (zBack)
+    positions.push(c0x, c0y, zBack);
+    positions.push(p0x, p0y, zBack);
+    positions.push(p1x, p1y, zBack);
+    positions.push(c1x, c1y, zBack);
+
+    // Front face (+Z normal)
+    indices.push(base + 0, base + 1, base + 2);
+    indices.push(base + 0, base + 2, base + 3);
+    // Back face (-Z normal)
+    indices.push(base + 4, base + 6, base + 5);
+    indices.push(base + 4, base + 7, base + 6);
+    // Inner cylindrical hole wall (inward normal toward hole center)
+    indices.push(base + 4, base + 0, base + 3);
+    indices.push(base + 4, base + 3, base + 7);
+
+    // Outer perimeter wall (skip internal seam edge if shared between upper and lower halves)
+    const midY = 0.5 * (p0y + p1y);
+    const onTopEdge = Math.abs(p0y - yMax) < 1e-4 && Math.abs(p1y - yMax) < 1e-4;
+    const onBottomEdge = Math.abs(p0y - yMin) < 1e-4 && Math.abs(p1y - yMin) < 1e-4;
+    if ((onTopEdge && !emitTopWall) || (onBottomEdge && !emitBottomWall)) {
+      continue;
+    }
+    indices.push(base + 5, base + 6, base + 2);
+    indices.push(base + 5, base + 2, base + 1);
+  }
+}
+
 export function buildPureDialFaceplateGeometry(THREE, forSTL = false) {
-  const w = forSTL ? 167.0 : 168.4;
-  const h = forSTL ? 212.0 : 214.4;
-  const geo = new THREE.BoxGeometry(w, h, 2.4, 1, 1, 1);
-  geo.translate(0.0, 0.0, -5.80); // Front face sits strictly at Z = -4.60, back face at Z = -7.00
-  return geo;
+  if (!forSTL) {
+    const geo = new THREE.BoxGeometry(168.4, 214.4, 2.4, 1, 1, 1);
+    geo.translate(0.0, 0.0, -5.80); // Front face sits strictly at Z = -4.60, back face at Z = -7.00
+    return geo;
+  }
+
+  // For 3D Printable STL Export: 167.0 x 212.0 x 2.4 mm plate with dual Ø9.0mm (R=4.5mm)
+  // stepper shaft clearance through-holes at (0.0, +25.3 mm) and (0.0, -78.2 mm)!
+  const halfW = 167.0 * 0.5;
+  const halfH = 212.0 * 0.5;
+  const zBack = -7.00;
+  const zFront = -4.60;
+  const ySplit = -26.45;
+  const holeRadius = 4.5;
+
+  const positions = [];
+  const indices = [];
+
+  // Upper half containing Upper Stepper shaft hole at (0.0, +25.3)
+  appendRectPlateWithHole(
+    positions,
+    indices,
+    -halfW,
+    halfW,
+    ySplit,
+    halfH,
+    zBack,
+    zFront,
+    0.0,
+    25.3,
+    holeRadius,
+    36,
+    true,
+    false
+  );
+
+  // Lower half containing Lower Stepper shaft hole at (0.0, -78.2)
+  appendRectPlateWithHole(
+    positions,
+    indices,
+    -halfW,
+    halfW,
+    -halfH,
+    ySplit,
+    zBack,
+    zFront,
+    0.0,
+    -78.2,
+    holeRadius,
+    36,
+    false,
+    true
+  );
+
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geom.setIndex(indices);
+  const nonIndexed = geom.toNonIndexed();
+  nonIndexed.computeVertexNormals();
+  geom.dispose();
+  return nonIndexed;
 }
 
 /**
  * Renders any string into an inline SVG string using the exact proportional FONT_STROKES clock typeface!
  */
 export function renderGlyphSVG(text, { height = 14, strokeWidth = 2.0, tracking = 0.30, color = "currentColor" } = {}) {
-  const clean = (text || "").toUpperCase();
+  const clean = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
   const charH = 10;
   const pad = strokeWidth * 1.2;
   const totalTextW = measureProportionalString(clean, charH, tracking);
@@ -689,9 +969,12 @@ export function buildBinarySTLFromGeometries(geometries, headerLabel = "SC01_SUR
       const i1 = i0 + 1;
       const i2 = i0 + 2;
 
-      const ax = pos.getX(i0), ay = pos.getY(i0), az = pos.getZ(i0) + zShift;
-      const bx = pos.getX(i1), by = pos.getY(i1), bz = pos.getZ(i1) + zShift;
-      const cx = pos.getX(i2), cy = pos.getY(i2), cz = pos.getZ(i2) + zShift;
+      let az = pos.getZ(i0) + zShift; if (Math.abs(az) < 1e-5) az = 0.0;
+      let bz = pos.getZ(i1) + zShift; if (Math.abs(bz) < 1e-5) bz = 0.0;
+      let cz = pos.getZ(i2) + zShift; if (Math.abs(cz) < 1e-5) cz = 0.0;
+      const ax = pos.getX(i0), ay = pos.getY(i0);
+      const bx = pos.getX(i1), by = pos.getY(i1);
+      const cx = pos.getX(i2), cy = pos.getY(i2);
 
       const ux = bx - ax, uy = by - ay, uz = bz - az;
       const vx = cx - ax, vy = cy - ay, vz = cz - az;
@@ -724,5 +1007,38 @@ export function buildBinarySTLFromGeometries(geometries, headerLabel = "SC01_SUR
 
   for (const ni of tempNonIdx) ni.dispose();
   return buffer;
+}
+
+/**
+ * Generates a Binary .STL ArrayBuffer for the custom dial faceplate + raised typography (includeBasePlate = true, zShift = 7.0)
+ * or standalone raised typography inlay (includeBasePlate = false, zShift = 4.675 so bottom sits at Z = 0.000mm).
+ */
+export function generateCustomDialSTLBuffer(
+  includeBasePlate = true,
+  regionCode = "CUSTOM",
+  THREE = null,
+  beachNames5 = ["LONG REEF", "QUEENSIE", "DEE WHY", "FRESHIE", "CURL CURL"],
+  subdialMode = "worth_it"
+) {
+  const ThreeLib = THREE || globalThis.THREE;
+  const cleanCode = (regionCode || "CUSTOM").replace(/[^A-Za-z0-9_-]/g, "_").toUpperCase();
+  const typoGeo = buildDialTypographyGeometry(ThreeLib, beachNames5, subdialMode, true);
+  const geoms = [];
+  if (includeBasePlate) {
+    geoms.push(buildPureDialFaceplateGeometry(ThreeLib, true));
+  }
+  geoms.push(typoGeo);
+
+  const zShift = includeBasePlate ? 7.0 : 4.675;
+  const stlBuffer = buildBinarySTLFromGeometries(
+    geoms,
+    `SC01_${cleanCode}_${beachNames5.join("_")}`,
+    zShift
+  );
+
+  for (const g of geoms) {
+    if (g && g.dispose) g.dispose();
+  }
+  return stlBuffer;
 }
 

@@ -32,7 +32,7 @@ def get_swell_exposure(spot_pos: int, swell_dir: float) -> float:
         if 140 <= swell_dir <= 210: return 0.80 # S swell headland wrap penalty
         if 75 <= swell_dir <= 115: return 0.95  # Direct East opens the bay
         return 0.85 # NE sheltered
-    elif spot_pos == 5: # Queenscliff: sheltered bight / bombie
+    elif spot_pos == 5: # Queensie: sheltered bight / bombie
         if 140 <= swell_dir <= 210: return 0.82 # South swell wrap
         if 50 <= swell_dir <= 110: return 0.95  # E/NE swell direct
         return 0.90

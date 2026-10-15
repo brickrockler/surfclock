@@ -873,110 +873,128 @@ export const CURATED_EDITIONS = [
  * Generates high-definition procedural tangent-space normal, roughness, and mineral grain maps
  * so the 3D clock surfaces catch and scatter directional & environment light like real bead-blasted hardware.
  */
+let _cachedStudioTextures = null;
+
 export function buildProceduralStudioTextures(THREE, maxAnisotropy = 8) {
+  if (_cachedStudioTextures) {
+    return _cachedStudioTextures;
+  }
+
   const size = 512;
+  const mask = size - 1;
+  const totalPixels = size * size;
+
   const normCanvas = document.createElement("canvas");
   normCanvas.width = size;
   normCanvas.height = size;
   const nCtx = normCanvas.getContext("2d");
   const nImg = nCtx.createImageData(size, size);
+  const nU32 = new Uint32Array(nImg.data.buffer);
 
   const roughCanvas = document.createElement("canvas");
   roughCanvas.width = size;
   roughCanvas.height = size;
   const rCtx = roughCanvas.getContext("2d");
   const rImg = rCtx.createImageData(size, size);
+  const rU32 = new Uint32Array(rImg.data.buffer);
 
   const grainCanvas = document.createElement("canvas");
   grainCanvas.width = size;
   grainCanvas.height = size;
   const gCtx = grainCanvas.getContext("2d");
   const gImg = gCtx.createImageData(size, size);
+  const gU32 = new Uint32Array(gImg.data.buffer);
 
+  // Fast Schrage integer PRNG (zero float modulo overhead, 100% deterministic)
   let seed = 1337;
-  const rand = () => {
-    seed = (seed * 16807) % 2147483647;
-    return (seed - 1) / 2147483646;
-  };
-
-  // Multi-octave VDI-24 bead-blasted matte mineral / honed stone-ceramic micro-surface
-  const raw = new Float32Array(size * size);
-  const flecks = new Float32Array(size * size);
-  for (let i = 0; i < size * size; i++) {
-    const r = rand();
+  const invMax = 1.0 / 2147483646.0;
+  const raw = new Float32Array(totalPixels);
+  const flecks = new Float32Array(totalPixels);
+  for (let i = 0; i < totalPixels; i++) {
+    const q = (seed / 127773) | 0;
+    const rem = seed - q * 127773;
+    seed = 16807 * rem - 2836 * q;
+    if (seed <= 0) seed += 2147483647;
+    const r = (seed - 1) * invMax;
     raw[i] = r;
     flecks[i] = r > 0.90 ? 1.0 : r < 0.11 ? -1.0 : 0.0;
   }
 
-  const pass1 = new Float32Array(size * size);
+  const inv58 = 1.0 / 5.8;
+  const pass1 = new Float32Array(totalPixels);
   for (let y = 0; y < size; y++) {
-    const y0 = (y - 1 + size) % size;
-    const y1 = (y + 1) % size;
+    const yRow = y * size;
+    const y0Row = ((y - 1) & mask) * size;
+    const y1Row = ((y + 1) & mask) * size;
     for (let x = 0; x < size; x++) {
-      const x0 = (x - 1 + size) % size;
-      const x1 = (x + 1) % size;
-      pass1[y * size + x] =
-        (raw[y0 * size + x] + raw[y1 * size + x] + raw[y * size + x0] + raw[y * size + x1] + raw[y * size + x] * 1.8) / 5.8;
+      const x0 = (x - 1) & mask;
+      const x1 = (x + 1) & mask;
+      pass1[yRow + x] =
+        (raw[y0Row + x] + raw[y1Row + x] + raw[yRow + x0] + raw[yRow + x1] + raw[yRow + x] * 1.8) * inv58;
     }
   }
 
-  const pass2 = new Float32Array(size * size);
+  const pass2 = new Float32Array(totalPixels);
   for (let y = 0; y < size; y++) {
-    const y0 = (y - 2 + size) % size;
-    const y1 = (y + 2) % size;
+    const yRow = y * size;
+    const y0Row = ((y - 2) & mask) * size;
+    const y1Row = ((y + 2) & mask) * size;
     for (let x = 0; x < size; x++) {
-      const x0 = (x - 2 + size) % size;
-      const x1 = (x + 2) % size;
-      pass2[y * size + x] =
-        (pass1[y0 * size + x] + pass1[y1 * size + x] + pass1[y * size + x0] + pass1[y * size + x1]) * 0.25;
+      const x0 = (x - 2) & mask;
+      const x1 = (x + 2) & mask;
+      pass2[yRow + x] =
+        (pass1[y0Row + x] + pass1[y1Row + x] + pass1[yRow + x0] + pass1[yRow + x1]) * 0.25;
     }
   }
 
-  const heights = new Float32Array(size * size);
+  const heights = new Float32Array(totalPixels);
   for (let y = 0; y < size; y++) {
-    const y0 = (y - 4 + size) % size;
-    const y1 = (y + 4) % size;
+    const yRow = y * size;
+    const y0Row = ((y - 4) & mask) * size;
+    const y1Row = ((y + 4) & mask) * size;
     for (let x = 0; x < size; x++) {
-      const x0 = (x - 4 + size) % size;
-      const x1 = (x + 4) % size;
-      const macro = (pass2[y0 * size + x] + pass2[y1 * size + x] + pass2[y * size + x0] + pass2[y * size + x1]) * 0.25;
-      heights[y * size + x] =
-        raw[y * size + x] * 0.25 +
-        pass1[y * size + x] * 0.36 +
-        pass2[y * size + x] * 0.25 +
+      const x0 = (x - 4) & mask;
+      const x1 = (x + 4) & mask;
+      const idx = yRow + x;
+      const macro = (pass2[y0Row + x] + pass2[y1Row + x] + pass2[yRow + x0] + pass2[yRow + x1]) * 0.25;
+      heights[idx] =
+        raw[idx] * 0.25 +
+        pass1[idx] * 0.36 +
+        pass2[idx] * 0.25 +
         macro * 0.14 +
-        flecks[y * size + x] * 0.06;
+        flecks[idx] * 0.06;
     }
   }
 
   for (let y = 0; y < size; y++) {
-    const yUp = (y - 1 + size) % size;
-    const yDn = (y + 1) % size;
+    const yRow = y * size;
+    const yUpRow = ((y - 1) & mask) * size;
+    const yDnRow = ((y + 1) & mask) * size;
     for (let x = 0; x < size; x++) {
-      const xLt = (x - 1 + size) % size;
-      const xRt = (x + 1) % size;
-      const dx = (heights[y * size + xRt] - heights[y * size + xLt]) * 2.15;
-      const dy = (heights[yDn * size + x] - heights[yUp * size + x]) * 2.15;
-      const idx = (y * size + x) * 4;
-      nImg.data[idx + 0] = Math.min(255, Math.max(0, Math.round((dx * 0.5 + 0.5) * 255)));
-      nImg.data[idx + 1] = Math.min(255, Math.max(0, Math.round((dy * 0.5 + 0.5) * 255)));
-      nImg.data[idx + 2] = 246;
-      nImg.data[idx + 3] = 255;
+      const xLt = (x - 1) & mask;
+      const xRt = (x + 1) & mask;
+      const pIdx = yRow + x;
+      const dx = (heights[yRow + xRt] - heights[yRow + xLt]) * 2.15;
+      const dy = (heights[yDnRow + x] - heights[yUpRow + x]) * 2.15;
 
-      const hVal = heights[y * size + x];
-      const flk = flecks[y * size + x];
-      const rv = Math.min(230, Math.max(135, Math.round(182 - (hVal - 0.5) * 52 - flk * 12)));
-      rImg.data[idx + 0] = rv;
-      rImg.data[idx + 1] = rv;
-      rImg.data[idx + 2] = rv;
-      rImg.data[idx + 3] = 255;
+      let nx = ((dx * 0.5 + 0.5) * 255 + 0.5) | 0;
+      let ny = ((dy * 0.5 + 0.5) * 255 + 0.5) | 0;
+      if (nx < 0) nx = 0; else if (nx > 255) nx = 255;
+      if (ny < 0) ny = 0; else if (ny > 255) ny = 255;
+      nU32[pIdx] = 0xff000000 | (246 << 16) | (ny << 8) | nx;
 
-      // Silky VDI-18 Teenage Engineering / Braun micro-satin finish (241..255) with zero coarse blotches
-      const baseG = Math.min(255, Math.max(241, Math.round(249 + (hVal - 0.5) * 24 + flk * 5)));
-      gImg.data[idx + 0] = baseG;
-      gImg.data[idx + 1] = Math.max(239, baseG - (flk < 0 ? 1 : 0));
-      gImg.data[idx + 2] = Math.max(237, baseG - (flk < 0 ? 2 : 0));
-      gImg.data[idx + 3] = 255;
+      const hVal = heights[pIdx];
+      const flk = flecks[pIdx];
+      let rv = (182 - (hVal - 0.5) * 52 - flk * 12 + 0.5) | 0;
+      if (rv < 135) rv = 135; else if (rv > 230) rv = 230;
+      rU32[pIdx] = 0xff000000 | (rv << 16) | (rv << 8) | rv;
+
+      // Silky VDI-18 Teenage Engineering / Braun micro-satin finish (241..255)
+      let baseG = (249 + (hVal - 0.5) * 24 + flk * 5 + 0.5) | 0;
+      if (baseG < 241) baseG = 241; else if (baseG > 255) baseG = 255;
+      const g1 = Math.max(239, baseG - (flk < 0 ? 1 : 0));
+      const g2 = Math.max(237, baseG - (flk < 0 ? 2 : 0));
+      gU32[pIdx] = 0xff000000 | (g2 << 16) | (g1 << 8) | baseG;
     }
   }
   nCtx.putImageData(nImg, 0, 0);
@@ -999,24 +1017,33 @@ export function buildProceduralStudioTextures(THREE, maxAnisotropy = 8) {
   grainColorMap.colorSpace = THREE.SRGBColorSpace;
   grainColorMap.anisotropy = maxAnisotropy;
 
-  // 2. 45-Degree Translucent Infill Normal Map (for Frosted / Amber editions)
+  // 2. 45-Degree Translucent Infill Normal Map using 8-element LUT + Uint32Array store
   const infSize = 256;
   const infCanvas = document.createElement("canvas");
   infCanvas.width = infSize;
   infCanvas.height = infSize;
   const iCtx = infCanvas.getContext("2d");
   const iImg = iCtx.createImageData(infSize, infSize);
+  const iU32 = new Uint32Array(iImg.data.buffer);
+
+  const cosLUT = new Float32Array(8);
+  const sinLUT = new Float32Array(8);
+  for (let k = 0; k < 8; k++) {
+    const ang = (k / 8.0) * Math.PI * 2.0;
+    cosLUT[k] = Math.cos(ang) * 0.45;
+    sinLUT[k] = Math.sin(ang) * 0.45;
+  }
+
   for (let y = 0; y < infSize; y++) {
+    const yRow = y * infSize;
     for (let x = 0; x < infSize; x++) {
-      const u1 = ((x + y) / 8.0) * Math.PI * 2.0;
-      const u2 = ((x - y) / 8.0) * Math.PI * 2.0;
-      const gx = Math.cos(u1) * 0.45 + Math.cos(u2) * 0.45;
-      const gy = Math.sin(u1) * 0.45 - Math.sin(u2) * 0.45;
-      const idx = (y * infSize + x) * 4;
-      iImg.data[idx + 0] = Math.round((gx * 0.5 + 0.5) * 255);
-      iImg.data[idx + 1] = Math.round((gy * 0.5 + 0.5) * 255);
-      iImg.data[idx + 2] = 238;
-      iImg.data[idx + 3] = 255;
+      const k1 = (x + y) & 7;
+      const k2 = (x - y) & 7;
+      const gx = cosLUT[k1] + cosLUT[k2];
+      const gy = sinLUT[k1] - sinLUT[k2];
+      const rx = ((gx * 0.5 + 0.5) * 255 + 0.5) | 0;
+      const ry = ((gy * 0.5 + 0.5) * 255 + 0.5) | 0;
+      iU32[yRow + x] = 0xff000000 | (238 << 16) | (ry << 8) | rx;
     }
   }
   iCtx.putImageData(iImg, 0, 0);
@@ -1038,5 +1065,6 @@ export function buildProceduralStudioTextures(THREE, maxAnisotropy = 8) {
   travertineMap.colorSpace = THREE.SRGBColorSpace;
   travertineMap.anisotropy = maxAnisotropy;
 
-  return { microNormalMap, microRoughnessMap, grainColorMap, infillNormalMap, travertineMap };
+  _cachedStudioTextures = { microNormalMap, microRoughnessMap, grainColorMap, infillNormalMap, travertineMap };
+  return _cachedStudioTextures;
 }

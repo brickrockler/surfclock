@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless execution of the Orchid / 1979 Sony hardware archive aesthetic. The royal blue felt cyclorama, warm amber edge-light on the slate-blue ABS housing, and the coiled black cable with the chrome 1/4-inch TRS jack give it immense tactile authenticity. All 9 upper tick marks are exact with a completely blank bottom arc, single orange hands on each dial, and crisp typography.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

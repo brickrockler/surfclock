@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Impeccable fidelity to the reference product geometry, typography, and dial layout. The vertical rectangular monolith housing, 9 upper radial ticks (with a completely blank bottom arc), accurate beach labels, lower sub-dial, and burnt-orange hands are all spot-on. The Mediterranean architectural setting with white Carrara and deep Rosso Levanto marble plinths alongside dappled olive tree shadows delivers a stunning Domus/Architectural Digest editorial aesthetic.",
+  "prompt_fix": "None needed.",
+  "critic_model": "gemini-4-argon"
+}

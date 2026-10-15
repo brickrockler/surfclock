@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 98,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Exceptional execution. The vertical rectangular monolith housing, recessed dial face, and chamfered bezel are rendered with high material fidelity. The upper dial strictly features the 9 upper radial ticks with a completely blank bottom arc. All 5 beach labels and the lower sub-dial labels ('NAH', 'YEAH', 'WORTH IT?') are crisp and accurately spelled. Each dial has a single burnt-orange pointer hand. The Mediterranean balcony setting with warm golden hour lighting, stone balustrade, olive branch, and out-of-focus deep blue sea creates a stunning Architectural Digest / Domus editorial atmosphere.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

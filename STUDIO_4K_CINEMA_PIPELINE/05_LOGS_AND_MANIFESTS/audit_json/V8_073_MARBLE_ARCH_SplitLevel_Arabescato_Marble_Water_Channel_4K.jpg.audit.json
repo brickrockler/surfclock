@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 94,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "The candidate image nails all geometry and typography constraints: vertical rectangular matte-molded housing, strictly 9 upper radial ticks with a completely blank bottom arc, single burnt-orange hand per dial, and sharp, accurate typography. The architectural setting with raw board-formed concrete, aged brass, stepped Calacatta marble, and a dark water mirror pool creates an exceptional Domus-level editorial composition.",
+  "prompt_fix": "Ensure the clock sits firmly on a solid continuous marble plinth or spans cleanly across a narrower architectural channel so the center doesn't appear unsupported over the water.",
+  "critic_model": "gemini-4-argon"
+}

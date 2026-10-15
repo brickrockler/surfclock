@@ -1,0 +1,305 @@
+{
+  "V8_008": {
+    "id": "V8_008",
+    "tag": "V8_008_CAUSTIC_BLUE_Twin_FrontAndRear_Exhibition_Duo",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_008_CAUSTIC_BLUE_Twin_FrontAndRear_Exhibition_Duo_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow cinema camera slider move past the twin front-and-rear Slate-Blue Surf Clocks on the satin cyclorama as internal telemetry glows through the fluted rear cover.",
+    "jury": {
+      "first_five_second_read": "A clean, well-lit 3D industrial design render with a restrained palette and precise geometry.",
+      "scores": {
+        "design": 7.6,
+        "usability": 7.3,
+        "creativity": 7.5,
+        "content": 7.4,
+        "weighted": 7.47,
+        "band_position": "Lower end of the top quartile, carried by strong material execution."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "Lacks the participatory mechanic and experimental interaction required for FWA."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "Dark themes, restrained two-color palettes, and 3D material focus.",
+        "dated_or_derivative": "none",
+        "leads": "Strong execution of physical materials like fluted glass and satin-matte finishes."
+      },
+      "largest_gap": "The raised typography (e.g., 'LONG REEF') appears slightly soft at the edges, lacking the crispness of high-end industrial molding.",
+      "top_three_fixes": [
+        "Sharpen the edges of the raised typography for a crisper industrial feel.",
+        "Increase contrast on the intermediate tick marks to prevent them from getting lost in shadows.",
+        "Adjust lighting on the lower gauge to evenly highlight the raised arc."
+      ],
+      "escalation": "none",
+      "confidence": "high",
+      "passed": true,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_013": {
+    "id": "V8_013",
+    "tag": "V8_013_CAUSTIC_BLUE_CreamBlack_M600_Edition_In_SlateBlue_Cyc",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_013_CAUSTIC_BLUE_CreamBlack_M600_Edition_In_SlateBlue_Cyc_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow 3D camera orbit around the Warm Chalk-Cream Surf Clock against the deep slate-blue cyclorama as the warm golden caustic ribbon glides across the backdrop.",
+    "jury": {
+      "first_five_second_read": "A highly realistic, minimalist 3D render of a physical surf condition clock with dramatic lighting.",
+      "scores": {
+        "design": 7.7,
+        "usability": 7.4,
+        "creativity": 7.5,
+        "content": 7.5,
+        "weighted": 7.55,
+        "band_position": "Lower end of the top quartile, carried by strong lighting and material execution."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "A static industrial design render lacking the interactive digital experimentation required for FWA."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "3D WebGL heroes, clean minimalist aesthetics, single material focus.",
+        "dated_or_derivative": "none",
+        "leads": "Exceptional lighting and material realism in a static frame."
+      },
+      "largest_gap": "The typography weight on the beach labels (e.g., 'QUEENSIE' at 9 o'clock) is too heavy compared to the delicate tick marks.",
+      "top_three_fixes": [
+        "Reduce the font weight of all dial labels by one step to balance with the tick marks.",
+        "Increase tracking slightly on the 'WORTH IT?' label for better optical spacing.",
+        "Soften the drop shadow of the upper orange hand to match the ambient light diffusion."
+      ],
+      "escalation": "none",
+      "confidence": "high, clear adherence to all physical and geometric locks in the brief.",
+      "passed": true,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_009": {
+    "id": "V8_009",
+    "tag": "V8_009_CAUSTIC_BLUE_HighAngle_45Deg_Geometric_Shadow_Study",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_009_CAUSTIC_BLUE_HighAngle_45Deg_Geometric_Shadow_Study_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). High-angle 45-degree cinema shot: the two intersecting beams of optical light slowly pivot across the slate-blue floor, shifting the long architectural shadow of the Surf Clock.",
+    "jury": {
+      "first_five_second_read": "A photorealistic, minimalist surf condition clock render.",
+      "scores": {
+        "design": 7.5,
+        "usability": 7.5,
+        "creativity": 7.5,
+        "content": 7.5,
+        "weighted": 7.5,
+        "band_position": "Top quartile, excellent material execution."
+      },
+      "fwa_verdict": {
+        "verdict": "yes",
+        "reason": "Flawless 3D execution of a unique industrial design."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "3D heroes, single material focus.",
+        "dated_or_derivative": "none",
+        "leads": "Restrained color and typography."
+      },
+      "largest_gap": "White typography lacks subtle ambient occlusion to ground it.",
+      "top_three_fixes": [
+        "Add subtle AO to white typography.",
+        "Increase specular roughness on orange hands.",
+        "Soften chamfer edge lighting top left."
+      ],
+      "escalation": "none",
+      "confidence": "high, all constraints are clearly visible and met",
+      "passed": true,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_003": {
+    "id": "V8_003",
+    "tag": "V8_003_CAUSTIC_BLUE_Asymmetric_RuleOfThirds_ThreeQuarter_RimLight",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_003_CAUSTIC_BLUE_Asymmetric_RuleOfThirds_ThreeQuarter_RimLight_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Buttery-smooth horizontal camera slider move from right to left across the slate-blue cyclorama as optical glass caustics ripple across the negative space and graze the 3mm chamfered bezel.",
+    "jury": {
+      "first_five_second_read": "A caustic-lit 3D surf clock render that misses strict geometric and textural constraints.",
+      "scores": {
+        "design": 7.3,
+        "usability": 7.4,
+        "creativity": 7.5,
+        "content": 7.4,
+        "weighted": 7.38,
+        "band_position": "Median (7.38), below the 7.45 pass line."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "Static 3D render lacking experimental interaction."
+      },
+      "gate_failures": [
+        "Outer bezel corners are radiused, not sharp 90-degrees.",
+        "Dial surface has visible grain, failing the silky-smooth lock."
+      ],
+      "smooth_dial_texture_passed": false,
+      "horology_and_geometry_passed": false,
+      "trend_check": {
+        "echoes": "3D aesthetic, dark theme, single accent color, tracked-capital labels.",
+        "dated_or_derivative": "none",
+        "leads": "Caustic lighting implies environment without heavy chrome."
+      },
+      "largest_gap": "Outer bezel corners are visibly rounded instead of the mandated sharp 90-degree angles.",
+      "top_three_fixes": [
+        "Sharpen outer bezel corners to exact 90-degree angles.",
+        "Remove noise texture from dial face for a pure satin-matte finish.",
+        "Ensure lower gauge tick marks perfectly align with the semicircular arc."
+      ],
+      "escalation": "none",
+      "confidence": "High, visual evidence clearly contradicts strict brief locks.",
+      "passed": false,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_006": {
+    "id": "V8_006",
+    "tag": "V8_006_CAUSTIC_BLUE_Chiaroscuro_Eclipse_Golden_Rim_Silhouette",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_006_CAUSTIC_BLUE_Chiaroscuro_Eclipse_Golden_Rim_Silhouette_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Dramatic low-key cinema shot: the warm amber-gold rim light slowly rotates around the 3mm chamfered perimeter bezel, making the raised 3D white letters and burnt-orange hands glow against the midnight-slate void.",
+    "jury": {
+      "first_five_second_read": "Moody 3D industrial clock leaning heavily on telemetry tropes.",
+      "scores": {
+        "design": 7.2,
+        "usability": 7.0,
+        "creativity": 7.1,
+        "content": 6.5,
+        "weighted": 7.05,
+        "band_position": "Below bottom quartile; fails pass line."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "Static render lacking experimental interaction."
+      },
+      "gate_failures": [
+        "7 ticks instead of 9",
+        "Duplicate beach labels",
+        "Rounded bezel corners instead of sharp 90-degree"
+      ],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": false,
+      "trend_check": {
+        "echoes": "Dark theme, 3D monolith, neo-grotesk type.",
+        "dated_or_derivative": "Telemetry HUD dressing.",
+        "leads": "None."
+      },
+      "largest_gap": "Upper dial features 7 ticks and duplicate labels instead of the requested 9 ticks and 5 unique labels.",
+      "top_three_fixes": [
+        "Add ticks at 8 and 4 o'clock.",
+        "Remove duplicate 'FRESHIE' and 'DEE WHY' labels.",
+        "Sharpen bezel corners to true 90 degrees."
+      ],
+      "escalation": "none",
+      "confidence": "high, clear visual evidence of brief violations",
+      "passed": false,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_005": {
+    "id": "V8_005",
+    "tag": "V8_005_CAUSTIC_BLUE_Through_Foreground_Crystal_Prism_Bokeh",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_005_CAUSTIC_BLUE_Through_Foreground_Crystal_Prism_Bokeh_4K.jpg",
+    "has_mp4_target": false,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow 3D parallax rack-focus and camera drift past the foreground optical glass prism as the refracted warm-ivory light band sweeps across the Slate-Blue Surf Clock dial.",
+    "jury": {
+      "first_five_second_read": "A moody, well-lit industrial design render of a surf clock that suffers from severe 3D typography rendering artifacts on close inspection.",
+      "scores": {
+        "design": 7.0,
+        "usability": 7.0,
+        "creativity": 7.5,
+        "content": 7.5,
+        "weighted": 7.15,
+        "band_position": "Bottom quartile (below 7.27) due to visible typography rendering flaws."
+      },
+      "fwa_verdict": {
+        "verdict": "no",
+        "reason": "While the concept is playful, the execution fails on basic 3D typography craft with visible glitching on the dial labels."
+      },
+      "gate_failures": [
+        "Typography rendering artifacts on left-side labels"
+      ],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "Dark themes and minimal, hardware-inspired interfaces.",
+        "dated_or_derivative": "Floating 3D text that glitches feels unrefined.",
+        "leads": "Playful, single-purpose physical data visualization."
+      },
+      "largest_gap": "The 3D text extrusion on 'QUEENSIE' and 'FRESHIE' (left side, white) is glitchy and doubled, destroying legibility.",
+      "top_three_fixes": [
+        "Bake typography flat to the dial surface to fix extrusion glitches on 'QUEENSIE' and 'FRESHIE'.",
+        "Dim the primary spotlight to recover blown-out highlights near 'LONG REEF'.",
+        "Embed tick marks flush with the dial to remove inconsistent micro-shadows."
+      ],
+      "escalation": "none",
+      "confidence": "high, the rendering artifacts on the typography are clearly visible in the provided detail crop.",
+      "passed": false,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  },
+  "V8_012": {
+    "id": "V8_012",
+    "tag": "V8_012_CAUSTIC_BLUE_TwoTone_WhiteBezel_NavyDial_In_BlueCyc",
+    "world": "WORLD_01_CAUSTIC_BLUE",
+    "mode": "full_front",
+    "still_path": "/Users/jcolley/surf_clock/STUDIO_4K_CINEMA_PIPELINE/01_V9_WORKING_VIBE_4K_STILLS/V8_012_CAUSTIC_BLUE_TwoTone_WhiteBezel_NavyDial_In_BlueCyc_4K.jpg",
+    "has_mp4_target": true,
+    "video_prompt": "Slow, unhurried, graceful luxury studio cinema motion (24fps film cadence mastered to 60fps). The camera glides on a precision fluid tripod slider by at most 2% while studio light or optical caustics drift gently and fluidly across the silky-smooth satin-matte clock face. The clock housing, raised 3D typography, 9 upper radial ticks, and both burnt-orange pointer hands remain 100% motionless, solid, and razor-sharp throughout the entire shot (zero fast movement, zero hand spinning, zero warping). Slow 3D camera push-in toward the Two-Tone Chalk-White and Navy Surf Clock as soft curved optical caustics drift across the deep slate-blue cyclorama.",
+    "jury": {
+      "first_five_second_read": "A beautifully lit, minimalist 3D render of a bespoke surf condition clock that perfectly nails the requested satin-matte finish and strict horological constraints.",
+      "scores": {
+        "design": 7.6,
+        "usability": 7.2,
+        "creativity": 7.6,
+        "content": 7.5,
+        "weighted": 7.47,
+        "band_position": "Lower end of the top quartile, carried by strong lighting and material restraint."
+      },
+      "fwa_verdict": {
+        "verdict": "yes",
+        "reason": "The execution of the physical object render is flawless, demonstrating the 'one material idea' trend with excellent lighting and typographic restraint."
+      },
+      "gate_failures": [],
+      "smooth_dial_texture_passed": true,
+      "horology_and_geometry_passed": true,
+      "trend_check": {
+        "echoes": "Restrained color palette, neo-grotesk tracked capitals, and high-quality 3D lighting.",
+        "dated_or_derivative": "none",
+        "leads": "Commitment to a single, beautifully lit physical material without unnecessary decorative noise."
+      },
+      "largest_gap": "The question mark in the 'WORTH IT?' label at the bottom center (approx 12px) suffers from a minor rendering artifact, appearing slightly malformed.",
+      "top_three_fixes": [
+        "Clean up the typographic artifact on the 'WORTH IT?' question mark to ensure crisp legibility.",
+        "Sharpen the inner corners of the white bezel to perfectly match the strict 90-degree outer corners.",
+        "Slightly increase the tracking on the 'WORTH IT?' label to match the breathing room of the upper beach labels."
+      ],
+      "escalation": "none",
+      "confidence": "high, the render strictly adheres to the complex negative-space and tick-mark constraints of the brief.",
+      "passed": true,
+      "jury_model": "gemini-3.1-pro-preview"
+    }
+  }
+}

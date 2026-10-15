@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 97,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless adherence to all industrial design specs and typography. The upper dial has strictly the 9 upper ticks with a clean bottom arc, accurate beach labels, and a single orange pointer per dial. The monochromatic slate-blue matte housing against the Calacatta Viola marble plinth and dappled foliage shadows creates a striking, Architectural Digest-worthy editorial composition.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

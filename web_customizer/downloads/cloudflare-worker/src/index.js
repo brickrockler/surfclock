@@ -6,7 +6,7 @@ const SPOTS = [
   { pos: 2, name: "Dee Why", dial_text: "DEE WHY", angle: 60, lat: -33.754, lon: 151.299, facing: 100, swell_min: 80, swell_max: 170, wind_min: 240, wind_max: 290, min_s: 0.8, max_s: 3.5, period: 12 },
   { pos: 3, name: "Curl Curl", dial_text: "CURL CURL", angle: 120, lat: -33.768, lon: 151.298, facing: 95, swell_min: 70, swell_max: 160, wind_min: 260, wind_max: 310, min_s: 0.6, max_s: 3.0, period: 12 },
   { pos: 4, name: "Freshwater", dial_text: "FRESHIE", angle: 240, lat: -33.780, lon: 151.291, facing: 85, swell_min: 70, swell_max: 150, wind_min: 250, wind_max: 300, min_s: 0.7, max_s: 2.2, period: 11 },
-  { pos: 5, name: "Queenscliff", dial_text: "QUEENSCLIFF", angle: 300, lat: -33.791, lon: 151.289, facing: 80, swell_min: 60, swell_max: 150, wind_min: 240, wind_max: 300, min_s: 0.6, max_s: 2.5, period: 11 }
+  { pos: 5, name: "Queensie", dial_text: "QUEENSIE", angle: 300, lat: -33.791, lon: 151.289, facing: 80, swell_min: 60, swell_max: 150, wind_min: 240, wind_max: 300, min_s: 0.6, max_s: 2.5, period: 11 }
 ];
 
 function angleDiff(a, b) {
@@ -65,7 +65,7 @@ function getSwellExposure(spotPos, swellDir) {
     if (swellDir >= 140 && swellDir <= 210) return 0.80; // S swell headland wrap penalty
     if (swellDir >= 75 && swellDir <= 115) return 0.95;  // Direct East opens the bay
     return 0.85; // NE sheltered
-  } else if (spotPos === 5) { // Queenscliff: sheltered bight / bombie
+  } else if (spotPos === 5) { // Queensie: sheltered bight / bombie
     if (swellDir >= 140 && swellDir <= 210) return 0.82; // South swell wrap
     if (swellDir >= 50 && swellDir <= 110) return 0.95;  // E/NE swell direct
     return 0.90;
@@ -1101,9 +1101,9 @@ export default {
               <text x="0" y="0" font-size="19" text-anchor="middle">FRESHIE</text>
             </g>
 
-            <!-- QUEENSCLIFF: 10 oclock (300°) -->
+            <!-- QUEENSIE: 10 oclock (300°) -->
             <g transform="translate(125, 178) rotate(32)" class="dial-label">
-              <text x="0" y="0" font-size="19" text-anchor="middle">QUEENSCLIFF</text>
+              <text x="0" y="0" font-size="19" text-anchor="middle">QUEENSIE</text>
             </g>
 
             <!-- Motorized Break Indicator Hand -->
@@ -1300,7 +1300,7 @@ export default {
       2: 60,    // Dee Why (2 oclock / 60°)
       3: 120,   // Curl Curl (4 oclock / 120°)
       4: 240,   // Freshie (8 oclock / 240°)
-      5: 300    // Queenscliff (10 oclock / 300°)
+      5: 300    // Queensie (10 oclock / 300°)
     };
 
     const CLOCK_POS_TEXT = {
@@ -1308,7 +1308,7 @@ export default {
       2: "60° on Dial (Dee Why)",
       3: "120° on Dial (Curl Curl)",
       4: "240° on Dial (Freshie)",
-      5: "300° on Dial (Queenscliff)"
+      5: "300° on Dial (Queensie)"
     };
 
     let latestData = null;

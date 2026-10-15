@@ -10,7 +10,7 @@
 | # | Component | Specification | Qty | Est. Cost | Notes / Sourcing |
 |---|-----------|---------------|-----|-----------|------------------|
 | 1 | **Microcontroller** | ESP32-S3 DevKitC-1 (or XIAO ESP32-S3) | 1 | $6.50 | Built-in Wi-Fi BLE + 8KB RTC SRAM + NVS Flash |
-| 2 | **Stepper Motors** | `28BYJ-48` 5V DC Reduction Stepper (`4096 steps/rev`) | 2 | $3.80 | `Ø28mm` body, `35mm` M3 mount pitch, `8mm` shaft offset |
+| 2 | **Stepper Motors** | `28BYJ-48` 5V DC Reduction Stepper (`2048 steps/rev`) | 2 | $3.80 | `Ø28mm` body, `35mm` M3 mount pitch, `8mm` shaft offset |
 | 3 | **Stepper Drivers** | `ULN2003A` Darlington Driver Board | 2 | $1.80 | Usually bundled with `28BYJ-48` motors |
 | 4 | **Power / Data Cable** | USB-C 5V Braided Right-Angle Cable (`1.5m`) | 1 | $3.50 | Routes through bottom-rear `12 × 9 mm` strain-relief slot |
 | 5 | **3D Filament — Bezel & Dial** | Matte PLA (`1.75mm`, Primary + Dial Face) | ~195g | $4.50 | Prusa MK4 / Bambu X1C / P1S / Any `200×240mm` bed |
@@ -48,10 +48,10 @@
 | **Upper Stepper (Beach Selector)** | `GPIO 5` | ULN2003 #1 (Top) | `IN2` | |
 | **Upper Stepper (Beach Selector)** | `GPIO 6` | ULN2003 #1 (Top) | `IN3` | |
 | **Upper Stepper (Beach Selector)** | `GPIO 7` | ULN2003 #1 (Top) | `IN4` | |
-| **Lower Stepper (Conditions 1–10)** | `GPIO 15` | ULN2003 #2 (Bottom) | `IN1` | `Y = -56.0 mm` Lower Axis (`-90°` to `+90°`) |
-| **Lower Stepper (Conditions 1–10)** | `GPIO 16` | ULN2003 #2 (Bottom) | `IN2` | |
-| **Lower Stepper (Conditions 1–10)** | `GPIO 17` | ULN2003 #2 (Bottom) | `IN3` | |
-| **Lower Stepper (Conditions 1–10)** | `GPIO 18` | ULN2003 #2 (Bottom) | `IN4` | |
+| **Lower Stepper (Conditions 1–10)** | `GPIO 11` | ULN2003 #2 (Bottom) | `IN1` | `Y = -56.0 mm` Lower Axis (`-90°` to `+90°`) |
+| **Lower Stepper (Conditions 1–10)** | `GPIO 12` | ULN2003 #2 (Bottom) | `IN2` | |
+| **Lower Stepper (Conditions 1–10)** | `GPIO 13` | ULN2003 #2 (Bottom) | `IN3` | |
+| **Lower Stepper (Conditions 1–10)** | `GPIO 14` | ULN2003 #2 (Bottom) | `IN4` | |
 | **5V Power Rail** | `5V / VBUS` | Both ULN2003 Boards | `+ (5V)` | Powered directly via USB-C 5V |
 | **Common Ground** | `GND` | Both ULN2003 Boards | `- (GND)` | Common ground reference |
 

@@ -11,7 +11,7 @@ void CliHandler::begin() {
 void CliHandler::printHelp() {
     Serial.println("\n=== 🏄 SurfClock Dual Actuator CLI Commands ===");
     Serial.println("  [Motor 1: Break Pointer (5 Northern Beaches)]");
-    Serial.println("    pos <1-5>         : Move to beach (1:LongReef, 2:DeeWhy, 3:CurlCurl, 4:Freshie, 5:Queenscliff)");
+    Serial.println("    pos <1-5>         : Move to beach (1:LongReef, 2:DeeWhy, 3:CurlCurl, 4:Freshie, 5:Queensie)");
     Serial.println("    angle <0-360>     : Move directly to exact degree (0=Top, 90=3oclock, 180=6oclock)");
     Serial.println("    seek cw / ccw     : Crawl continuously seeking Break datum (GPIO 10)");
     Serial.println("    step <N>          : Step Motor 1 manually (+N CW, -N CCW)");
@@ -84,7 +84,7 @@ void CliHandler::processCommand(const String& line) {
         else if (arg == "deewhy" || arg == "dy") _stepper.setBeachPosition(2);
         else if (arg == "curlcurl" || arg == "cc") _stepper.setBeachPosition(3);
         else if (arg == "freshie" || arg == "fw") _stepper.setBeachPosition(4);
-        else if (arg == "queenscliff" || arg == "qc") _stepper.setBeachPosition(5);
+        else if (arg == "queensie" || arg == "qc") _stepper.setBeachPosition(5);
         else {
             int pos = arg.toInt();
             _stepper.setBeachPosition(pos);

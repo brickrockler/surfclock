@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "score": 96,
+  "upper_ticks_only_9_no_bottom_ticks": true,
+  "single_hand_per_dial": true,
+  "text_accurate": true,
+  "matte_molded_no_titanium": true,
+  "art_direction_magazine_grade": true,
+  "critique": "Flawless execution of the product geometry, dial graphics, and typography. The vertical rectangular monolith housing, 9 upper tick marks with a blank lower arc, and single burnt-orange hands per dial are 100% faithful to the reference. The surreal, magazine-grade art direction hovering just above glassy ocean swells at dawn with a crisp inverted water reflection is striking and cinematic.",
+  "prompt_fix": "",
+  "critic_model": "gemini-4-argon"
+}

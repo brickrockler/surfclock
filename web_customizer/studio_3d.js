@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { OrbitControls } from "./vendor/OrbitControls.js";
 import { GLTFLoader } from "./vendor/GLTFLoader.js";
 import { RoomEnvironment } from "./vendor/RoomEnvironment.js";
-import { DIAL_SLOTS } from "./surf_data.js?v=42";
+import { DIAL_SLOTS } from "./surf_data.js?v=66";
 import {
   buildDialTypographyGeometry,
   buildRearPlaqueTypographyGeometry,
@@ -17,50 +17,62 @@ import {
   FONT_STROKES,
   getCharWidthFactor,
   measureProportionalString,
-} from "./glyphs_3d.js?v=42";
-import { COMPONENT_SWATCHES, buildProceduralStudioTextures } from "./materials_and_presets.js?v=42";
+} from "./glyphs_3d.js?v=66";
+import { COMPONENT_SWATCHES, buildProceduralStudioTextures } from "./materials_and_presets.js?v=66";
 
 /**
  * Mirrors a BufferGeometry across X (x -> -x) and reverses triangle winding so outward normals stay valid.
  * Used on `Duo_Rear_Root` children so that when viewed from the Rear Camera (-Z),
  * ESP32-S3 is on the LEFT, dual ULN2003 boards are on the RIGHT, and IC markings read left-to-right!
  */
+function isDeadOrHiddenGLBMeshName(nameStr) {
+  if (!nameStr) return false;
+  return (
+    nameStr.includes("Molded_Spec_Text") ||
+    nameStr.includes("IC_Markings") ||
+    nameStr.includes("USBC_Cord") ||
+    nameStr.includes("USBC_Lead") ||
+    nameStr.includes("USBC_Strain_Boot") ||
+    nameStr.includes("Dial_Shadow_Moat_Backer") ||
+    nameStr.includes("Coiled_Tabletop_USBC_Cord")
+  );
+}
+
 function mirrorGeometryXInPlace(geom) {
   if (!geom) return;
   const pos = geom.attributes.position;
-  if (pos) {
-    for (let i = 0; i < pos.count; i++) {
-      pos.setX(i, -pos.getX(i));
+  const pArr = pos ? pos.array : null;
+  if (pArr) {
+    for (let i = 0, n = pArr.length; i < n; i += 3) {
+      pArr[i] = -pArr[i];
     }
     pos.needsUpdate = true;
   }
   const norm = geom.attributes.normal;
-  if (norm) {
-    for (let i = 0; i < norm.count; i++) {
-      norm.setX(i, -norm.getX(i));
+  const nArr = norm ? norm.array : null;
+  if (nArr) {
+    for (let i = 0, n = nArr.length; i < n; i += 3) {
+      nArr[i] = -nArr[i];
     }
     norm.needsUpdate = true;
   }
   if (geom.index) {
     const idx = geom.index.array;
-    for (let i = 0; i < idx.length; i += 3) {
+    for (let i = 0, n = idx.length; i < n; i += 3) {
       const tmp = idx[i + 1];
       idx[i + 1] = idx[i + 2];
       idx[i + 2] = tmp;
     }
     geom.index.needsUpdate = true;
-  } else if (pos) {
-    // Non-indexed triangle list: swap vertex 1 and 2 of each triangle
-    for (let i = 0; i < pos.count; i += 3) {
-      const x1 = pos.getX(i + 1), y1 = pos.getY(i + 1), z1 = pos.getZ(i + 1);
-      const x2 = pos.getX(i + 2), y2 = pos.getY(i + 2), z2 = pos.getZ(i + 2);
-      pos.setXYZ(i + 1, x2, y2, z2);
-      pos.setXYZ(i + 2, x1, y1, z1);
-      if (norm) {
-        const nx1 = norm.getX(i + 1), ny1 = norm.getY(i + 1), nz1 = norm.getZ(i + 1);
-        const nx2 = norm.getX(i + 2), ny2 = norm.getY(i + 2), nz2 = norm.getZ(i + 2);
-        norm.setXYZ(i + 1, nx2, ny2, nz2);
-        norm.setXYZ(i + 2, nx1, ny1, nz1);
+  } else if (pArr) {
+    for (let i = 0, n = pArr.length; i < n; i += 9) {
+      const x1 = pArr[i + 3], y1 = pArr[i + 4], z1 = pArr[i + 5];
+      pArr[i + 3] = pArr[i + 6]; pArr[i + 4] = pArr[i + 7]; pArr[i + 5] = pArr[i + 8];
+      pArr[i + 6] = x1;          pArr[i + 7] = y1;          pArr[i + 8] = z1;
+      if (nArr) {
+        const nx1 = nArr[i + 3], ny1 = nArr[i + 4], nz1 = nArr[i + 5];
+        nArr[i + 3] = nArr[i + 6]; nArr[i + 4] = nArr[i + 7]; nArr[i + 5] = nArr[i + 8];
+        nArr[i + 6] = nx1;         nArr[i + 7] = ny1;         nArr[i + 8] = nz1;
       }
     }
   }
@@ -68,10 +80,9 @@ function mirrorGeometryXInPlace(geom) {
   geom.computeBoundingSphere();
 }
 
-
 /**
  * Generates clean millimeter-scaled triplanar UV coordinates for CAD/STL meshes
- * so normalMap, bumpMap, roughnessMap, and grainColorMap render with crisp tactile fidelity on all faces & chamfers.
+ * using direct TypedArray access (pos.array / norm.array) for ~4x faster startup.
  */
 function ensureTriplanarUVs(geom, scalePerMm = 0.026) {
   if (!geom || !geom.attributes || !geom.attributes.position) return;
@@ -80,27 +91,32 @@ function ensureTriplanarUVs(geom, scalePerMm = 0.026) {
   }
   const pos = geom.attributes.position;
   const norm = geom.attributes.normal;
-  const uvs = new Float32Array(pos.count * 2);
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    const z = pos.getZ(i);
-    const nx = norm ? Math.abs(norm.getX(i)) : 0;
-    const ny = norm ? Math.abs(norm.getY(i)) : 0;
-    const nz = norm ? Math.abs(norm.getZ(i)) : 1;
-    let u, v;
-    if (nz >= nx && nz >= ny) {
-      u = x * scalePerMm;
-      v = y * scalePerMm;
-    } else if (nx >= ny) {
-      u = z * scalePerMm;
-      v = y * scalePerMm;
-    } else {
-      u = x * scalePerMm;
-      v = z * scalePerMm;
+  const pArr = pos.array;
+  const nArr = norm ? norm.array : null;
+  const count = pos.count;
+  const uvs = new Float32Array(count * 2);
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
+    const x = pArr[i3];
+    const y = pArr[i3 + 1];
+    const z = pArr[i3 + 2];
+    let nx = 0, ny = 0, nz = 1;
+    if (nArr) {
+      nx = nArr[i3]; if (nx < 0) nx = -nx;
+      ny = nArr[i3 + 1]; if (ny < 0) ny = -ny;
+      nz = nArr[i3 + 2]; if (nz < 0) nz = -nz;
     }
-    uvs[i * 2] = u;
-    uvs[i * 2 + 1] = v;
+    const i2 = i * 2;
+    if (nz >= nx && nz >= ny) {
+      uvs[i2] = x * scalePerMm;
+      uvs[i2 + 1] = y * scalePerMm;
+    } else if (nx >= ny) {
+      uvs[i2] = z * scalePerMm;
+      uvs[i2 + 1] = y * scalePerMm;
+    } else {
+      uvs[i2] = x * scalePerMm;
+      uvs[i2 + 1] = z * scalePerMm;
+    }
   }
   geom.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 }
@@ -126,7 +142,7 @@ export class SurfClockStudio3D {
     this.dShaftMeshes = [];
 
     // Dynamic state
-    this.beachNames = ["LONG REEF", "QUEENSCLIFF", "DEE WHY", "FRESHIE", "CURL CURL"];
+    this.beachNames = ["LONG REEF", "QUEENSIE", "DEE WHY", "FRESHIE", "CURL CURL"];
     this.regionTitle = "SYDNEY";
     this.subdialMode = "worth_it";
     this.activeBeachIndex = 2;
@@ -149,8 +165,13 @@ export class SurfClockStudio3D {
     this.lowerAngleTarget = 52.0;
     this.lowerVelocity = 0.0;
 
-    // Camera animation state
+    // Camera animation & mobile drawer state
     this.camAnim = null;
+    this.currentPreset = "front";
+    this.activeCameraPreset = "front";
+    this.mobileDrawerOpen = false;
+    this.mobileDrawerRatio = 0.52;
+    this.isDialTranslucent = false;
 
     this.swColors = {
       bezel: "#DCD7CD",
@@ -181,10 +202,11 @@ export class SurfClockStudio3D {
       this._initSoftware3DEngine();
     }
 
-    this._lastTime = performance.now();
+    this.lastTime = performance.now();
+    this._lastTime = this.lastTime;
     this._animate = this._animate.bind(this);
     this._animLoopStarted = true;
-    requestAnimationFrame(this._animate);
+    this._rafId = requestAnimationFrame(this._animate);
   }
 
   _buildStudioSoftboxEnv(pmrem) {
@@ -252,7 +274,7 @@ export class SurfClockStudio3D {
     this.resize();
     this.setCameraPreset("front", true);
     this.controls.minDistance = 120.0;
-    this.controls.maxDistance = 1150.0;
+    this.controls.maxDistance = 1550.0;
     this.controls.maxPolarAngle = Math.PI * 0.54;
     this.controls.minPolarAngle = 0.12;
     this.controls.update();
@@ -391,9 +413,9 @@ export class SurfClockStudio3D {
         color: 0xf8fbff,
         roughness: 0.05,
         metalness: 0.02,
-        transmission: 0.84,
+        transmission: 0,
         transparent: true,
-        opacity: 0.36,
+        opacity: 0.28,
         ior: 1.49,
         clearcoat: 1.0,
         clearcoatRoughness: 0.03,
@@ -531,12 +553,19 @@ export class SurfClockStudio3D {
     this.swellAccentHex = "#FF4F00";
     this.swellBgColor = new THREE.Color(0xfaf8f4);
 
+    this.swellAngleCurrent = 0.46;
+    this.swellAngleTarget = 0.46;
+    this.swellDirVecCurrent = new THREE.Vector2(Math.cos(0.46), Math.sin(0.46));
+    this.swellDirVecTarget = new THREE.Vector2(Math.cos(0.46), Math.sin(0.46));
+    this._swellDirInitialized = false;
+
     this.swellUniforms = {
       uTime: { value: 0.0 },
       uSwellHeight: { value: 1.9 },
       uSwellPeriod: { value: 13.0 },
       uWorthIt: { value: 8.2 },
-      uSwellAngle: { value: 0.38 },
+      uSwellAngle: { value: 0.46 },
+      uSwellDirVec: { value: new THREE.Vector2(0.89, 0.45) },
       uAccentColor: { value: new THREE.Color(0xff4f00) },
       uBgColor: { value: new THREE.Color(0xfaf8f4) },
       uIsNight: { value: 0.0 },
@@ -544,18 +573,19 @@ export class SurfClockStudio3D {
       uExplodeFade: { value: 0.0 },
       uPulseTime: { value: -99.0 },
       uPulseStrength: { value: 0.0 },
+      uCloseUpShowcase: { value: 0.0 },
     };
 
-    const swellGeo = new THREE.PlaneGeometry(1480, 620, 128, 56);
-    swellGeo.rotateX(-Math.PI * 0.5); // True horizontal X-Z studio ground plane
+    const swellGeo = new THREE.PlaneGeometry(3200, 3200, 520, 520);
+    swellGeo.rotateX(-Math.PI * 0.5); // Deep horizontal X-Z studio ground plane extending far behind the clock
 
     this.swellMat = new THREE.ShaderMaterial({
       uniforms: this.swellUniforms,
       transparent: true,
-      depthWrite: false,
+      depthWrite: true,
       depthTest: true,
       toneMapped: false,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
       extensions: { derivatives: true },
       vertexShader: `
         uniform float uTime;
@@ -563,42 +593,50 @@ export class SurfClockStudio3D {
         uniform float uSwellPeriod;
         uniform float uWorthIt;
         uniform float uSwellAngle;
+        uniform vec2 uSwellDirVec;
         uniform float uExplodeFade;
         uniform float uPulseTime;
         uniform float uPulseStrength;
+        uniform float uCloseUpShowcase;
 
         varying vec3 vWorldPos;
         varying float vHeaveNorm;
         varying float vCalmMask;
+        varying float vSlope;
 
         void main() {
           vec3 pos = position;
           vec4 worldPos4 = modelMatrix * vec4(pos, 1.0);
           vec2 xz = worldPos4.xz;
 
-          // Keep the studio floor directly beneath the clock base (R < 95mm) calm & level so the monolith sits flush
-          float footDist = length((xz - vec2(0.0, -4.0)) * vec2(0.82, 1.65));
-          float calmMask = smoothstep(68.0, 165.0, footDist);
+          // Keep the clock base & immediate front apron (|X| <= 94mm, Z <= 32mm) calm so no wave crest
+          // ever rises inside the bottom bezel, while waves in front, behind, and beside roll freely
+          vec2 qFoot = abs(xz - vec2(0.0, 4.0)) - vec2(94.0, 28.0);
+          float boxDist = length(max(qFoot, 0.0)) + min(max(qFoot.x, qFoot.y), 0.0);
+          float calmFoot = smoothstep(0.0, mix(52.0, 48.0, uCloseUpShowcase), boxDist);
 
-          // Subtle distance attenuation toward horizon edges
-          float radialDist = length(xz * vec2(0.55, 1.15));
-          float distFade = 1.0 - smoothstep(220.0, 620.0, radialDist);
+          // Ultra-wide radial distance attenuation so waves undulate all the way across +-1150mm in Z and X
+          float radialDist = length(xz * vec2(0.42, 0.42));
+          float distFade = 1.0 - smoothstep(380.0, 1180.0, radialDist);
 
-          // Propagate swell along the beach's real compass swell angle
-          vec2 swellDir = vec2(cos(uSwellAngle), sin(uSwellAngle));
+          // Propagate swell along the true compass direction vector of the selected beach's swell
+          vec2 swellDir = normalize(length(uSwellDirVec) > 0.001 ? uSwellDirVec : vec2(cos(uSwellAngle), sin(uSwellAngle)));
           vec2 crossDir = vec2(-swellDir.y, swellDir.x);
 
-          float freq = 0.015 / max(0.60, uSwellPeriod * 0.082);
-          float speed = (1.10 + clamp(uWorthIt, 1.0, 10.0) * 0.05) * (10.5 / max(5.0, uSwellPeriod));
+          float freq = mix(0.023, 0.026, uCloseUpShowcase) / max(0.60, uSwellPeriod * 0.080);
+          float speed = (1.35 + clamp(uWorthIt, 1.0, 10.0) * 0.062) * (11.5 / max(5.0, uSwellPeriod));
           float phase = dot(xz, swellDir) * freq - uTime * speed;
-          float crossPhase = dot(xz, crossDir) * (freq * 0.52) + uTime * speed * 0.34;
+          float crossPhase = dot(xz, crossDir) * (freq * 0.38) + uTime * speed * 0.22;
 
-          // Whisper-subtle, hypnotic 3D groundswell undulation (1.4mm on small days -> 5.5mm on solid groundswells)
-          float amp = (0.65 + clamp(uSwellHeight, 0.25, 4.5) * 1.45) * calmMask * distFade * (1.0 - uExplodeFade * 0.65);
+          // Dramatic 3D groundswell height (~2x taller on the website floor & close-up, 100% non-folding)
+          float baseAmp = (1.95 + clamp(uSwellHeight, 0.25, 4.5) * 2.75);
+          float showcaseAmp = (3.45 + clamp(uSwellHeight, 0.25, 4.5) * 3.20);
+          float amp = mix(baseAmp, showcaseAmp, uCloseUpShowcase) * calmFoot * distFade * (1.0 - uExplodeFade * 0.65);
 
+          // Stokes-style directional groundswell profile so wave propagation direction is unmistakable
           float w1 = sin(phase);
-          float w2 = 0.28 * sin(phase * 1.95 + crossPhase * 0.75 + 0.8);
-          float w3 = 0.14 * cos(crossPhase * 1.35 - uTime * 0.45);
+          float w2 = 0.22 * sin(phase * 2.0 - 0.45);
+          float w3 = 0.06 * cos(crossPhase * 1.15 - uTime * 0.32);
           float heave = (w1 + w2 + w3) * amp;
 
           // Interactive concentric ripple when switching beaches or colorways
@@ -608,15 +646,16 @@ export class SurfClockStudio3D {
             float rDist = length(xz);
             float ringRadius = pAge * 260.0;
             float ringEnv = exp(-pow((rDist - ringRadius) * 0.015, 2.0)) * exp(-pAge * 1.35);
-            float ripple = sin((rDist - ringRadius) * 0.075) * ringEnv * 3.8 * uPulseStrength * calmMask;
+            float ripple = sin((rDist - ringRadius) * 0.075) * ringEnv * 3.8 * uPulseStrength * calmFoot;
             heave += ripple;
             pulseBoost = ringEnv * 0.65;
           }
 
           pos.y += heave;
           vWorldPos = (modelMatrix * vec4(pos, 1.0)).xyz;
-          vHeaveNorm = clamp((w1 + w2 + 1.25) / 2.5 + pulseBoost, 0.0, 1.0);
-          vCalmMask = calmMask;
+          vHeaveNorm = clamp((w1 + w2 + 1.28) / 2.56 + pulseBoost, 0.0, 1.0);
+          vCalmMask = calmFoot;
+          vSlope = clamp(cos(phase) * 0.5 + 0.5, 0.0, 1.0);
 
           gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
         }
@@ -627,55 +666,74 @@ export class SurfClockStudio3D {
         uniform float uIsNight;
         uniform float uMacroFade;
         uniform float uExplodeFade;
+        uniform float uCloseUpShowcase;
 
         varying vec3 vWorldPos;
         varying float vHeaveNorm;
         varying float vCalmMask;
+        varying float vSlope;
 
         void main() {
           if (uMacroFade <= 0.004) discard;
 
-          // 1. Confine the 3D Blender/AutoCAD floor grid strictly to the studio floor plane (Z > -145mm)
-          // so it dissolves cleanly behind the clock base and NEVER rises up behind the middle of the clock!
-          float backFade = smoothstep(-88.0, -14.0, vWorldPos.z);
-          float frontFade = 1.0 - smoothstep(260.0, 440.0, vWorldPos.z);
-          float sideFade = 1.0 - smoothstep(280.0, 680.0, abs(vWorldPos.x));
+          // 1. Extended Symmetric 3D Horizon Fade:
+          //    - Extends >1,050mm behind the clock (-Z) AND >1,080mm in front of the clock (+Z) and +-1,180mm on the sides,
+          //      with ultra-long ~980mm gradual feather ramps so the grid goes >2x further in every direction and
+          //      seamlessly bleeds into the background from any 360° camera angle without any clear beginning or ending.
+          float backFade = pow(smoothstep(-1050.0, -75.0, vWorldPos.z), 1.55);
+          float frontFade = pow(1.0 - smoothstep(75.0, 1080.0, vWorldPos.z), 1.55);
+          float sideFade = pow(1.0 - smoothstep(220.0, 1180.0, abs(vWorldPos.x)), 1.55);
           float horizonFade = backFade * frontFade * sideFade;
-          if (horizonFade <= 0.002) discard;
+          if (horizonFade <= 0.001) discard;
 
-          // 2. Blender / AutoCAD Derivative-Anti-Aliased 3D Floor Grid (24mm Minor Cells, 120mm Major Cells)
-          vec2 coordMinor = vWorldPos.xz / 24.0;
+          // 2. Derivative-Anti-Aliased 3D Floor Grid (20mm Minor Cells, 100mm Major Cells)
+          //    Evaluate X-line and Z-line LOD independently so deep Z-space & foreground lines stay crisp
+          vec2 coordMinor = vWorldPos.xz / 20.0;
           vec2 fwMinor = max(fwidth(coordMinor), vec2(0.0001));
           vec2 gridMinor = abs(fract(coordMinor - 0.5) - 0.5) / fwMinor;
-          float lineMinor = 1.0 - smoothstep(0.0, 1.15, min(gridMinor.x, gridMinor.y));
-          float minorLod = 1.0 - smoothstep(0.14, 0.36, max(fwMinor.x, fwMinor.y));
-          lineMinor *= minorLod;
+          float minorWidth = mix(1.18, 1.45, uCloseUpShowcase);
+          float lineMinorX = (1.0 - smoothstep(0.0, minorWidth, gridMinor.x)) * (1.0 - smoothstep(0.48, 1.30, fwMinor.x));
+          float lineMinorZ = (1.0 - smoothstep(0.0, minorWidth, gridMinor.y)) * (1.0 - smoothstep(0.65, 1.95, fwMinor.y));
+          float lineMinor = max(lineMinorX, lineMinorZ);
 
-          vec2 coordMajor = vWorldPos.xz / 120.0;
+          vec2 coordMajor = vWorldPos.xz / 100.0;
           vec2 fwMajor = max(fwidth(coordMajor), vec2(0.0001));
           vec2 gridMajor = abs(fract(coordMajor - 0.5) - 0.5) / fwMajor;
-          float lineMajor = 1.0 - smoothstep(0.0, 1.28, min(gridMajor.x, gridMajor.y));
-          float majorLod = 1.0 - smoothstep(0.20, 0.50, max(fwMajor.x, fwMajor.y));
-          lineMajor *= majorLod;
+          float majorWidth = mix(1.30, 1.72, uCloseUpShowcase);
+          float lineMajorX = (1.0 - smoothstep(0.0, majorWidth, gridMajor.x)) * (1.0 - smoothstep(0.55, 1.50, fwMajor.x));
+          float lineMajorZ = (1.0 - smoothstep(0.0, majorWidth, gridMajor.y)) * (1.0 - smoothstep(0.75, 2.20, fwMajor.y));
+          float lineMajor = max(lineMajorX, lineMajorZ);
 
           // Subtle horizontal X-datum baseline directly aligned with the clock front face (Z = 0)
           vec2 fwWorld = max(fwidth(vWorldPos.xz), vec2(0.001));
-          float axisX = (1.0 - smoothstep(0.0, 1.35, abs(vWorldPos.z) / fwWorld.y)) * majorLod;
+          float axisX = (1.0 - smoothstep(0.0, 1.38, abs(vWorldPos.z) / fwWorld.y)) * (1.0 - smoothstep(0.75, 2.20, fwMajor.y));
 
-          // 3. Whisper-subtle Colorway Accent Illumination on Rising 3D Swell Crests
-          float crestGlow = smoothstep(0.50, 0.90, vHeaveNorm) * vCalmMask;
-          vec3 cadMinorCol = mix(vec3(0.64, 0.61, 0.57), vec3(0.18, 0.27, 0.42), uIsNight);
-          vec3 cadMajorCol = mix(vec3(0.46, 0.44, 0.40), vec3(0.26, 0.40, 0.62), uIsNight);
+          // 3. Colorway Accent Illumination & Subtle Volumetric Crest Shading on Rising 3D Swell Crests
+          float crestGlow = smoothstep(0.44, 0.84, vHeaveNorm) * vCalmMask;
+          float troughShade = (1.0 - smoothstep(0.16, 0.50, vHeaveNorm)) * vCalmMask;
+          vec3 cadMinorCol = mix(vec3(0.52, 0.49, 0.45), vec3(0.22, 0.33, 0.50), uIsNight);
+          vec3 cadMajorCol = mix(vec3(0.30, 0.28, 0.25), vec3(0.34, 0.50, 0.74), uIsNight);
 
-          float accentMix = clamp(crestGlow * 0.72 + axisX * 0.55 + lineMajor * crestGlow * 0.35, 0.0, 1.0);
+          float accentMix = clamp(
+            crestGlow * mix(0.84, 0.98, uCloseUpShowcase) +
+            axisX * 0.55 +
+            lineMajor * crestGlow * 0.48,
+            0.0, 1.0
+          );
           vec3 baseGridCol = mix(cadMinorCol, cadMajorCol, clamp(lineMajor + axisX, 0.0, 1.0));
-          vec3 gridColor = mix(baseGridCol, uAccentColor, accentMix);
+          vec3 gridLineCol = mix(baseGridCol, uAccentColor, accentMix);
 
-          float minorAlpha = lineMinor * mix(0.095, 0.14, uIsNight);
-          float majorAlpha = lineMajor * mix(0.19, 0.28, uIsNight);
-          float datumAlpha = axisX * mix(0.28, 0.38, uIsNight);
-          float crestBoost = (lineMinor * 0.12 + lineMajor * 0.22) * crestGlow;
-          float gridAlpha = clamp(max(max(minorAlpha, majorAlpha), datumAlpha) + crestBoost, 0.0, 0.68);
+          float minorAlpha = lineMinor * mix(mix(0.22, 0.38, uCloseUpShowcase), 0.26, uIsNight);
+          float majorAlpha = lineMajor * mix(mix(0.38, 0.64, uCloseUpShowcase), 0.44, uIsNight);
+          float datumAlpha = axisX * mix(0.34, 0.44, uIsNight);
+          float crestBoost = (lineMinor * mix(0.26, 0.46, uCloseUpShowcase) + lineMajor * mix(0.36, 0.56, uCloseUpShowcase)) * crestGlow;
+          float lineAlpha = clamp(max(max(minorAlpha, majorAlpha), datumAlpha) + crestBoost, 0.0, 0.90);
+
+          // Subtle 3D surface shading across the wave crests and troughs so the floor visibly undulates between lines too
+          float surfAlpha = (crestGlow * mix(0.055, 0.105, uCloseUpShowcase) + troughShade * mix(0.035, 0.065, uCloseUpShowcase)) * (1.0 - uExplodeFade * 0.8);
+          vec3 surfCol = mix(mix(vec3(0.82, 0.79, 0.74), vec3(0.05, 0.09, 0.16), uIsNight), uAccentColor, crestGlow * 0.65);
+          float gridAlpha = clamp(lineAlpha + surfAlpha * (1.0 - lineAlpha), 0.0, 0.90);
+          vec3 gridColor = mix(surfCol, gridLineCol, lineAlpha / max(0.001, gridAlpha));
 
           // 4. Grounded 3D Contact AO + Directional Cast Shadow Strictly Under the Clock Base (Y = -115.4mm)
           vec2 pContact = (vWorldPos.xz - vec2(0.0, -3.5)) / vec2(94.0, 25.0);
@@ -699,7 +757,6 @@ export class SurfClockStudio3D {
         }
       `,
     });
-
     this.swellMesh = new THREE.Mesh(swellGeo, this.swellMat);
     // True horizontal studio floor plane directly under the clock base (Y = -115.0mm)
     this.swellMesh.position.set(0.0, -115.5, 0.0);
@@ -814,13 +871,43 @@ export class SurfClockStudio3D {
       this.swellUniforms.uSwellHeight.value = this.swellHeightM || 1.9;
       this.swellUniforms.uSwellPeriod.value = this.swellPeriodS || 13.0;
       this.swellUniforms.uWorthIt.value = this.worthItScore || 8.2;
-      const dirMap = {
-        N: 0.0, NNE: 0.39, NE: 0.78, ENE: 1.18, E: 1.57, ESE: 1.96, SE: 2.35, SSE: 2.75,
-        S: 3.14, SSW: 3.53, SW: 3.92, WSW: 4.32, W: 4.71, WNW: 5.10, NW: 5.50, NNW: 5.89
+      // Map compass swell origin (where waves come FROM) to 3D floor propagation angle (where waves travel TOWARD):
+      // West swells (W, WNW, NW, SW) travel Left -> Right (+X); East swells (E, ENE, NE, SE, SSE) travel Right -> Left (-X);
+      // North swells travel Back -> Front (+Z); South swells travel Front -> Back (-Z).
+      const propAngleMap = {
+        W:    0.16,
+        WNW:  0.46,
+        NW:   0.78,
+        NNW:  1.10,
+        N:    1.48,
+        NNE:  2.04,
+        NE:   2.36,
+        ENE:  2.68,
+        E:    2.98,
+        ESE: -2.76,
+        SE:  -2.44,
+        SSE: -2.12,
+        S:   -1.48,
+        SSW: -1.04,
+        SW:  -0.72,
+        WSW: -0.38,
       };
-      const baseAng = dirMap[this.swellDir] ?? 0.38;
-      const slotOffset = ((this.activeBeachIndex || 0) - 2) * 0.24;
-      this.swellUniforms.uSwellAngle.value = baseAng + slotOffset;
+      const cleanDir = String(this.swellDir || "WNW").trim().toUpperCase();
+      const baseAng = propAngleMap[cleanDir] ?? 0.46;
+      const targetAng = baseAng;
+      this.swellAngleTarget = targetAng;
+      this.swellUniforms.uSwellAngle.value = targetAng;
+      if (this.swellDirVecTarget) {
+        this.swellDirVecTarget.set(Math.cos(targetAng), Math.sin(targetAng));
+        if (!this._swellDirInitialized) {
+          this._swellDirInitialized = true;
+          this.swellAngleCurrent = targetAng;
+          this.swellDirVecCurrent.copy(this.swellDirVecTarget);
+          if (this.swellUniforms.uSwellDirVec) {
+            this.swellUniforms.uSwellDirVec.value.copy(this.swellDirVecTarget);
+          }
+        }
+      }
     }
   }
 
@@ -912,14 +999,23 @@ export class SurfClockStudio3D {
       this.swellUniforms.uTime.value = nowSec;
       this.swellAccentCurrent.lerp(this.swellAccentTarget, 0.12);
       this.swellUniforms.uAccentColor.value.copy(this.swellAccentCurrent);
+      if (this.swellDirVecCurrent && this.swellUniforms.uSwellDirVec) {
+        const targetAng = this.swellAngleTarget ?? 0.46;
+        const curAng = this.swellAngleCurrent ?? targetAng;
+        const angDiff = Math.atan2(Math.sin(targetAng - curAng), Math.cos(targetAng - curAng));
+        this.swellAngleCurrent = curAng + angDiff * 0.16;
+        this.swellDirVecCurrent.set(Math.cos(this.swellAngleCurrent), Math.sin(this.swellAngleCurrent));
+        this.swellUniforms.uSwellDirVec.value.copy(this.swellDirVecCurrent);
+      }
       let macroTarget = 1.0;
       if (this.camera) {
         const camDist = this.camera.position.length();
         // Smoothly fade out background swell when zooming in close (Close-Up / Sub-Dial) or in Rear view
-        const zoomFade = Math.max(0.0, Math.min(1.0, (camDist - 255.0) / 140.0));
+        const showcase = this.swellUniforms.uCloseUpShowcase ? this.swellUniforms.uCloseUpShowcase.value : 0.0;
+        const zoomFade = Math.max(showcase, Math.max(0.0, Math.min(1.0, (camDist - 255.0) / 140.0)));
         const rearFade = this.camera.position.z < -80.0 ? 0.18 : 1.0;
         const expFade = Math.max(0.15, 1.0 - (this.explodeCurrent || 0.0) * 0.65);
-        macroTarget = zoomFade * rearFade * expFade;
+        macroTarget = Math.max(showcase, zoomFade * rearFade * expFade);
       }
       this.swellUniforms.uMacroFade.value += (macroTarget - this.swellUniforms.uMacroFade.value) * 0.16;
       if (this.swellMesh) {
@@ -933,7 +1029,7 @@ export class SurfClockStudio3D {
   }
 
   _initExplodedAxisGuides() {
-    // 6 Coaxial Dashed Brushed-Gold Alignment Rods (Upper Shaft, Lower Shaft, 4 Corner M3 Screws)
+    // 6 Coaxial Dashed Brushed-Gold Alignment Rods merged into a single BufferGeometry (1 draw call!)
     const guideMat = new THREE.MeshBasicMaterial({
       color: 0xc59b38,
       transparent: true,
@@ -947,14 +1043,34 @@ export class SurfClockStudio3D {
       [-80.96, 103.96, -290.0, 5.0],
       [80.96, 103.96, -290.0, 5.0],
     ];
-    const dashGeo = new THREE.BoxGeometry(0.65, 0.65, 4.8);
+    const dashTemplate = new THREE.BoxGeometry(0.65, 0.65, 4.8);
+    const tPos = dashTemplate.attributes.position.array;
+    const tIdx = dashTemplate.index ? dashTemplate.index.array : null;
+    const mergedPos = [];
+    const mergedIdx = [];
+    let vOffset = 0;
+
     for (const [ax, ay, z0, z1] of axes) {
       for (let z = z0; z < z1; z += 9.0) {
-        const m = new THREE.Mesh(dashGeo, guideMat);
-        m.position.set(ax, ay, z + 2.4);
-        this.explodedGuidesGroup.add(m);
+        const cz = z + 2.4;
+        for (let i = 0; i < tPos.length; i += 3) {
+          mergedPos.push(tPos[i] + ax, tPos[i + 1] + ay, tPos[i + 2] + cz);
+        }
+        if (tIdx) {
+          for (let j = 0; j < tIdx.length; j++) {
+            mergedIdx.push(tIdx[j] + vOffset);
+          }
+        }
+        vOffset += tPos.length / 3;
       }
     }
+    dashTemplate.dispose();
+
+    const mergedGeo = new THREE.BufferGeometry();
+    mergedGeo.setAttribute("position", new THREE.Float32BufferAttribute(mergedPos, 3));
+    if (mergedIdx.length > 0) mergedGeo.setIndex(mergedIdx);
+    const mergedMesh = new THREE.Mesh(mergedGeo, guideMat);
+    this.explodedGuidesGroup.add(mergedMesh);
     this.explodedGuidesGroup.visible = false;
   }
 
@@ -1017,7 +1133,48 @@ export class SurfClockStudio3D {
       }
     });
 
+    this.canvas.addEventListener(
+      "webglcontextlost",
+      (e) => {
+        e.preventDefault();
+        console.warn("[SurfClockStudio3D] WebGL context lost; awaiting restoration.");
+      },
+      false
+    );
+    this.canvas.addEventListener(
+      "webglcontextrestored",
+      () => {
+        console.info("[SurfClockStudio3D] WebGL context restored; rebuilding studio resources.");
+        this._initMaterials();
+        this.setLightingMode(this.lightingMode, true);
+      },
+      false
+    );
+
     window.addEventListener("resize", () => this.resize());
+    if (typeof ResizeObserver !== "undefined") {
+      this._resizeObserver = new ResizeObserver(() => this.resize());
+      this._resizeObserver.observe(this.canvas.parentElement || this.canvas);
+    }
+  }
+
+  setMobileDrawerOffset(isOpen, drawerRatio = 0.52) {
+    this.mobileDrawerOpen = Boolean(isOpen);
+    this.mobileDrawerRatio = drawerRatio;
+    this._applyCameraViewOffset();
+  }
+
+  _applyCameraViewOffset() {
+    if (!this.camera) return;
+    const w = this.canvas?.clientWidth || window.innerWidth || 1;
+    const h = this.canvas?.clientHeight || window.innerHeight || 1;
+    if (this.mobileDrawerOpen && w <= 960) {
+      const offsetY = Math.round(h * 0.22);
+      this.camera.setViewOffset(w, h, 0, offsetY, w, h);
+    } else if (typeof this.camera.clearViewOffset === "function") {
+      this.camera.clearViewOffset();
+    }
+    this.camera.updateProjectionMatrix();
   }
 
   resize() {
@@ -1027,7 +1184,7 @@ export class SurfClockStudio3D {
       const aspect = w / Math.max(1, h);
       this.camera.aspect = aspect;
       this.camera.fov = aspect < 0.78 ? Math.min(52, 34 / Math.pow(aspect, 0.54)) : aspect < 1.0 ? Math.min(45, 34 / Math.pow(aspect, 0.35)) : 34;
-      this.camera.updateProjectionMatrix();
+      this._applyCameraViewOffset();
     }
     this._canvasRect = null;
     if (this.renderer) {
@@ -1045,14 +1202,17 @@ export class SurfClockStudio3D {
         // First, un-mirror Duo_Rear_Root children along X so that when viewed from the back (-Z),
         // ESP32-S3 is on the LEFT, dual ULN2003 boards are on the RIGHT, and IC markings read left-to-right!
         const duoRearRoot = root.getObjectByName("Duo_Rear_Root");
+        this.duoRearRoot = duoRearRoot || null;
         if (duoRearRoot) {
           const seenGeoms = new Set();
           duoRearRoot.children.forEach((child) => {
-            // Coiled tabletop cord stays in world space; mirror all internal rear bay components
-            if (child.name && child.name.includes("Coiled_Tabletop_USBC_Cord")) return;
+            if (child.name && isDeadOrHiddenGLBMeshName(child.name)) return;
             child.position.x = -child.position.x;
             child.traverse((m) => {
-              if (m.isMesh && m.geometry && !seenGeoms.has(m.geometry)) {
+              if (!m.isMesh || !m.geometry) return;
+              const mName = [m.name, m.parent ? m.parent.name : ""].filter(Boolean).join("__");
+              if (isDeadOrHiddenGLBMeshName(mName)) return;
+              if (!seenGeoms.has(m.geometry)) {
                 seenGeoms.add(m.geometry);
                 mirrorGeometryXInPlace(m.geometry);
               }
@@ -1060,9 +1220,9 @@ export class SurfClockStudio3D {
           });
         }
 
+        const seenUVGeoms = new Set();
         root.traverse((obj) => {
           if (!obj.isMesh) return;
-          ensureTriplanarUVs(obj.geometry, 0.026);
           const nm = [obj.name, obj.parent ? obj.parent.name : ""].filter(Boolean).join("__");
           this.meshesByName[nm] = obj;
           // If this mesh is a primitive inside a multi-material CAD Group under Duo_Rear_Root / Left_Clock_Root,
@@ -1110,23 +1270,25 @@ export class SurfClockStudio3D {
           } else if (nm.includes("SurfClock_Master_60fps_Rig_dial_v2_flush")) {
             // Replace baked Sydney dial mesh with a 100% pure blank recessed faceplate so zero ghost text exists!
             const oldGeo = obj.geometry;
+            if (oldGeo) oldGeo.dispose();
             obj.geometry = buildPureDialFaceplateGeometry(THREE);
             ensureTriplanarUVs(obj.geometry, 0.026);
-            if (oldGeo) oldGeo.dispose();
+            seenUVGeoms.add(obj.geometry);
             obj.material = this.dialMat;
             this.explodedOffsetsZ.set(moveTarget, 96.0);
           } else if (nm.includes("Dial_Shadow_Moat_Backer")) {
             obj.visible = false;
             obj.castShadow = false;
             obj.receiveShadow = false;
+            if (obj.geometry) obj.geometry.dispose();
             this.shadowMoatMesh = obj;
             this.explodedOffsetsZ.set(moveTarget, 24.0);
           } else if (nm.includes("Static_Dial_Ticks_And_Arch")) {
-            // Use the genuine 160-segment Blender-beveled 9 upper ticks & connected L-corner arch from surf_clock_v9_master.glb!
-            obj.visible = true;
-            obj.material = this.inlayMat;
-            obj.castShadow = true;
-            obj.receiveShadow = true;
+            // Replaced by dynamicTypoMesh which includes the exact physical clock 9 rounded-pill upper ticks & 5-tick 180-deg sub-dial arch!
+            obj.visible = false;
+            obj.castShadow = false;
+            obj.receiveShadow = false;
+            if (obj.geometry) obj.geometry.dispose();
             this.staticTicksMesh = obj;
             this.explodedOffsetsZ.set(moveTarget, 144.0);
           } else if (nm.includes("SurfClock_Master_60fps_Rig_beach_hand")) {
@@ -1157,9 +1319,11 @@ export class SurfClockStudio3D {
             obj.material = this.hwMats.blackPcb;
             this.explodedOffsetsZ.set(moveTarget, 36.0);
           } else if (nm.includes("Molded_Spec_Text") || nm.includes("IC_Markings")) {
-            // Replaced by dynamic un-mirrored `this.rearPlaqueTypoMesh`
+            // Replaced by dynamic un-mirrored `this.rearPlaqueTypoMesh` — dispose unused GLB geometry
             obj.visible = false;
             obj.castShadow = false;
+            obj.receiveShadow = false;
+            if (obj.geometry) obj.geometry.dispose();
             this.explodedOffsetsZ.set(moveTarget, 36.0);
           } else if (nm.includes("Stepper_BrassHub") || nm.includes("Shaft_Axis_Marker")) {
             obj.material = this.hwMats.turnedBrass;
@@ -1180,10 +1344,11 @@ export class SurfClockStudio3D {
             this.wireMeshes.push(obj);
             this.explodedOffsetsZ.set(moveTarget, -142.0);
           } else if (nm.includes("USBC_Cord") || nm.includes("USBC_Lead") || nm.includes("USBC_Strain_Boot")) {
-            // Completely hide the disconnected USB cable!
+            // Completely hide the disconnected USB cable and dispose unused high-poly cord geometry!
             obj.visible = false;
             obj.castShadow = false;
             obj.receiveShadow = false;
+            if (obj.geometry) obj.geometry.dispose();
             if (moveTarget) moveTarget.visible = false;
           } else if (nm.includes("ESP32_Shield") || nm.includes("ESP_Metal_Parts")) {
             obj.material = this.hwMats.brushedSteel;
@@ -1215,6 +1380,11 @@ export class SurfClockStudio3D {
           } else if (nm.includes("Machined_Hardware")) {
             obj.material = this.hwMats.brushedSteel;
             this.explodedOffsetsZ.set(moveTarget, -264.0);
+          }
+
+          if (obj.visible && obj.geometry && !seenUVGeoms.has(obj.geometry) && !isDeadOrHiddenGLBMeshName(nm)) {
+            seenUVGeoms.add(obj.geometry);
+            ensureTriplanarUVs(obj.geometry, 0.026);
           }
         });
 
@@ -1326,6 +1496,7 @@ export class SurfClockStudio3D {
       this.swColors[part] = sw.hex;
       if (part === "bezel") this.swColors.bezelTransmission = sw.transmission || 0.0;
       if (part === "dial") this.swColors.dialTransmission = sw.transmission || 0.0;
+      this.isDialTranslucent = Boolean(this.swColors.dialTransmission || this.swColors.bezelTransmission);
     }
     if (this.softwareMode) return sw;
     const targetMat =
@@ -1471,6 +1642,10 @@ export class SurfClockStudio3D {
         this.twilightRimLight.decay = 0.0;
         this.twilightRimLight.position.set(-118.0, -85.0, 95.0);
       }
+      if (this.dialMat) {
+        this.dialMat.clearcoat = 0.30;
+        this.dialMat.clearcoatRoughness = 0.18;
+      }
       this.scene.environmentIntensity = 0.30;
       this._setMaterialsEnvIntensity(0.30);
       if (this.swellUniforms) {
@@ -1522,20 +1697,24 @@ export class SurfClockStudio3D {
         this.bounceLight.intensity = 0.24;
       }
       if (this.frontSheenLight) {
-        // Warm golden-amber nocturnal instrument pool focused on the lower-right sub-dial & hands (cutoffDistance=235mm, decay=0.0!)
+        // Warm golden-amber nocturnal instrument pool on lower-right sub-dial & hands — softened to eliminate hot specular glare
         this.frontSheenLight.color.setHex(0xff9838);
-        this.frontSheenLight.intensity = 1.55;
-        this.frontSheenLight.distance = 235.0;
+        this.frontSheenLight.intensity = 0.92;
+        this.frontSheenLight.distance = 255.0;
         this.frontSheenLight.decay = 0.0;
-        this.frontSheenLight.position.set(62.0, -58.0, 82.0);
+        this.frontSheenLight.position.set(68.0, -62.0, 118.0);
       }
       if (this.twilightRimLight) {
-        // Cool lunar blue-white spotlight pool focused on the upper-left bezel chamfer & beach dial (cutoffDistance=265mm, decay=0.0!)
+        // Cool lunar blue-white spotlight pool focused on the upper-left bezel chamfer & beach dial
         this.twilightRimLight.color.setHex(0xdbeafe);
-        this.twilightRimLight.intensity = 1.75;
-        this.twilightRimLight.distance = 265.0;
+        this.twilightRimLight.intensity = 1.28;
+        this.twilightRimLight.distance = 275.0;
         this.twilightRimLight.decay = 0.0;
-        this.twilightRimLight.position.set(-66.0, 78.0, 88.0);
+        this.twilightRimLight.position.set(-72.0, 82.0, 112.0);
+      }
+      if (this.dialMat) {
+        this.dialMat.clearcoat = 0.14;
+        this.dialMat.clearcoatRoughness = 0.26;
       }
       this.scene.environmentIntensity = 0.04;
       this._setMaterialsEnvIntensity(0.04);
@@ -1567,39 +1746,68 @@ export class SurfClockStudio3D {
    * Smoothly animates camera & orbit target to one of the 5 studio inspection views
    */
   setCameraPreset(preset, immediate = false) {
+    const prevPreset = this.currentPreset || this.activeCameraPreset;
+    this.currentPreset = preset;
     this.activeCameraPreset = preset;
-    const w = this.canvas ? (this.canvas.clientWidth || window.innerWidth) : window.innerWidth;
-    const h = this.canvas ? (this.canvas.clientHeight || window.innerHeight) : window.innerHeight;
-    const isPortraitMobile = (w / Math.max(1, h)) < 0.82;
+    const w = this.canvas?.clientWidth || window.innerWidth || 1;
+    const h = this.canvas?.clientHeight || window.innerHeight || 1;
+    const aspect = w / Math.max(1, h);
+    const isPortraitMobile = aspect < 0.82;
+    const portraitScale = isPortraitMobile ? Math.min(1.58, Math.max(1.18, 0.78 / Math.max(0.38, aspect))) : 1.0;
+    const s = isPortraitMobile ? Math.max(1.0, 0.49 / Math.max(0.35, aspect)) : 1.0;
+
     let pos, tgt, explodeAfter = null;
     if (preset === "front") {
       pos = isPortraitMobile
-        ? new THREE.Vector3(-38.0, 10.0, 645.0)
+        ? new THREE.Vector3(0.0, -6.0, 645.0 * s)
         : new THREE.Vector3(-88.0, 14.0, 495.0);
       tgt = isPortraitMobile
-        ? new THREE.Vector3(0.0, -8.0, -6.0)
+        ? new THREE.Vector3(0.0, -8.0, -5.0)
         : new THREE.Vector3(0.0, -8.0, -8.0);
       if (this.explodeTarget > 0.5) explodeAfter = 0.0;
     } else if (preset === "macro") {
-      // Level-horizon grazing macro skimming +0.60mm 3D beach letters & crowned hand boss
-      pos = new THREE.Vector3(-56.0, 28.0, 194.0);
-      tgt = new THREE.Vector3(2.0, 28.0, -4.0);
+      // Level-horizon grazing macro skimming +0.60mm 3D beach letters & crowned hand boss (scaled on mobile portrait to avoid clipping QUEENSIE / DEE WHY)
+      pos = isPortraitMobile
+        ? new THREE.Vector3(-22.0, 26.0, Math.max(268.0 * Math.sqrt(portraitScale), 360.0 * s))
+        : new THREE.Vector3(-56.0, 28.0, 194.0);
+      tgt = isPortraitMobile
+        ? new THREE.Vector3(-2.0, 22.0, -4.0)
+        : new THREE.Vector3(2.0, 28.0, -4.0);
       explodeAfter = 0.0;
     } else if (preset === "subdial") {
-      // Close-up on lower 180° connected L-corner WORTH IT? arch
-      pos = new THREE.Vector3(-24.0, -68.0, 175.0);
-      tgt = new THREE.Vector3(0.0, -75.0, -4.0);
+      // Close-up on lower 180° connected L-corner WORTH IT? arch (scaled on mobile portrait to avoid clipping NAH / YEAH)
+      pos = isPortraitMobile
+        ? new THREE.Vector3(-14.0, -68.0, Math.max(248.0 * Math.sqrt(portraitScale), 280.0 * s))
+        : new THREE.Vector3(-24.0, -68.0, 175.0);
+      tgt = isPortraitMobile
+        ? new THREE.Vector3(0.0, -74.0, -4.0)
+        : new THREE.Vector3(0.0, -75.0, -4.0);
       explodeAfter = 0.0;
     } else if (preset === "rear") {
-      // 180° Rear Electronics Bay view: full framing of all 4 corner M3 counterbores + bottom cord
-      pos = new THREE.Vector3(46.0, -6.0, -525.0);
+      // 180° Rear Electronics Bay view: full framing of all 4 corner M3 counterbores
+      pos = isPortraitMobile
+        ? new THREE.Vector3(28.0, -6.0, Math.min(-465.0 * portraitScale, -565.0 * s))
+        : new THREE.Vector3(46.0, -6.0, -525.0);
       tgt = new THREE.Vector3(0.0, -10.0, -20.0);
       if (this.explodeTarget > 0.5) explodeAfter = 0.0;
     } else if (preset === "exploded") {
-      // True 60° Isometric 9-Tier Coaxial Exploded View showing every internal layer clearly
-      pos = new THREE.Vector3(-575.0, 162.0, 295.0);
-      tgt = new THREE.Vector3(0.0, -8.0, -35.0);
-      if (this.explodeTarget < 0.25) explodeAfter = 1.0;
+      // Allow tapping Explode a second time on mobile portrait to smoothly collapse back
+      if (prevPreset === "exploded" && !immediate && this.explodeTarget > 0.5 && isPortraitMobile) {
+        explodeAfter = 0.0;
+        this.currentPreset = "front";
+        this.activeCameraPreset = "front";
+        pos = new THREE.Vector3(0.0, -6.0, 645.0 * s);
+        tgt = new THREE.Vector3(0.0, -8.0, -5.0);
+      } else {
+        // True 60° Isometric 9-Tier Coaxial Exploded View fitting all 9 tiers inside 390x844 and 320x568 with >=22px margins
+        pos = isPortraitMobile
+          ? new THREE.Vector3(-950.0 * s, 245.0 * s, 685.0 * s)
+          : new THREE.Vector3(-575.0, 162.0, 295.0);
+        tgt = isPortraitMobile
+          ? new THREE.Vector3(0.0, -12.0, -44.0)
+          : new THREE.Vector3(0.0, -8.0, -35.0);
+        if (this.explodeTarget < 0.25) explodeAfter = 1.0;
+      }
     } else {
       return;
     }
@@ -1646,7 +1854,7 @@ export class SurfClockStudio3D {
     const stlBuffer = buildBinarySTLFromGeometries(
       geoms,
       `SC01_${cleanCode}_${this.beachNames.join("_")}`,
-      includeBasePlate ? 7.0 : 4.6
+      includeBasePlate ? 7.0 : 4.675
     );
 
     const blob = new Blob([stlBuffer], { type: "application/octet-stream" });
@@ -1682,7 +1890,7 @@ export class SurfClockStudio3D {
     const stlBuffer = buildBinarySTLFromGeometries(
       geoms,
       `SC01_${cleanCode}_${this.beachNames.join("_")}`,
-      includeBasePlate ? 7.0 : 4.6
+      includeBasePlate ? 7.0 : 4.675
     );
 
     for (const g of geoms) { if (g && g.dispose) g.dispose(); }
@@ -1765,8 +1973,15 @@ export class SurfClockStudio3D {
   }
 
   _animate(now) {
-    requestAnimationFrame(this._animate);
-    const dt = Math.min(0.05, (now - this._lastTime) / 1000.0);
+    this._rafId = requestAnimationFrame(this._animate);
+    if (typeof document !== "undefined" && document.hidden) {
+      this.lastTime = now;
+      this._lastTime = now;
+      return;
+    }
+    const prevTime = this.lastTime ?? this._lastTime ?? now;
+    const dt = Math.min(0.05, (now - prevTime) / 1000.0);
+    this.lastTime = now;
     this._lastTime = now;
 
     // 1. Camera preset interpolation
@@ -1811,6 +2026,14 @@ export class SurfClockStudio3D {
     }
     this._updateWallWaveform(now * 0.001);
     this.controls.update();
+    if (this.duoRearRoot) {
+      this.duoRearRoot.visible = !(
+        this.explodeCurrent < 0.01 &&
+        this.camera &&
+        this.camera.position.z > 0 &&
+        !this.isDialTranslucent
+      );
+    }
     if (this.swellMesh) {
       this.swellMesh.position.set(0.0, -115.5, 0.0);
       this.swellMesh.rotation.set(-0.045, 0.0, 0.0);
@@ -2380,42 +2603,36 @@ export class SurfClockStudio3D {
       const UPPER_Y = 25.3;
       const LOWER_Y = -78.2;
 
-      // 12 Radial Upper Ticks
-      for (let i = 0; i < 12; i++) {
-        const rad = (i * 30 * Math.PI) / 180.0;
-        const isMajor = i % 2 === 0;
-        const r0 = isMajor ? 18.8 : 20.8;
-        const r1 = 25.2;
-        drawSeg3D(
-          Math.sin(rad) * r0,
-          UPPER_Y + Math.cos(rad) * r0,
-          zT,
-          Math.sin(rad) * r1,
-          UPPER_Y + Math.cos(rad) * r1,
-          zT,
-          inlayCol,
-          isMajor ? 2.1 : 1.3
-        );
+      // 9 Upper Sector Ticks matching physical clock
+      for (const deg of [-120, -60, 0, 60, 120]) {
+        const rad = (deg * Math.PI) / 180.0;
+        const r0 = 35.5;
+        const r1 = deg === 0 ? 42.6 : 42.0;
+        drawSeg3D(Math.sin(rad) * r0, UPPER_Y + Math.cos(rad) * r0, zT, Math.sin(rad) * r1, UPPER_Y + Math.cos(rad) * r1, zT, inlayCol, deg === 0 ? 2.2 : 2.0);
+      }
+      for (const deg of [-90, -30, 30, 90]) {
+        const rad = (deg * Math.PI) / 180.0;
+        drawSeg3D(Math.sin(rad) * 37.5, UPPER_Y + Math.cos(rad) * 37.5, zT, Math.sin(rad) * 41.5, UPPER_Y + Math.cos(rad) * 41.5, zT, inlayCol, 1.5);
       }
 
       // 5 Dynamic Beach Labels + Screen Hit Targets
       const layout = [
-        { idx: 0, cx: 0.0, cy: 64.5, capH: 4.55, sw: 0.86, maxW: 68.0 },
-        { idx: 1, cx: -50.8, cy: 40.5, capH: 3.30, sw: 0.64, maxW: 41.0 },
-        { idx: 2, cx: 48.0, cy: 38.8, capH: 3.45, sw: 0.68, maxW: 42.0 },
-        { idx: 3, cx: -49.5, cy: -1.8, capH: 3.45, sw: 0.68, maxW: 42.0 },
-        { idx: 4, cx: 48.0, cy: -1.8, capH: 3.45, sw: 0.68, maxW: 42.0 },
+        { idx: 0, cx: 0.0, cy: 75.8, capH: 4.45, sw: 0.72, maxW: 106.0, tr: 0.43 },
+        { idx: 1, cx: -57.2, cy: 49.8, capH: 3.65, sw: 0.65, maxW: 48.0, tr: 0.31 },
+        { idx: 2, cx: 57.2, cy: 49.8, capH: 4.30, sw: 0.70, maxW: 48.0, tr: 0.42 },
+        { idx: 3, cx: -56.2, cy: -3.8, capH: 4.30, sw: 0.70, maxW: 48.0, tr: 0.42 },
+        { idx: 4, cx: 57.2, cy: -3.8, capH: 4.20, sw: 0.68, maxW: 48.0, tr: 0.39 },
       ];
       this.swBeachHitPts = [];
       for (const item of layout) {
         const label = this.beachNames[item.idx] || DIAL_SLOTS[item.idx].defaultBeach;
-        drawString3D(label, item.cx, item.cy, zT, item.capH, item.sw, inlayCol, item.maxW, 0.30, 1.0, true);
+        drawString3D(label, item.cx, item.cy, zT, item.capH, item.sw, inlayCol, item.maxW, item.tr, 1.0, true);
         const hp = project(item.cx, item.cy, zT);
         this.swBeachHitPts.push({ idx: item.idx, x: hp.x, y: hp.y });
       }
 
-      // Lower 180-deg Sub-Dial Arch & Ticks
-      const ARCH_R = 23.0;
+      // Lower 180-deg Sub-Dial Arch & 5 Inward Graduation Ticks
+      const ARCH_R = 31.375;
       for (let s = 0; s < 36; s++) {
         const a0 = (-90 + (180 * s) / 36) * (Math.PI / 180);
         const a1 = (-90 + (180 * (s + 1)) / 36) * (Math.PI / 180);
@@ -2427,38 +2644,28 @@ export class SurfClockStudio3D {
           LOWER_Y + Math.cos(a1) * ARCH_R,
           zT,
           inlayCol,
-          1.75
+          2.0
         );
       }
-      drawSeg3D(-ARCH_R - 4.2, LOWER_Y, zT, -ARCH_R + 2.8, LOWER_Y, zT, inlayCol, 1.85);
-      drawSeg3D(ARCH_R - 2.8, LOWER_Y, zT, ARCH_R + 4.2, LOWER_Y, zT, inlayCol, 1.85);
-      for (let deg = -72; deg <= 72; deg += 18) {
+      for (const [deg, tLen, wPx] of [[-90, 4.5, 2.0], [-45, 3.6, 1.6], [0, 4.4, 2.0], [45, 3.6, 1.6], [90, 4.5, 2.0]]) {
         const rad = (deg * Math.PI) / 180.0;
-        const r1 = deg === 0 ? ARCH_R + 3.4 : ARCH_R + 2.0;
-        drawSeg3D(
-          Math.sin(rad) * ARCH_R,
-          LOWER_Y + Math.cos(rad) * ARCH_R,
-          zT,
-          Math.sin(rad) * r1,
-          LOWER_Y + Math.cos(rad) * r1,
-          zT,
-          inlayCol,
-          deg === 0 ? 1.85 : 1.25
-        );
+        const rOut = 31.45;
+        const rIn = 30.55 - tLen;
+        drawSeg3D(Math.sin(rad) * rOut, LOWER_Y + Math.cos(rad) * rOut, zT, Math.sin(rad) * rIn, LOWER_Y + Math.cos(rad) * rIn, zT, inlayCol, wPx);
       }
 
       if (this.subdialMode === "conditions") {
-        drawString3D("1", -41.0, LOWER_Y - 1.2, zT, 3.10, 0.60, inlayCol, 20.0);
-        drawString3D("10", 42.5, LOWER_Y - 1.2, zT, 3.10, 0.60, inlayCol, 20.0);
-        drawString3D("CONDITIONS", 0.0, LOWER_Y - 13.8, zT, 2.75, 0.54, inlayCol, 68.0);
+        drawString3D("1", -44.2, -76.2, zT, 4.05, 0.68, inlayCol, 24.0, 0.48);
+        drawString3D("10", 45.2, -76.2, zT, 4.05, 0.68, inlayCol, 24.0, 0.48);
+        drawString3D("CONDITIONS", 0.0, -90.0, zT, 3.85, 0.66, inlayCol, 72.0, 0.40);
       } else if (this.subdialMode === "swell") {
-        drawString3D("FLAT", -44.5, LOWER_Y - 1.2, zT, 2.85, 0.56, inlayCol, 26.0);
-        drawString3D("EPIC", 45.5, LOWER_Y - 1.2, zT, 2.85, 0.56, inlayCol, 26.0);
-        drawString3D("SWELL", 0.0, LOWER_Y - 13.8, zT, 2.85, 0.56, inlayCol, 60.0);
+        drawString3D("FLAT", -44.2, -76.2, zT, 3.95, 0.68, inlayCol, 28.0, 0.44);
+        drawString3D("EPIC", 45.2, -76.2, zT, 3.95, 0.68, inlayCol, 28.0, 0.44);
+        drawString3D("SWELL", 0.0, -90.0, zT, 4.05, 0.68, inlayCol, 64.0, 0.46);
       } else {
-        drawString3D("NAH", -44.5, LOWER_Y - 1.2, zT, 2.85, 0.56, inlayCol, 26.0);
-        drawString3D("YEAH", 45.5, LOWER_Y - 1.2, zT, 2.85, 0.56, inlayCol, 26.0);
-        drawString3D("WORTH IT?", 0.0, LOWER_Y - 13.8, zT, 2.75, 0.54, inlayCol, 68.0);
+        drawString3D("NAH", -44.2, -76.2, zT, 4.05, 0.68, inlayCol, 28.0, 0.50);
+        drawString3D("YEAH", 45.2, -76.2, zT, 4.05, 0.68, inlayCol, 28.0, 0.50);
+        drawString3D("WORTH IT?", 0.0, -90.0, zT, 4.05, 0.68, inlayCol, 72.0, 0.46);
       }
 
       // TIER 9: Tapered 3D Lacquered Stepper Hands with Cast Shadows & Crowned Center Bosses

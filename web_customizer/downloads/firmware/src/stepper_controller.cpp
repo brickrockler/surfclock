@@ -70,7 +70,7 @@ void StepperController::calibrateCurrentAsBeach(int pos) {
         case 2:  step = 359; name = "Dee Why"; break;
         case 3:  step = 677; name = "Curl Curl"; break;
         case 4:  step = 1345; name = "Freshie"; break;
-        case 5:  step = 1682; name = "Queenscliff"; break;
+        case 5:  step = 1682; name = "Queensie"; break;
         default:
             Serial.printf("[MOTOR] Invalid beach pos for calibration: %d\n", pos);
             return;
@@ -169,9 +169,9 @@ bool StepperController::setBeachPosition(int pos) {
         case 4:
             angle = 236.4f; name = "Freshie"; break;        // Step 1345
         case 5:
-            angle = 295.7f; name = "Queenscliff"; break;    // Step 1682
+            angle = 295.7f; name = "Queensie"; break;    // Step 1682
         default:
-            Serial.printf("[MOTOR] Invalid beach position: %d (use 1:LongReef, 2:DeeWhy, 3:CurlCurl, 4:Freshie, 5:Queenscliff)\n", pos);
+            Serial.printf("[MOTOR] Invalid beach position: %d (use 1:LongReef, 2:DeeWhy, 3:CurlCurl, 4:Freshie, 5:Queensie)\n", pos);
             return false;
     }
 
@@ -281,7 +281,7 @@ void StepperController::update() {
         if (_lastSweepStepTime == 0) {
             _lastSweepStepTime = millis();
         } else if (millis() - _lastSweepStepTime > 1500) {
-            const int targets[] = {1, 4, 7, 10, 12};
+            const int targets[] = {1, 2, 3, 4, 5};
             _sweepTargetIndex = (_sweepTargetIndex + 1) % 5;
             setBeachPosition(targets[_sweepTargetIndex]);
             _lastSweepStepTime = 0;

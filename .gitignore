@@ -8,20 +8,37 @@ node_modules/
 .wrangler/
 .firebase/
 .env
+.env.*
 
-# Ignore local Blender working files, temporary renders, and scratch scripts in root
+# Ignore local Blender working files, raw 4K video renders, and scratch files in root
 /*
 !/README.md
 !/.gitignore
 !/AGENT.md
+!/AGENTS.md
+!/HANDOFF.md
+!/README_ANTIGRAVITY_HANDOFF.md
 !/SURF_CLOCK_001_AXON_EXPLODED_WEB.gif
+!/surf_clock_esp32s3_magnet_free.ino
+!/surf_clock_rams.scad
+!/generate_30_printable_design_exploration_images.py
 !/.github/
 !/firebase.json
 !/.firebaserc
 !/firmware/
+!/functions/
 !/cloudflare-worker/
 !/server/
 !/docs/
 !/cad/
 !/stl/
 !/web_customizer/
+!/V5_PERFECT_CLICKLOCK_PRINT_KIT/
+V5_PERFECT_CLICKLOCK_PRINT_KIT/*.mp4
+!/STUDIO_4K_CINEMA_PIPELINE/
+STUDIO_4K_CINEMA_PIPELINE/*
+!STUDIO_4K_CINEMA_PIPELINE/*.html
+!STUDIO_4K_CINEMA_PIPELINE/*.md
+!STUDIO_4K_CINEMA_PIPELINE/scripts/
+!STUDIO_4K_CINEMA_PIPELINE/05_LOGS_AND_MANIFESTS/
+STUDIO_4K_CINEMA_PIPELINE/05_LOGS_AND_MANIFESTS/*.jpg
